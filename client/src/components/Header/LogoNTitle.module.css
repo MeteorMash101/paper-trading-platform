@@ -1,0 +1,19 @@
+.container {
+    border: 2px solid blueviolet;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 0% 1%;
+    width: 25%;
+    height: 50px;
+    text-decoration: none;
+    color: black;
+}
+
+.tempLogo {
+    max-width: 50px;
+    max-height: 50px;
+    background-color: transparent;
+    border-radius: 10px;
+    border-color: rgb(0, 0, 0);
+}
