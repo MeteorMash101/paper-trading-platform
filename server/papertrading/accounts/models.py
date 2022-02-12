@@ -11,6 +11,11 @@ class Account(models.Model):
     name = models.CharField(max_length=50, unique=True)
     email = models.CharField(max_length=50, unique=True)
     google_user_id = models.CharField(max_length=50, unique=True, primary_key=True) # EDIT: just google ID for now...
+    MAX_DIGITS = 2
+    balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
+    # balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
+    # transaction_history = 
+    
 
     # EDIT: For later?
     # friends, ranking, STATS, isActive, LastLoginDate:, etc.
