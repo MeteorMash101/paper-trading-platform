@@ -8,10 +8,10 @@ import OrderWidget from '../OrderWidget';
 const StockDetail = () => {
     // Pull the relevant stock info. from DB. using stock_id
     const [stock, setStock] = useState("");
-    const { stock_id } = useParams();
+    const { symbol } = useParams();
     useEffect(() => {
         const fetchStock = async () => {
-            const stockFromServer = await axios.get(`http://127.0.0.1:8000/stocks/${stock_id}/`)
+            const stockFromServer = await axios.get(`http://127.0.0.1:8000/stocks/${symbol}/`)
             console.log("[DEBUG]: stock received from db:", stockFromServer.data)
             setStock(stockFromServer.data)
         }
