@@ -15,14 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from stocks.views import StockList, StockDetail
+from stocks.views import StockList, StockDetail, StockHistData, TopStocks
 from accounts.views import AccountList, AccountDetail
 # from accounts.views import GoogleLogin
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('stocks/', StockList.as_view()),
-    path('stocks/<int:pk>/', StockDetail.as_view()),
+    path('stocks/', TopStocks.as_view()),
+    path('stocks/<str:ticker>/', StockDetail.as_view()), # For single stock page
+    path("stocks/hist/<ticker>/", StockHistData.as_view()), #Called for specifically historical data
+                                                            #since only need that once per showing of graph
     path('accounts/', AccountList.as_view()),
     path('accounts/<str:pk>/', AccountDetail.as_view()),
     # path('rest-auth/google/', GoogleLogin.as_view(), name='google_login')
