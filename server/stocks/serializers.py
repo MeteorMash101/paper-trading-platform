@@ -26,10 +26,17 @@ class StockSerializer(serializers.Serializer):
 
 #All available fields
 #https://www.geeksforgeeks.org/serializers-django-rest-framework/
-class StockHistSerializer(serializers.Serializer):
+class HistSerializer(serializers.Serializer):
     historical_data = serializers.ListField()
 
-class QuickStockSerializer(serializers.Serializer):
+class LivePriceSerializer(serializers.Serializer):
+    MAX_DIGITS = 30
+    live_price = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places = 2)
+
+class EarningsSerializer(serializers.Serializer):
+    quarterly_earnings = serializers.ListField()
+
+class ShortSerializer(serializers.Serializer):
     """Your data serializer, define your fields here."""
     company_name = serializers.CharField(max_length=50)
     symbol = serializers.CharField(max_length=5)

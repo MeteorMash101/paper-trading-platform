@@ -3,7 +3,7 @@
 # Source: https://www.django-rest-framework.org/tutorial/3-class-based-views/
 
 from stocks.models import Stock
-from stocks.serializers import StockSerializer, StockHistSerializer, QuickStockSerializer
+from stocks.serializers import StockSerializer, HistSerializer, ShortSerializer, LivePriceSerializer, EarningsSerializer
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -30,7 +30,7 @@ class StockList(APIView):
 class StockHistData(APIView):
     def get(self, request, ticker):
         jsonData = si.get_stock_historical_data(ticker)
-        results = StockHistSerializer(jsonData).data
+        results = HistSerializer(jsonData).data
         return Response(results)
 
 '''For the specific stock page general updating info'''
@@ -43,14 +43,21 @@ class StockDetail(APIView):
         results = StockSerializer(jsonData).data
         return Response(results)
 
-
-import threading
-import queue
 class TopStocks(APIView):
-    def get(elf, request):
+    def get(self, request):
         stocks = si.get_top_stocks()
-        serializer = QuickStockSerializer(stocks, many=True)
+        serializer = ShortSerializer(stocks, many=True)
         return Response(serializer.data)
+
+class LivePrice(APIView):
+    def get(self, request, ticker):
+        return Response(LivePriceSerializer({"live_price": si.get_live_price(ticker)}).data)
+
+class CompanyEarnings(APIView):
+    def get(self, request, ticker):
+        jsonData = si.getEarningsReport(ticker)
+        serializer = EarningsSerializer(jsonData).data
+        return Response(serializer)
 
 
 

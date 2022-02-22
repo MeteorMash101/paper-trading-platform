@@ -15,6 +15,13 @@ class stock_info:
     @staticmethod
     def get_day_most_active():
         return si.get_day_most_active()
+    
+    @staticmethod
+    def getEarningsReport(ticker):
+        fullReport = si.get_earnings(ticker)
+        earningsDF = fullReport["quarterly_revenue_earnings"].drop(columns="revenue")
+        earnings = {"quarterly_earnings": earningsDF.to_dict("records")}
+        return earnings
 
     @staticmethod
     def get_stock_historical_data(ticker):

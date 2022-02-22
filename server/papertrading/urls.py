@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from stocks.views import StockList, StockDetail, StockHistData, TopStocks
+from stocks.views import StockList, StockDetail, StockHistData, TopStocks, LivePrice, CompanyEarnings
 from accounts.views import AccountList, AccountDetail
 # from accounts.views import GoogleLogin
 
@@ -25,6 +25,8 @@ urlpatterns = [
     path('stocks/<str:ticker>/', StockDetail.as_view()), # For single stock page
     path("stocks/hist/<ticker>/", StockHistData.as_view()), #Called for specifically historical data
                                                             #since only need that once per showing of graph
+    path("stocks/getPrice/<ticker>/", LivePrice.as_view()),
+    path("stocks/quarterlyEarnings/<ticker>/", CompanyEarnings.as_view()),
     path('accounts/', AccountList.as_view()),
     path('accounts/<str:pk>/', AccountDetail.as_view()),
     # path('rest-auth/google/', GoogleLogin.as_view(), name='google_login')
