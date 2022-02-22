@@ -25,7 +25,7 @@ const App = () => {
       <Header/>
       <Routes>
         <Route path="/" element={<MainFeed stockList={stockList}/>} exact/>
-        <Route path="/stock/:stock_id" element={<StockDetail/>}/>
+        <Route path="/stock/:symbol" element={<StockDetail/>}/>
         {/* <Route path="/user" element={<UserProfile postsList={postsList}/>}/> */}
       </Routes>
     </div>

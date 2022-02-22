@@ -7,7 +7,7 @@ const StockItem = ({stock_id, symbol, company_name, price, percent_change, chang
   const randColor = [classes.red, classes.blue, classes.green, classes.yellow] // EDIT: random color for now...
   const colorStyle = randColor[Math.floor(Math.random() * 3)]
   return (
-    <Link to={`/stock/${stock_id}`} className={classes.stockLink}>
+    <Link to={`/stock/${symbol}`} className={classes.stockLink}>
       <div className={classes.container} onClick={() => console.log("Clicked on a stock.")}>
         <h4 className={classes.symbol} id={colorStyle}>{symbol}</h4>
         <p className={classes.company_name}>{company_name}</p>
