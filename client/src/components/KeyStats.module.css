@@ -1,0 +1,9 @@
+.container {
+    border: 2px solid black;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 1rem;
+    width: 25%;
+    height: 84%;
+    background-color: azure;
+}

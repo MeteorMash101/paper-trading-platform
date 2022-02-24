@@ -1,0 +1,11 @@
+.listContainer {
+    /* border: 2px solid rgb(189, 255, 183); */
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.container {
+    border: 2px solid rgb(202, 178, 38);
+    display: flex;
+}

@@ -1,0 +1,37 @@
+.wrapper {
+    border: 2px solid rgb(33, 35, 61);
+    border-radius: 8px;
+    background-color: rgb(88, 93, 167);
+    color: rgb(255, 255, 255);
+    width: 20%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+}
+
+.wrapper2 {
+    /* border: 2px solid rgb(226, 30, 30); */
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    width: 60%;
+    height: 100%;
+    padding: 1%;
+}
+
+.username {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.logo {
+    background-color: transparent;
+    border-radius: 50%;
+    width: 15%;
+    height: 70%;
+}

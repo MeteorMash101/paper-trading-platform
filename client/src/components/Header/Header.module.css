@@ -1,0 +1,12 @@
+.container {
+    position: sticky;
+    top: 0;
+    border: 2px solid black;
+    background-color: azure;
+    height: 70px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+}

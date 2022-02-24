@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(27, 107, 24);
+    background-color: rgb(176, 230, 176);
+    width: 500px;
+    height: 400px;
+    margin: 2.5rem;
+    padding: 1rem 1rem;
+    text-align: left;
+}
+
+
+.label {
+    margin: .3rem .3rem;
+}
+
+.message {
+    color: rgb(224, 98, 98);
+    font-weight: bold;
+    font-size: larger;
+}
