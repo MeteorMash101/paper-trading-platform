@@ -38,7 +38,8 @@ class stock_info:
     @staticmethod
     def get_full_stock_stats(ticker):
         try:
-            data = si.get_quote_data(ticker)
+            data = si.get_quote_data(ticker) #To catch assertion errors
+            live_price = si.get_live_price(ticker) #to catch keyerrors with the key "timestamp" (these can't be sold anyways)
         except:
             return {
                 "symbol": ticker,
@@ -57,58 +58,33 @@ class stock_info:
                 "revenue": None,
                 "dividend_yield": None
             }
-        try:
-            jsonData = {
-                "symbol": ticker,
-                "company_name": stock_info.__getName(data, ticker),
-                "price": si.get_live_price(ticker),
-                "low_today": stock_info.__getMarketLow(data),
-                "high_today": data["regularMarketDayHigh"],
-                "percent_change": data["regularMarketChangePercent"],
-                "change_direction": data["regularMarketChangePercent"] > 0,
-                "ft_week_high": data["fiftyTwoWeekHigh"],
-                "ft_week_low": data["fiftyTwoWeekLow"],
-                "volume": stock_info.__getMarketVol(data),
-                "average_volume": stock_info.__getAvgVol(data),
-                "pe_ratio": stock_info.__getPE(data),
-                "market_cap": stock_info.__getMarketCap(data),
-                "revenue": 0.00000,
-                "dividend_yield": 0.00000
-            }
-        except KeyError as e:
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            print(ticker)
-            print(e.__str__())
-            print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            #Throw error to catch
-            #Currently it just prints none for all the remaining stock
-            jsonData = {
-                "symbol": ticker,
-                "company_name": stock_info.__getName(data, ticker),
-                "price": si.get_live_price(ticker),
-                "low_today": stock_info.__getMarketLow(data),
-                "high_today": None,
-                "percent_change": None,
-                "change_direction": None,
-                "ft_week_high": None,
-                "ft_week_low": None,
-                "volume": stock_info.__getMarketVol(data),
-                "average_volume": stock_info.__getAvgVol(data),
-                "pe_ratio": stock_info.__getPE(data),
-                "market_cap": stock_info.__getMarketCap(data),
-                "revenue": 0.00000,
-                "dividend_yield": 0.00000
-            }
+        jsonData = {
+            "symbol": ticker,
+            "company_name": stock_info.__getName(data, ticker),
+            "price": live_price,
+            "low_today": stock_info.__getMarketLow(data),
+            "high_today": stock_info.__getDayHigh(data),
+            "percent_change": data["regularMarketChangePercent"],
+            "change_direction": data["regularMarketChangePercent"] > 0,
+            "ft_week_high": stock_info.__ftWeekHigh(data),
+            "ft_week_low": stock_info.__ftWeekLow(data),
+            "volume": stock_info.__getMarketVol(data),
+            "average_volume": stock_info.__getAvgVol(data),
+            "pe_ratio": stock_info.__getPE(data),
+            "market_cap": stock_info.__getMarketCap(data),
+            "revenue": 0.00000,
+            "dividend_yield": 0.00000
+        }
         return jsonData
     
+    #This is for stocks to get the daily most active
     @staticmethod
     def get_top_stocks():
-        NUM_STOCKS_TO_RETURN = 5
         symbols = si.get_day_most_active()["Symbol"].to_list()
         print("----------------------", symbols)
         q = queue.Queue()
         threads = []
-        for symbol in symbols[:(NUM_STOCKS_TO_RETURN + 1)]:
+        for symbol in symbols[:10]:
             t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
             t.start()
             threads.append(t)
@@ -117,26 +93,9 @@ class stock_info:
         stocks = []
         while not q.empty():
             stocks.append(q.get())
-        #print([i["symbol"] for i in stocks])
-        #print([(i["symbol"], i["volume"]) for i in sorted(stocks, key = lambda x: x["volume"], reverse=True)])
         return sorted(stocks, key = lambda x: x["volume"], reverse=True)
 
-    @staticmethod
-    def get_popular_stocks():
-        POPULAR_STOCKS = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM"]
-        q = queue.Queue()
-        threads = []
-        for symbol in POPULAR_STOCKS:
-            t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
-            t.start()
-            threads.append(t)
-        for thread in threads:
-            thread.join(2) # n is the number of seconds to wait before joining
-        stocks = []
-        while not q.empty():
-            stocks.append(q.get())
-        return stocks
-
+    #This is for the multithreaded functions
     def __queueJSON(q, ticker):
         data = si.get_quote_data(ticker)
         jsonData = {
@@ -148,6 +107,24 @@ class stock_info:
             "volume": stock_info.__getMarketVol(data)
         }
         q.put(jsonData)
+
+    #Heyo technical debt called and wants you to pay
+    #Either way this is for Accounts when they want the stock list, we really only want price and percent change from this
+    @staticmethod
+    def get_price_and_change_for_list(symbols):
+        q = queue.Queue()
+        threads = []
+        for symbol in symbols:
+            t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
+            t.start()
+            threads.append(t)
+        for thread in threads:
+            thread.join(2) # n is the number of seconds to wait before joining
+        stocks = {}
+        while not q.empty():
+            stock = q.get()
+            stocks[stock["symbol"]] = stock
+        return stocks
 
     @staticmethod
     def __getName(data, ticker):
@@ -168,7 +145,7 @@ class stock_info:
             return None
 
     @staticmethod
-    def __getMarketLow(data):
+    def __getDayLow(data):
         if "regularMarketDayLow" in data.keys():
             return data["regularMarketDayLow"]
         else:
@@ -194,6 +171,26 @@ class stock_info:
     def __getMarketCap(data):
         if "marketCap" in data.keys():
             return data["marketCap"]
+        else:
+            return None
+    @staticmethod
+    def __getDayHigh(data):
+        if "regularMarketDayHigh" in data.keys():
+            return data["regularMarketDayHigh"]
+        else:
+            return None
+    
+    @staticmethod
+    def __ftWeekHigh(data):
+        if "fiftyTwoWeekHigh" in data.keys():
+            return data["fiftyTwoWeekHigh"]
+        else:
+            return None
+    
+    @staticmethod
+    def __ftWeekLow(data):
+        if "fiftyTwoWeekLow" in data.keys():
+            return data["fiftyTwoWeekLow"]
         else:
             return None
 '''

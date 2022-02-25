@@ -16,7 +16,8 @@ class Account(models.Model):
     # balance == 'buying power'
     balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=5000.00)
     portfolio_value = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=0.00)
-
+    ownedStocks = models.JSONField(null=True)
+    
     def __str__(self):
         return self.google_user_id
 
