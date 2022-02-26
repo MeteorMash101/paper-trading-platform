@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from stocks.views import StockList, StockDetail, StockHistData, TopStocks, PopularStocks, LivePrice, CompanyEarnings
-from accounts.views import AccountList, AccountDetail, AccountBalance, AccountStocksOwned
+from accounts.views import AccountList, AccountDetail, AccountBalance, AccountStocksOwned, AccountWatchList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,5 +33,6 @@ urlpatterns = [
     path('accounts/new/', AccountDetail.as_view()),
     path('accounts/balance', AccountBalance.as_view()),
     path('accounts/<str:goog_id>/getStocks', AccountStocksOwned.as_view()),
+    path('accounts/<str:goog_id>/watchList', AccountWatchList.as_view()),
     path('auth/', include('drf_social_oauth2.urls', namespace='drf'))
 ]

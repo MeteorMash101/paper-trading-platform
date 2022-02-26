@@ -7,7 +7,7 @@ from . import models
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Account
-        fields = ('user', 'name', 'email', 'google_user_id', 'balance', 'portfolio_value') # fields to be converted to JSON
+        fields = ('user', 'name', 'email', 'google_user_id', 'balance', 'portfolio_value', "start_date") # fields to be converted to JSON
 
 
 class StockListSerializer(serializers.Serializer):
@@ -18,3 +18,11 @@ class StockNumSerializer(serializers.Serializer):
 
 class PortfolioValueSerializer(serializers.Serializer):
     portfolio_value = serializers.DecimalField(max_digits=30, decimal_places=2)
+    percent_change = serializers.DecimalField(max_digits=30, decimal_places=2)
+    change_direction = serializers.BooleanField() # True => + change, False => - change
+
+class TransactionHistorySerializer(serializers.Serializer):
+    transaction_history = serializers.JSONField()
+
+class BoolSerializer(serializers.Serializer):
+    isPresent = serializers.BooleanField()

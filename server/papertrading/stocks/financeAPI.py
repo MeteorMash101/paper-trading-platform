@@ -22,6 +22,10 @@ class stock_info:
         earningsDF = fullReport["quarterly_revenue_earnings"].drop(columns="revenue")
         earnings = {"quarterly_earnings": earningsDF.to_dict("records")}
         return earnings
+    
+    @staticmethod
+    def get_data(ticker, start_date=None, end_date=None):
+        return si.get_data(ticker, start_date, end_date)
 
     @staticmethod
     def get_stock_historical_data(ticker):
