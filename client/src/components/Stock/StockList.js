@@ -15,7 +15,6 @@ const StockList = ({title, stockListURL}) => {
 		}
 		fetchStocks()
   	}, []) // this DB retreival should only execute the first time this App is loaded.
-  	// EDIT: move this to PARENTrandom color for now...
   	const randColor = [classes.red, classes.blue, classes.green, classes.yellow, classes.cyan, classes.pink] 
 	return (
 		<div className={classes.container}>

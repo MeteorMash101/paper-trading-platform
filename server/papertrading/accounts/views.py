@@ -25,8 +25,8 @@ class AccountDetail(APIView):
     def post(self, request, *args, **kwargs):
         print("IN POST AccountDetail...w/ data:", request.data)
         # EDIT: need way to add User's pk to req. data to map this Account -> User.
-        # request.data['user'] = User.objects.get(email=request.data['email'])
-        # request.data['user'] = request.data['email'].split('@')[0]
+        # tried: User.objects.get(email=request.data['email']), request.data['email'].split('@')[0]
+        # request.data['user'] = ?
         # print("UPDATED REQ. DATA", request.data)
         serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
@@ -65,16 +65,3 @@ class AccountDetail(APIView):
         Account = self.get_object(pk)
         Account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-class AccountBalance(APIView):
-    """
-    Update an Account's buying power.
-    """
-    def put(self, request, pk):
-        Account = self.get_object(pk)
-        print("AMOUNT SENT IN BP PUT: ", request.data['amount'], type(request.data['amount']))
-        serializer = AccountSerializer(Account, data=request.data)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response(serializer.data)
-        return Response(None)

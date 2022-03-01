@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from stocks.views import StockList, StockDetail, StockHistData, TopStocks, PopularStocks, LivePrice, CompanyEarnings
-from accounts.views import AccountList, AccountDetail, AccountBalance
+from accounts.views import AccountList, AccountDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,9 +28,11 @@ urlpatterns = [
     path("stocks/hist/<ticker>/", StockHistData.as_view()),
     path("stocks/getPrice/<ticker>/", LivePrice.as_view()),
     path("stocks/quarterlyEarnings/<ticker>/", CompanyEarnings.as_view()),
+    
     path('accounts/', AccountList.as_view()),
     path('accounts/<str:pk>/', AccountDetail.as_view()),
     path('accounts/new/', AccountDetail.as_view()),
-    path('accounts/balance', AccountBalance.as_view()),
-    path('auth/', include('drf_social_oauth2.urls', namespace='drf'))
+    path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
+
+    path('orders/', include('orders.urls'))
 ]

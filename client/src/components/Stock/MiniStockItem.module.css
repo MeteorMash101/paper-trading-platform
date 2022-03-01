@@ -1,0 +1,29 @@
+.container {
+    border: 2px solid rgb(199, 89, 77);
+    width: 100%;
+    height: 50px;
+    margin: .5rem .2rem;
+    display: flex;
+}
+
+/* .leftContainer {
+    border: 2px solid rgb(77, 85, 199);
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    height: 100%;
+
+} */
+
+.symbol {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+    border: 2px solid rgb(0, 0, 0);
+    background-color: rgb(49, 49, 49);
+    color: whitesmoke;
+    min-width: 20%;
+    min-height: 60%;
+    text-align: center;
+    /* height: 50%; */
+}
