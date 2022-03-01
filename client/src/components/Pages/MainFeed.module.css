@@ -6,6 +6,17 @@
 }
 
 .container {
-    border: 2px solid rgb(202, 178, 38);
+    /* border: 2px solid rgb(202, 178, 38); */
     display: flex;
+    align-items: left;
+    justify-content: left;
+
+}
+
+.list1{
+    padding: 20px;
+}
+
+.list2{
+    padding: 20px;
 }

@@ -6,6 +6,7 @@ import { Fragment, useContext } from 'react';
 import UserContext from '../../store/user-context';
 import UserTab from './UserTab';
 import axios from 'axios';
+import NewSearchBar from './newSearchBar';
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -42,9 +43,12 @@ const Header = () => {
         <Fragment>
             <div className={classes.container}>
                 <LogoNTitle/>
-                <SearchBar/>
-                {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>}
-                {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+                {/* <SearchBar/> */}
+                <NewSearchBar stockListURL={"http://127.0.0.1:8000/stocks/"}/>
+                <div className={classes.signin}>
+                    {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>}
+                    {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+                </div>
             </div>
             {/* HAVE THIS FADE msg... */}
             {/* {userCtx.isLoggedIn && <h2>Welcome {userCtx.name}!</h2>} */}
@@ -52,6 +56,6 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default Header; 
 
 
