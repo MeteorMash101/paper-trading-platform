@@ -4,40 +4,42 @@
 } */
 
 .Graph {
-  background-color: #000000;
-  border: 1px solid white;
+  /* background-color: rgb(248, 245, 245); */
+  /* border: 1px solid rgb(61, 240, 240); */
 }
 
 .axisX text {
   text-anchor: start;
+  color: rgb(138, 141, 141);
 }
 
 .baseGridLine line {
-  stroke: rgba(255, 255, 255, 0.5);
+  stroke: rgba(83, 83, 83, 0.5);
 }
 
 .tooltip text {
   font-size: 12px;
-  fill: #ffffff;
+  fill: #817f7f;
 }
 
 .tooltipLine {
-  stroke: #ff007a;
+  stroke: #878a8a;
   stroke-width: 1px;
 }
 
 .tooltipContent .contentTitle {
   font-weight: bold;
+  color: grey;
 }
 
 .tooltipLinePoint {
-  fill: #ff007a;
+  fill: #cdcece;
 }
 
 .legendContainer {
   display: flex;
   justify-content: center;
-  color: #ffffff;
+  color: #8e8c8f;
 }
 
 .checkbox {

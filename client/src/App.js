@@ -3,6 +3,7 @@ import './App.css';
 import Header from './components/Header/Header.js'
 import MainFeed from './components/Pages/MainFeed';
 import StockDetail from './components/Pages/StockDetail';
+import UserProfile from './components/Pages/UserProfile';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainFeed/>} exact/>
         <Route path="/stock/:symbol" element={<StockDetail/>}/>
+        <Route path="/user" element = {<UserProfile/>}/>
         {/* <Route path="/user" element={<UserProfile postsList={postsList}/>}/> */}
       </Routes>
     </div>

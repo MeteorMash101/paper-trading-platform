@@ -1,19 +1,19 @@
 .container {
-    border: 2px solid black;
+    border: 1px solid rgb(153, 152, 152);
     border-radius: 10px;
     overflow: hidden;
     margin: 1rem 1rem;
-    width: 25%;
-    height: 84%;
-    background-color: azure;
+    width: 50%;
+    height: 60%;
+    /* background-color: rgb(202, 202, 202); */
 }
 
 #buy {
-    background-color: rgb(179, 226, 186);
+    background-color: rgb(236, 247, 238);
 }
 
 #sell {
-    background-color: rgb(230, 187, 187);
+    background-color: rgb(250, 239, 239);
 }
 
 .orderType {
@@ -28,11 +28,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 10px solid rgb(81, 180, 119);
+    border-bottom: 2px solid rgb(150, 236, 183);
     width: 50%;
     height: 100%;
-    background-color: rgb(29, 116, 43);
-    color: whitesmoke;
+    /* background-color: rgb(124, 126, 124); */
+    color: rgb(7, 7, 7);
     cursor: pointer;
 }
 
@@ -40,11 +40,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 10px solid rgb(184, 93, 93);
+    border-bottom: 2px solid rgb(235, 140, 140);
     width: 50%;
     height: 100%;
-    background-color: rgb(116, 29, 29);
-    color: whitesmoke;
+    /* background-color: rgb(252, 236, 236); */
+    color: rgb(22, 22, 22);
     cursor: pointer;
 }
 
@@ -55,11 +55,11 @@
 }
 
 .orderBtn {
-    background-color: rgb(238, 238, 127);
-    border-radius: 10px;
-    font-size: larger;
-    font-weight: bold;
-    width: 60%;
+    background-color: rgb(238, 238, 237);
+    border-radius: 1.6rem;
+    font-size: large;
+    /* font-weight: bold; */
+    width: 50%;
     height: 10%;
     cursor: pointer;
 }
@@ -69,7 +69,6 @@
     font-size: larger;
 
 }
-
 
 .errorMsg {
     color: red;

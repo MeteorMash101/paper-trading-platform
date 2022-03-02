@@ -1,22 +1,37 @@
 .container {
     display: flex;
     flex-direction: column;
-    border: 2px solid rgb(27, 107, 24);
-    background-color: rgb(176, 230, 176);
-    width: 500px;
-    height: 400px;
-    margin: 2.5rem;
+    /* border: 1px solid rgb(173, 175, 173); */
+    /* background-color: rgb(176, 230, 176); */
+    /* margin: 2.5rem; */
+    /* height: 40vh; */
+    /* width: 40vh; */
     padding: 1rem 1rem;
     text-align: left;
 }
 
 
 .label {
-    margin: .3rem .3rem;
+    /* margin: .3rem .3rem; */
+    /* padding-bottom: 30px; */
+    color: grey;
 }
 
 .message {
-    color: rgb(224, 98, 98);
+    color: rgb(207, 200, 200);
+    margin-bottom: -10px;
     font-weight: bold;
     font-size: larger;
+}
+
+.heading{
+    text-align: center;
+}
+
+.userInfo{
+    padding-left: 25px;
+}
+
+.value{
+    font-weight: bolder;
 }

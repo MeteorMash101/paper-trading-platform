@@ -66,7 +66,7 @@ Area.propTypes = {
 
 Area.defaultProps = {
   data: [],
-  color: "white",
+  color: "#00BFFF",
   disableAnimation: false
 };
 
