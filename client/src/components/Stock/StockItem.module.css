@@ -67,8 +67,12 @@
 
 .upArrow {
     color: rgb(1, 255, 1);
+    position: absolute;
+    left: 85%;
 }
 
 .downArrow {
     color: rgb(255, 0, 0);
+    position: absolute;
+    left: 85%;
 }

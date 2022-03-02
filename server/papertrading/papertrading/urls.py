@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from stocks.views import StockList, StockDetail, StockHistData, TopStocks, PopularStocks, LivePrice, CompanyEarnings
-from accounts.views import AccountList, AccountDetail
+from accounts.views import AccountList, AccountDetail, AccountStocksOwned, AccountWatchList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # STOCKS URLS:
     path('stocks/', TopStocks.as_view()),
     path('stocks/popular/', PopularStocks.as_view()),
     # For single stock page
@@ -28,11 +29,13 @@ urlpatterns = [
     path("stocks/hist/<ticker>/", StockHistData.as_view()),
     path("stocks/getPrice/<ticker>/", LivePrice.as_view()),
     path("stocks/quarterlyEarnings/<ticker>/", CompanyEarnings.as_view()),
-    
+    # ACCOUNTS URLS:
     path('accounts/', AccountList.as_view()),
     path('accounts/<str:pk>/', AccountDetail.as_view()),
     path('accounts/new/', AccountDetail.as_view()),
-    path('auth/', include('drf_social_oauth2.urls', namespace='drf')),
-
-    path('orders/', include('orders.urls'))
+    # path('accounts/balance/', AccountBalance.as_view()),
+    # '/stocklist', 'watchlist', '/portval'
+    path('accounts/<str:goog_id>/getStocks/', AccountStocksOwned.as_view()),
+    path('accounts/<str:goog_id>/watchList/', AccountWatchList.as_view()),
+    path('auth/', include('drf_social_oauth2.urls', namespace='drf'))
 ]

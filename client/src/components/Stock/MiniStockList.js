@@ -1,10 +1,13 @@
 import classes from './MiniStockList.module.css';
+import MiniStockItem from './MiniStockItem';
+import { useContext } from 'react';
+import UserContext from '../../store/user-context';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import MiniStockItem from './MiniStockItem';
 
 const MiniStockList = ({title, usersStocksURL}) => {
-    const USING_DUMMY_DATA = true;
+	const userCtx = useContext(UserContext);
+    const USING_DUMMY_DATA = false;
   	const [usersStocks, setUsersStocks] = useState([
           {
             symbol: "AAPL",
@@ -27,17 +30,18 @@ const MiniStockList = ({title, usersStocksURL}) => {
             percent_change: "[%]",
             change_direction: "[+/-]"
           },
-      ]);
-  	useEffect(() => {
-		const fetchStocks = async () => {
-			const stocksFromServer = await axios.get(usersStocksURL)
-			console.log("[DEBUG]: user's stocks received from db:", stocksFromServer.data)
-			setUsersStocks(stocksFromServer.data)
-		}
-        if (!USING_DUMMY_DATA) {
-            fetchStocks()
-        }
-  	}, [])
+	]);
+	// EDIT: this isn't loading the first time comp. is mounted...
+	useEffect(() => async () => {
+		console.log('FETCHING stock_list_display...W/ USER CONTEXT:', userCtx)
+		const dataFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
+			params: {
+				info: "stock_list_display"
+			}    
+		})
+		console.log("stock_list_display DATA:", dataFromServer.data.stock_list)
+		setUsersStocks(dataFromServer.data.stock_list);
+	})
 	return (
 		<div className={classes.container}>
 			<h1 className={classes.title}>{title}</h1>

@@ -2,6 +2,8 @@ import classes from './OrderWidget.module.css';
 import { useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../store/user-context';
+import axios from 'axios';
+
 
 const OrderWidget = ({livePrice, stock}) => {
     const userCtx = useContext(UserContext);
@@ -22,7 +24,7 @@ const OrderWidget = ({livePrice, stock}) => {
     const setSharesHandler = (event) => {
         setShares(event.target.value);
     }
-    const stockOrderHandler = (event) => {
+    const stockOrderHandler = async (event) => {
         event.preventDefault();
         // Error handling
         if (orderType == "BUY" && estimatedCost > userCtx.balance) {
@@ -49,6 +51,14 @@ const OrderWidget = ({livePrice, stock}) => {
         }
         
         // post transaction log to db for this user
+        const dataFromServer = await axios.put(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`,
+            {
+                action: orderType.toLowerCase(),
+                stock: stock.symbol,
+                quantity: shares
+            }
+        )
+        console.log("SUCCESS:", dataFromServer.data)
 
         userCtx.setBalance(estimatedCost);
         setShares(1);

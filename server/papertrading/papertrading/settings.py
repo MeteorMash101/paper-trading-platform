@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     # My apps
     'stocks',
     'accounts',
-    'orders',
     # CORS
     'corsheaders',
     # django rest framework

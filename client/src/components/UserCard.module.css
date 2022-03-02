@@ -15,6 +15,16 @@
     margin: .3rem .3rem;
 }
 
+.labelPos {
+    margin: .3rem .3rem;
+    color: rgb(98, 224, 125);
+}
+
+.labelNeg {
+    margin: .3rem .3rem;
+    color: rgb(224, 102, 98);
+}
+
 .message {
     color: rgb(224, 98, 98);
     font-weight: bold;

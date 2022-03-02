@@ -10,25 +10,33 @@ import axios from 'axios';
 const Header = () => {
     const userCtx = useContext(UserContext);
     const onLoginHandler = async (userInfo) => { // workaround to 'only being able to use hooks inside func. component' rule.
-        userCtx.setName(userInfo.name);
-        userCtx.setUserID(userInfo.user_id);
-        userCtx.setIsLoggedIn(userInfo.isLoggedIn);
+        // userCtx.setName(userInfo.name);
+        // userCtx.setUserID(userInfo.user_id);
+        // userCtx.setIsLoggedIn(userInfo.isLoggedIn);
         // Balance & stocklist attributes are unique to each user, fetch those from db.
+        let accountFromServer;
         try {
-            let accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`)
-            console.log("ACCOUNT FETCHED: ", accountFromServer.data);
+            accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`)
             if (accountFromServer.data == "") {
                 console.log("ACC. NOT FOUND, CREATING NEW");
                 accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, {
                     name: userInfo.name,
                     email: userInfo.email,
-                    google_user_id: userInfo.user_id
-                    // default balance.
+                    google_user_id: userInfo.user_id,
+                    // default balance, pv, etc.
                 })
+            } else {
+                console.log("ACCOUNT FETCHED: ", accountFromServer.data);
             }
         } catch (err) {
             console.log("failed", err)
         }
+        userInfo.balance = accountFromServer.data.balance
+        // userInfo.portfolioValue = accountFromServer.data.portfolio_value
+        console.log("IN onLoginHandler", userInfo)
+        // userCtx.setBalanceOnLogin(accountFromServer.data.balance);
+        // userCtx.setPortfolioValue(accountFromServer.data.portfolio_value);
+        userCtx.setUserOnLogin(userInfo)
     };
     const onLogoutHandler = () => { // workaround to 'only being able to use hooks inside func. component' rule.
         userCtx.setDefault()

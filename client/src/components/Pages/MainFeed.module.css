@@ -15,6 +15,6 @@
 }
 
 .container {
-    border: 2px solid rgb(202, 178, 38);
+    /* border: 2px solid rgb(202, 178, 38); */
     display: flex;
 }

@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { RiArrowUpCircleFill, RiArrowDownCircleFill } from "react-icons/ri";
 
 
-const StockItem = ({symbol, shares, price, percent_change, change_direction}) => {
+const MiniStockItem = ({symbol, shares, price, percent_change, change_direction}) => {
     return (
         <div className={classes.container}>
             {/* <div className={classes.leftContainer}> */}
-                <h4 className={classes.symbol}>{symbol}</h4>
-                <p >{shares}</p>
+            <h4 className={classes.symbol}>{symbol}</h4>
+            <p >{shares}</p>
             {/* </div> */}
             {/* <p className={classes.price}>{price}</p>
             {
@@ -27,4 +27,4 @@ const StockItem = ({symbol, shares, price, percent_change, change_direction}) =>
     );
 };
 
-export default StockItem;
+export default MiniStockItem;

@@ -1,5 +1,5 @@
 .container {
-    border: 2px solid blueviolet;
+    /* border: 2px solid blueviolet; */
     display: flex;
     align-items: center;
     justify-content: space-evenly;

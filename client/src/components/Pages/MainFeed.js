@@ -3,8 +3,11 @@ import StockList from '../Stock/StockList.js';
 import UserCard from '../UserCard.js';
 import classes from './MainFeed.module.css';
 import UserStockList from '../UserStockList.js';
+import { useEffect } from 'react';
+import axios from 'axios';
 
 const MainFeed = ({stockList}) => {
+
   return (
     <div className={classes.container}>
       <div className={classes.listContainer}>
