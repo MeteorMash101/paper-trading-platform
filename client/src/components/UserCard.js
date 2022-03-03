@@ -7,6 +7,7 @@ import axios from 'axios';
 const UserCard = () => {
     const userCtx = useContext(UserContext);
     // const [pvFetched, setPvFetched] = useState(false);
+    const API_SWITCH = false;
     const MINUTE_MS = 3000; // 3 seconds
     useEffect(() => {
         const interval = setInterval(() => {
@@ -21,7 +22,9 @@ const UserCard = () => {
                 userCtx.setPortfolioInfo(pvDataFromServer.data);
                 // setPvFetched(true);
             }
-            fetchStock()
+            if (!API_SWITCH) {
+                fetchStock()
+            }
         }, MINUTE_MS);
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])

@@ -12,7 +12,7 @@ const MainFeed = ({stockList}) => {
     <div className={classes.container}>
       <div className={classes.listContainer}>
         <StockList title={"Top Movers..."} stockListURL={"http://127.0.0.1:8000/stocks/"}/>
-        <StockList title={"Popular Stocks..."} stockListURL={"http://127.0.0.1:8000/stocks/popular"}/>
+        <StockList title={"Popular Stocks..."} stockListURL={"http://127.0.0.1:8000/stocks/popular/"}/>
       </div>
       <div className={classes.userContainer}>
         <UserCard/>
