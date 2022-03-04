@@ -10,22 +10,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from stocks.financeAPI import stock_info as si
 
-class StockList(APIView):
-    """
-    List all stocks, or create a new stock.
-    """
-    def get(self, request):
-        stocks = Stock.objects.all()
-        serializer = StockSerializer(stocks, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = StockSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 '''For historical data for the specific stock'''
 class StockHistData(APIView):
     def get(self, request, ticker):
@@ -74,6 +58,24 @@ Ok we need to error check everything::
 The get_quote_data isn't guaranteed to have all the keys
 Hence everyone should be given alternative and if push comes to shove nothing
 '''
+
+
+#DEPRECATED
+class StockList(APIView):
+    """
+    List all stocks, or create a new stock.
+    """
+    def get(self, request):
+        stocks = Stock.objects.all()
+        serializer = StockSerializer(stocks, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = StockSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # DEPRECIATED
 # class StockDetail(APIView):

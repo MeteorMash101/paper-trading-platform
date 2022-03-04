@@ -42,16 +42,16 @@ class AccountDetail(APIView):
 
     def get_object(self, request, *args, **kwargs):
         print("IN GETOBJ...")
-        pk = self.kwargs.get('pk')
+        pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)
         except Account.DoesNotExist:
             return None
 
-    def get(self, request, pk):
+    def get(self, request, goog_id):
         
-        print("IN GET...w/ pk:", pk)
-        AccountObj = self.get_object(pk)
+        print("IN GET...w/ pk:", goog_id)
+        AccountObj = self.get_object(goog_id)
         # EDIT: don't understand
         if AccountObj != None: # account exists
             serializer = AccountSerializer(AccountObj)
@@ -61,16 +61,16 @@ class AccountDetail(APIView):
             print("Account not found, sending None...")
             return Response(None)
 
-    def put(self, request, pk):
-        Account = self.get_object(pk)
+    def put(self, request, goog_id):
+        Account = self.get_object(goog_id)
         serializer = AccountSerializer(Account, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk):
-        Account = self.get_object(pk)
+    def delete(self, request, goog_id):
+        Account = self.get_object(goog_id)
         Account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -81,8 +81,10 @@ class AccountDetail(APIView):
     Should be called on log in
     '''
     def loadPortfolioValueHistory(self, account):
-        if account.portfolio_value_history == None:
-            account.portfolio_value_history = {"data":{}}
+        #if account.portfolio_value_history == None:
+        #    account.portfolio_value_history = {"data":{}}
+        if account.portfolio_value_history == {}:
+            account.portfolio_value_history["data"] = {}
         if len(account.portfolio_value_history["data"].keys()) == 0:
             startDate = date.fromisoformat(account.start_date)
         else:
@@ -219,7 +221,8 @@ class AccountStocksOwned(APIView):
                 serializer = StockListSerializer({"stock_list":account.ownedStocks})
                 return Response(serializer.data)
             elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
-                numOfStock = self.countStock(account.ownedStocks, data["symbol"])
+                symbol = request.query_params.get("symbol", None)
+                numOfStock = self.countStock(account.ownedStocks, symbol)
                 serializer = StockNumSerializer({"quantity_owned":numOfStock})
                 return Response(serializer.data)
             elif data == "portfolio_value":             #returns just the portfolio value
@@ -260,8 +263,8 @@ class AccountStocksOwned(APIView):
             return Response(None)
 
         data = request.data
-        if account.ownedStocks == None:
-            account.ownedStocks = {} # EDIT: can we set this to default in model?
+        #if account.ownedStocks == None:
+        #    account.ownedStocks = {} # EDIT: can we set this to default in model?
         owned = account.ownedStocks
         if data["action"] == "buy":
             valid = self.purchaseStock(data, account)
@@ -329,11 +332,16 @@ class AccountStocksOwned(APIView):
             return False
         toSell = int(data["quantity"])
         while toSell > 0:
-            if toSell >= int(stockPurchases[0]["quantity"]):
+            if toSell > int(stockPurchases[0]["quantity"]):
                 toSell -= int(stockPurchases[0]["quantity"])
                 stockPurchases.pop(0)
+            elif toSell < int(stockPurchases[0]["quantity"]):
+                stockPurchases[0]["quantity"] = int(stockPurchases[0]["quantity"]) - toSell
+                toSell = 0
             else:
-                stockPurchases[0]["quantity"] = str(int(stockPurchases[0]["quantity"]) - toSell)
+                stockPurchases.pop(0)
+                if len(stockPurchases) == 0:
+                    owned.pop(data["stock"].lower())
                 toSell = 0
 
         newSale = {
@@ -373,14 +381,14 @@ class AccountStocksOwned(APIView):
         return percent_change
 
     def recordTransaction(self, account, type, details, symbol):
-        if account.transaction_history == None:
-            account.transaction_history = {"history":[]}
+        if account.transaction_history == {}:
+            account.transaction_history["history"] = []
         history = account.transaction_history
         # if "history" not in history.keys():
         #     history["history"] = []
         history["history"].append({
             "type": type,
-            "stock": symbol,
+            "stock": symbol.lower(),
             "quantity": details["quantity"], 
             "date": details["datePurchased"], 
             "stockPrice": details["purchasePrice"]
@@ -450,8 +458,10 @@ class AccountWatchList(APIView):
             return Response(None)
 
         data = request.data
-        if account.watchList == None:
-            account.watchList = {"stocks": []}
+        #if account.watchList == None:
+        #    account.watchList = {"stocks": []}
+        if account.watchList == {}:
+            account.watchList["stocks"] = []
         watched = account.watchList["stocks"]
         try:
             watched.pop(watched.index(data["symbol"]))
