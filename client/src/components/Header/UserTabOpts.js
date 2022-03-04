@@ -9,15 +9,13 @@ const UserTabOpts = ({onLogout}) => {
 
   return (
     <div className={classes.wrapper}>
-	  	{/* <Link to="/user" style={{ textDecoration: 'none' }}> */}
+	  	<Link to="/user" style={{ textDecoration: 'none' }}>
 			<button className={classes.selectOpt}>Profile</button>
-		{/* </Link> */}
+		</Link>
 			<button className={classes.selectOpt}>My Stocks</button>
 			<button className={classes.selectOpt}>History</button>
 			<button className={classes.selectOpt} onClick={onLogout}>Logout</button>
-
-
-		</div>
+	</div>
   );
 }
 
