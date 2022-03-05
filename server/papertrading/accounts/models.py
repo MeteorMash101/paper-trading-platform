@@ -18,10 +18,10 @@ class Account(models.Model):
 
     # EDIT: PV is client-side store only (dynamically changes)
     portfolio_value = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=0.00)
-    ownedStocks = models.JSONField(null=True)
-    watchList = models.JSONField(null = True)
-    transaction_history = models.JSONField(null = True)
-    portfolio_value_history = models.JSONField(null = True)
+    ownedStocks = models.JSONField(null=True, default = dict)
+    watchList = models.JSONField(null = True, default = dict)
+    transaction_history = models.JSONField(null = True, default = dict)
+    portfolio_value_history = models.JSONField(null = True, default = dict)
     start_date = models.CharField(max_length=50, null=True)
     
     def __str__(self):
