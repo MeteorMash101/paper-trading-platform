@@ -35,21 +35,21 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
   }
   return (
     <Link to={`/stock/${symbol}`} className={classes.stockLink}>
-      <div className={classes.container} onClick={() => console.log("Clicked on a stock.")}>
+      <div className={classes.container}>
         <h4 className={classes.symbol} id={colorStyle}>{symbol}</h4>
         <p className={classes.company_name}>{company_name}</p>
-        <p className={classes.price}>{livePrice}</p>
+        <p className={classes.price}> $ {livePrice}</p>
         {
           change_direction && <p className={classes.percent_change} id={classes.posChange}>+{percent_change}%</p>
         }
         {
-          change_direction && <BiUpArrow size={25} className={classes.upArrow}/>
+          change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
         }
         {
           !change_direction && <p className={classes.percent_change} id={classes.negChange}>{percent_change}%</p>
         }
         {
-          !change_direction && <BiDownArrow size={25} className={classes.downArrow}/>
+          !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
         }
         <GrAddCircle size={23} onClick={addToWatchListHandler}/>
         {/* {

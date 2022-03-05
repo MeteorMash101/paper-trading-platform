@@ -1,33 +1,44 @@
 .container {
-    /* border: 2px solid rgb(199, 89, 77); */
-    width: 800px;
+    /* border: 1px solid rgb(173, 173, 173); */
+    border-radius: 3%;
+    width: 1000px;
+    margin-top: 2%;
+    margin-left: 5%;
 }
 
 .title {
-    margin: .8rem 1.5rem;
+    /* margin: .8rem 1.5rem; */
     text-align: left;
+    padding: 10px;
+    margin-left: 30px;
 }
 
-#red {
-    background-color: rgb(230, 100, 100);
+#neutral_yellow {
+    background-color: rgb(235, 235, 175);
 }
 
+#neutral_blue {
+    background-color: rgb(176, 227, 243);
+}
+
+/* SAVING THESE BEUTIFUL KOLORS FOR OTHER PROJS xd */
+/* 
 #blue {
-    background-color: rgb(122, 122, 219);
-}
-
-#green {
-    background-color: rgb(119, 223, 119)
-}
-
-#yellow {
-    background-color: rgb(236, 236, 114);
-}
-
-#cyan {
-    background-color: rgb(130, 210, 235);
+    background-color: rgb(168, 168, 233);
 }
 
 #pink {
-    background-color: rgb(241, 136, 206);
+    background-color: rgb(240, 183, 221);
+} 
+
+stock.change_direction ? classes.green : classes.red
+#red {
+    background-color: rgb(231, 143, 143);
 }
+
+#green {
+    background-color: rgb(166, 233, 166)
+}
+
+
+*/

@@ -9,7 +9,7 @@ import "./styles.css";
 
 const portfolioData = {
   name: "Portfolio",
-  color: "#ffffff",
+  color: "grey",
   items: portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
 };
 const schcData = {

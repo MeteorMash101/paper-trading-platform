@@ -59,8 +59,7 @@ const OrderWidget = ({livePrice, stock}) => {
             }
         )
         console.log("SUCCESS:", dataFromServer.data)
-
-        userCtx.setBalance(estimatedCost);
+        userCtx.setBalance(estimatedCost); // EDIT: should be called 'updateBalance'
         setShares(1);
     }
     return ( 

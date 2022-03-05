@@ -8,7 +8,7 @@ const UserCard = () => {
     const userCtx = useContext(UserContext);
     // const [pvFetched, setPvFetched] = useState(false);
     const API_SWITCH = false;
-    const MINUTE_MS = 3000; // 3 seconds
+    const MINUTE_MS = 3000; // 3 seconds = 3000
     useEffect(() => {
         const interval = setInterval(() => {
             const fetchStock = async () => {
@@ -32,10 +32,12 @@ const UserCard = () => {
         // EDIT: THERE IS A BUG THE CONTEXT ONLY GETS UPDATED AFTER GOING TO DIF PAGE N COMING BACK...
         <div>
             <h1>Your Portfolio:</h1>
-            {!userCtx.isLoggedIn && <p className={classes.message}>Please login to see your personal stats...dummy data:</p>}
+            {!userCtx.isLoggedIn && <p className={classes.message}>Please login to see your personal stats</p>}
             <div className={classes.container}>
-            <h2 className={classes.label}>Portfolio Value: ${userCtx.portfolioInfo.portfolio_value}</h2>
-                <h2 className={classes.label}>Buying Power: ${userCtx.balance}</h2>
+                <h2 className={classes.label}>Portfolio Value:</h2>
+                <h2>${userCtx.portfolioInfo.portfolio_value}</h2>
+                <h2 className={classes.label}>Buying Power:</h2>
+                <h2>${userCtx.balance}</h2>
                 {userCtx.portfolioInfo.change_direction && <h5 className={classes.labelPos}>{userCtx.portfolioInfo.percent_change}%</h5>}
                 {!userCtx.portfolioInfo.change_direction && <h5 className={classes.labelNeg}>{userCtx.portfolioInfo.percent_change}%</h5>}
                 <p className={classes.label}>[Today]</p>

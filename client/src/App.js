@@ -5,7 +5,6 @@ import MainFeed from './components/Pages/MainFeed';
 import StockDetail from './components/Pages/StockDetail';
 import UserProfile from './components/Pages/UserProfile';
 
-
 const App = () => {
   return (
     <div className="App">    

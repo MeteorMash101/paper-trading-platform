@@ -1,3 +1,5 @@
+/* DEPRECIATED */
+
 .container {
     /* border: 1px solid rgb(241, 132, 132); */
     display: flex;
@@ -6,12 +8,13 @@
 
 .searchInput {
     width: 300px;
-    height: 50px;
-    font-size: 20px;
+    height: 37px;
+    font-size: 17px;
     background-color: rgb(255, 255, 255);
 }
 
 .searchBtn {
-    width: 20%;
-    height: 56px;
+    width: 13%;
+    height: 43px;
 }
+

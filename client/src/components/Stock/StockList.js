@@ -1,6 +1,6 @@
+import React, { useState, useEffect } from 'react';
 import classes from './StockList.module.css';
 import StockItem from './StockItem';
-import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const StockList = ({title, stockListURL}) => {
@@ -15,20 +15,19 @@ const StockList = ({title, stockListURL}) => {
 		}
 		fetchStocks()
   	}, []) // this DB retreival should only execute the first time this App is loaded.
-  	const randColor = [classes.red, classes.blue, classes.green, classes.yellow, classes.cyan, classes.pink] 
 	return (
 		<div className={classes.container}>
-			<h1 className={classes.title}>{title}</h1>
+			<h2 className={classes.title}>{title}</h2>
 			{stockList.map((stock) => ( // making sure array exists first.
 				<StockItem
-					colorStyle={randColor[Math.floor(Math.random() * 6)]}
+					colorStyle={classes.neutral_blue}
 					key={stock.id} // required for React warning...
 					stock_id={stock.id}
 					symbol={stock.symbol}
 					company_name={stock.company_name}
 					price={stock.price}
-					percent_change={stock.percent_change}
 					change_direction={stock.change_direction}
+					percent_change={stock.percent_change}
 				/>
 			))}
 		</div>

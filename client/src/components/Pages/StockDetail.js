@@ -45,15 +45,46 @@ const StockDetail = () => {
     }, [])
     return (
         <div className={classes.container}>
-            <h3>company name: {stock.company_name}</h3>
-            <h3 >price: <span className={classes.animate}>{livePrice}</span></h3>
-            <h3>average_volume: {stock.average_volume}</h3>
-            <h3>high_today: {stock.high_today}</h3>
-            <h3>low_today: {stock.low_today}</h3>
-            <Graph/>
-            <Chart/>
-            <OrderWidget livePrice={livePrice} stock={stock}/>
-            <KeyStats/>
+            <div className={classes.name}>
+                <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
+                <h3 className={classes.symbol}>{stock.symbol}</h3>
+            </div>
+
+            <div className={classes.wrapper1}>
+                <div className={classes.leftSec}>
+
+                    <div className={classes.graph}>
+                        <Graph/>
+                    </div>
+
+                    <div className={classes.wrapper}>
+                        <div className={classes.stats1}>
+                            <h4 className={classes.attribute}> Vol: <span className={classes.value}>{stock.volume} </span> </h4>
+                            <h4 className={classes.attribute}> High: <span className={classes.value}>{stock.high_today} </span> </h4>
+                            <h4 className={classes.attribute}> Low: <span className={classes.value}>{stock.low_today} </span> </h4>
+                        </div>
+
+                        <div className={classes.stats2}>
+                            <h4 className={classes.attribute}> Mkt Cap: <span className={classes.value}>{stock.market_cap} </span> </h4>
+                            <h4 className={classes.attribute}> P/E: <span className={classes.value}>{stock.pe_ratio} </span> </h4>
+                            <h4 className={classes.attribute}> Avg Vol: <span className={classes.value}>{stock.average_volume} </span> </h4>
+                        </div>
+
+                        <div className={classes.stats3}>
+                            <h4 className={classes.attribute}> 52W H: <span className={classes.value}>{stock.ft_week_high} </span> </h4>
+                            <h4 className={classes.attribute}> 52W L: <span className={classes.value}>{stock.ft_week_low} </span> </h4>
+                            <h4 className={classes.attribute}> Yeild: <span className={classes.value}>{stock.dividend_yield} </span> </h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={classes.rightSec}>
+                    <OrderWidget livePrice={livePrice} stock={stock}/>
+                </div>
+                
+            </div>        
+            {/* <Chart/> */}
+            {/* <KeyStats/> */}
         </div>
     );
 }
