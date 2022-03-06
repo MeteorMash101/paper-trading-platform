@@ -17,7 +17,7 @@ const MainFeed = ({stockList}) => {
         </div>        
       </div>
       {/* <UserCard/> */}
-      <NewsCard/>
+      {/* <NewsCard/> */}
     </div>
   );
 }

@@ -19,12 +19,12 @@ const useController = ({ data, width, height }) => {
   );
 
   const yMin = useMemo(
-    () => d3.min(data, ({ items }) => d3.min(items, ({ value }) => value)),
+    () => d3.min(data, ({ items }) => d3.min(items, ({ open }) => open)),
     [data]
   );
 
   const yMax = useMemo(
-    () => d3.max(data, ({ items }) => d3.max(items, ({ value }) => value)),
+    () => d3.max(data, ({ items }) => d3.max(items, ({ open }) => open)),
     [data]
   );
 

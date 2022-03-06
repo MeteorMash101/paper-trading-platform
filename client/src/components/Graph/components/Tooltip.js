@@ -33,7 +33,7 @@ const Tooltip = ({
       const tooltipContent = d3.select(ref.current).select(".tooltipContent");
       tooltipContent.attr("transform", (cur, i, nodes) => {
         const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
-        const translateX = nodeWidth + x > width ? x - nodeWidth - 12 : x + 8;
+        const translateX = nodeWidth + x > width ? x - nodeWidth - 5 : x + 10;
         return `translate(${translateX}, ${-margin.top})`;
       });
       tooltipContent
@@ -48,7 +48,7 @@ const Tooltip = ({
     const contentBackground = d3
       .select(ref.current)
       .select(".contentBackground");
-    contentBackground.attr("width", 125).attr("height", 40);
+    contentBackground.attr("width", 150).attr("height", 40);
 
     // calculate new background size
     const tooltipContentElement = d3
@@ -59,18 +59,20 @@ const Tooltip = ({
 
     const contentSize = tooltipContentElement.getBoundingClientRect();
     contentBackground
-      .attr("width", contentSize.width + 8)
+      .attr("width", contentSize.width + 15)
       .attr("height", contentSize.height + 4);
   }, []);
 
   const onChangePosition = React.useCallback((d, i, isVisible) => {
     d3.selectAll(".performanceItemValue")
       .filter((td, tIndex) => tIndex === i)
-      .text(isVisible ? formatPercent(d.value) : "");
+      .text(isVisible ? (d.volume) : "");
+      // .text(isVisible ? formatPercent(d.volume) : "");
+
     d3.selectAll(".performanceItemMarketValue")
       .filter((td, tIndex) => tIndex === i)
       .text(
-        d.marketvalue && !isVisible ? "No data" : formatPriceUSD(d.marketvalue)
+        d.open && !isVisible ? "No data" : formatPriceUSD(d.open)
       );
 
     const maxNameWidth = d3.max(
@@ -81,13 +83,13 @@ const Tooltip = ({
       "transform",
       (datum, index, nodes) =>
         `translate(${
-          nodes[index].previousSibling.getBoundingClientRect().width + 14
+          nodes[index].previousSibling.getBoundingClientRect().width + 17
         },4)`
     );
 
     d3.selectAll(".performanceItemMarketValue").attr(
       "transform",
-      `translate(${maxNameWidth + 60},4)`
+      `translate(${maxNameWidth + 80},4)`
     );
   }, []);
 
@@ -105,7 +107,7 @@ const Tooltip = ({
         const d0 = data[i].items[index - 1];
         const d1 = data[i].items[index];
         const d = xDate - d0?.date > d1?.date - xDate ? d1 : d0;
-        if (d.date === undefined && d.value === undefined) {
+        if (d.date === undefined && d.open === undefined) {
           // move point out of container
           return "translate(-100,-100)";
         }
@@ -118,7 +120,7 @@ const Tooltip = ({
         if (xPos !== baseXPos) {
           isVisible = false;
         }
-        const yPos = yScale(d.value);
+        const yPos = yScale(d.open);
 
         onChangePosition(d, i, isVisible);
 
@@ -163,7 +165,7 @@ const Tooltip = ({
     <g ref={ref} opacity={0} {...props}>
       <line className="tooltipLine" />
       <g className="tooltipContent">
-        <rect className="contentBackground" rx={4} ry={4} opacity={0.2} />
+        <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
           {data.map(({ name, color }, i) => (

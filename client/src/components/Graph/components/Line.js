@@ -70,7 +70,7 @@ const Line = ({
   const line = d3
     .line()
     .x((d) => xScale(d.date))
-    .y((d) => yScale(d.value));
+    .y((d) => yScale(d.open));
 
   const d = line(data);
 
@@ -93,7 +93,7 @@ Line.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       date: PropTypes.date,
-      value: PropTypes.number
+      open: PropTypes.number
     })
   ),
   color: PropTypes.string,

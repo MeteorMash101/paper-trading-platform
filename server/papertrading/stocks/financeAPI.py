@@ -25,11 +25,11 @@ class stock_info:
 
     @staticmethod
     def get_stock_historical_data(ticker):
-        data = si.get_data(ticker)
+        data = si.get_data(ticker, "2021-03-15")
         data.reset_index(level=0, inplace=True)
         data.rename(columns={"index": "date"}, inplace = True)
         data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
-        data = data.drop(columns = ["ticker"])
+        data = data.drop(columns = ["ticker", "high", "low", "close", "adjclose"])
         jsonData = {
             "historical_data": data.to_dict("records")
         }

@@ -19,7 +19,7 @@
 
 .tooltip text {
   font-size: 12px;
-  fill: #817f7f;
+  fill: #0a0a0a;
 }
 
 .tooltipLine {
@@ -29,11 +29,11 @@
 
 .tooltipContent .contentTitle {
   font-weight: bold;
-  color: grey;
+  color: rgb(190, 190, 190);
 }
 
 .tooltipLinePoint {
-  fill: #cdcece;
+  fill: #57caca;
 }
 
 .legendContainer {

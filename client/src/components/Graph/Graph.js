@@ -6,24 +6,43 @@ import schc from "./SCHC.json";
 import vcit from "./VCIT.json";
 import portfolio from "./portfolio.json";
 import "./styles.css";
+import { useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const portfolioData = {
-  name: "Portfolio",
-  color: "grey",
-  items: portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-};
-const schcData = {
-  name: "SCHC",
-  color: "#d53e4f",
-  items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
-};
-const vcitData = {
-  name: "VCIT",
-  color: "#5e4fa2",
-  items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
-};
 
-export default function Graph() {
+export default function Graph({stockURL}) {
+
+  const [stock, setStock] = useState("");
+  let StockSymbol = 'goog';
+
+  useEffect(() => {
+    const fetchStock = async () => {
+        const stockFromServer = await axios.get(stockURL)
+        // const jsonResponse = await stockFromServer.json();
+        console.log("[DEBUG]: history stock received from db:", stockFromServer.data)
+        setStock(stockFromServer.data)
+    }
+    fetchStock()
+}, [])
+  
+  const portfolioData = {
+    name: "Portfolio",
+    color: "grey",
+    items: stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+    
+  };
+  const schcData = {
+    name: "SCHC",
+    color: "#d53e4f",
+    items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+  const vcitData = {
+    name: "VCIT",
+    color: "#5e4fa2",
+    items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
   const [selectedItems, setSelectedItems] = React.useState([]);
   const legendData = [portfolioData, schcData, vcitData];
   const chartData = [
