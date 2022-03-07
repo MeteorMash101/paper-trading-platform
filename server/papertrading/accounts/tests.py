@@ -50,9 +50,6 @@ class StockListTestCases(TestCase):
         expectedResult = {"dis": [{"quantity": 1, "datePurchased": "2022-02-15", "purchasePrice": stockPrice}]}
         self.assertEqual(expectedResult, user.ownedStocks)
 
-    
-    #TEST NOT DONE, TRANSACTION HISTORY IS STORED USING INPUT, BUT WE SHOULD MAKE ALL TICKERS LOWER CASE
-    #Well maybe, idk if it matters but consistency right
     @patch('stocks.financeAPI.Stock_info.get_live_price')
     @mock.patch('accounts.views.datetime', FakeDate)
     def test_buy_share_transaction_history(self, livePriceAPI):
@@ -82,7 +79,7 @@ class StockListTestCases(TestCase):
     #Buy the same stock back to back
     @patch('stocks.financeAPI.Stock_info.get_live_price')
     @mock.patch('accounts.views.datetime', FakeDate)
-    def test_buy_share_some_owned(self, livePriceAPI):
+    def test_buy_share_some_owned_raw_data(self, livePriceAPI):
         """Checking that multiple separate purchases of the same stock are put in the list correctly"""
         self.createTestUser()
         (price1, price2) = (123.50, 123.77)
@@ -205,7 +202,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(data["quantity_owned"], 13)
     
     ###########################################################################
-    #Testing the buy functionality
+    #Testing the display stock list functionality
     ###########################################################################
     def test_stock_list_when_none_owned(self):
         self.createTestUser()
@@ -270,8 +267,6 @@ class StockListTestCases(TestCase):
     ###########################################################################
     #Testing the portfolio current value functionality
     ###########################################################################
-    #reverse("accounts:ownedStockList", args=(goog_id, ))
-    #get(url, data = {"info": "portfolio_value"})                          The portfolio value of the stocks they own with the percent change
     def test_portfolio_value_no_stocks(self):
         self.createTestUser()
         url = reverse("accounts:ownedStockList", args=("test", ))
@@ -297,37 +292,61 @@ class StockListTestCases(TestCase):
         pv = Client().get(url, data = {"info": "portfolio_value"}).json()
         expected = {"portfolio_value": str(stockPrice), "percent_change": str(round(100*(stockPrice - buyPrice)/buyPrice, 2)), 'change_direction': (stockPrice - buyPrice)/stockPrice > 0}
         self.assertEqual(pv, expected)
-        
-
-    def test_portfolio_value_many_stocks(self):
-        self.assertTrue(True)
-    '''
-    #reverse("accounts:ownedStockList", args=(goog_id, ))
-    #get(url, data = {"info": "stock_list_detailed"})                      the crazy list form
-    def test_raw_stock_list_when_none_owned(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_when_one_share_owned(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_multiple_purchases_single_stock(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_multiple_stocks(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_stocks_purchased_alternating(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_bought_and_sold_all(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_bought_and_sold_exact_purchase(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_bought_and_sold_less_than_purchase(self):
-        self.assertTrue(True)
-    def test_raw_stock_list_bought_and_sold_greater_than_purchase(self):
-        self.assertTrue(True)
-
-    '''
-
-
     
+    @patch('stocks.financeAPI.Stock_info.get_live_price')
+    def test_portfolio_value_many_stocks(self, livePriceAPI):
+        #Set up the fake API call
+        livePriceAPI.side_effect = [107.99, 14.29, 2574.29]
 
+        #Create fake User Data
+        self.createTestUser()
+        user = self.getTestUser()
+        user.ownedStocks = {"dis" : [{"quantity": 6, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
+                                     {"quantity": 3, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
+                            "f"   : [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 14.41}],
+                            "goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": 2684.99}]}
+        user.save()
+
+        url = reverse("accounts:ownedStockList", args=("test", ))
+        pv = Client().get(url, data = {"info": "portfolio_value"}).json()
+        expectedPrice = 107.99*9 + 14.29*7 + 2574.29*1
+        buyPrice = 103.41*6 + 105.29*3 + 14.41*7 + 2684.99*1
+        pvChange = round(100*(expectedPrice - buyPrice)/buyPrice, 2)
+        expected = {"portfolio_value": str(expectedPrice), "percent_change": str(pvChange), 'change_direction': pvChange > 0}
+        self.assertEqual(pv, expected)
+
+    ###########################################################################
+    #Testing the portfolio current value functionality
+    ###########################################################################
+    def test_raw_stock_list_when_none_owned(self):
+        self.createTestUser()
+        url = reverse("accounts:ownedStockList", args=("test", ))
+        ownedStocks = Client().get(url, data = {"info": "stock_list_detailed"}).json()
+        self.assertEqual(ownedStocks, {"stock_list": {}})
+
+    def test_raw_stock_list_many_owned(self):
+        #Create fake user data
+        self.createTestUser()
+        (price1, price2, price3, price4, price5, price6) = (123.50, 14.81, 2589.99, 14.90, 67.82, 15.00)
+        user = self.getTestUser()
+        user.ownedStocks = {"dis" : [{"quantity": 2, "datePurchased": "2022-02-01", "purchasePrice": price1}],
+                            "f"   : [{"quantity": 4, "datePurchased": "2022-02-02", "purchasePrice": price2},
+                                     {"quantity": 5, "datePurchased": "2022-02-04", "purchasePrice": price4},
+                                     {"quantity": 6, "datePurchased": "2022-02-06", "purchasePrice": price6}],
+                            "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
+                            "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}
+        user.save()        
+
+        #Test
+        url = reverse("accounts:ownedStockList", args=("test", ))
+        ownedStock = Client().get(url, data = {"info": "stock_list_detailed"}).json()
+        expected = {"stock_list": {"dis" : [{"quantity": 2, "datePurchased": "2022-02-01", "purchasePrice": price1}],
+                                   "f"   : [{"quantity": 4, "datePurchased": "2022-02-02", "purchasePrice": price2},
+                                            {"quantity": 5, "datePurchased": "2022-02-04", "purchasePrice": price4},
+                                            {"quantity": 6, "datePurchased": "2022-02-06", "purchasePrice": price6}],
+                                   "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
+                                   "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}}
+        self.assertEqual(ownedStock, expected)
     
 
 '''
@@ -369,7 +388,7 @@ class WatchListTestCases(TestCase):
     def test_get_detailed_watchlist_stock_info_when_many(self):
         self.assertTrue(True)
 '''
-'''
+
 ###############################################################################
 class GeneralAccountTestCases(TestCase):
 
@@ -390,29 +409,31 @@ class GeneralAccountTestCases(TestCase):
     #Note that balance is stored as a string for some reason
     def test_see_all_accounts_when_one(self):
         userData = {"user": None, "name": "Will", "email": "test@gmail.com", "google_user_id": "test",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None}
-        user = Account.objects.create(name = "Will", email = "test@gmail.com", google_user_id = "test")
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-01"}
+        user = Account.objects.create(name = "Will", email = "test@gmail.com", google_user_id = "test", 
+        watchList = {"stocks": []}, transaction_history = {"history": []}, portfolio_value_history = {"data": []},
+        start_date = "2022-02-01")
         user.save()
+        
         url = reverse("accounts:allAccounts")
         data = Client().get(url).json()
         self.assertTrue(len(data) == 1)
         self.assertEqual(data[0], userData)
 
-    #This isn't sorting to make sure it is truly ok but I think that is fine
     def test_see_all_accounts_when_many(self):
         userData = [{"user": None, "name": "Will", "email": "test1@gmail.com", "google_user_id": "test1",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-15"},
                     {"user": None, "name": "William", "email": "test2@gmail.com", "google_user_id": "test2",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-15"},
                     {"user": None, "name": "Billiam", "email": "test5@gmail.com", "google_user_id": "test5",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-17"},
                     {"user": None, "name": "Willy", "email": "test3@gmail.com", "google_user_id": "test3",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-26"},
                     {"user": None, "name": "Bill", "email": "test4@gmail.com", "google_user_id": "test4",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None}]
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-03-01"}]
         #Load data into database
         for acctInfo in userData:
-            user = Account.objects.create(name = acctInfo["name"], email = acctInfo["email"], google_user_id = acctInfo["google_user_id"])
+            user = Account.objects.create(name = acctInfo["name"], email = acctInfo["email"], google_user_id = acctInfo["google_user_id"], start_date = acctInfo["start_date"])
             user.save()
         #Make backend call
         url = reverse("accounts:allAccounts")
@@ -429,19 +450,19 @@ class GeneralAccountTestCases(TestCase):
     
     def test_see_existing_account_details(self):
         userData = [{"user": None, "name": "Will", "email": "test1@gmail.com", "google_user_id": "test1",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-15"},
                     {"user": None, "name": "William", "email": "test2@gmail.com", "google_user_id": "test2",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-15"},
                     {"user": None, "name": "Billiam", "email": "test5@gmail.com", "google_user_id": "test5",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-17"},
                     {"user": None, "name": "Willy", "email": "test3@gmail.com", "google_user_id": "test3",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-02-26"},
                     {"user": None, "name": "Bill", "email": "test4@gmail.com", "google_user_id": "test4",
-                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": None}]
+                    "balance": "5000.00", "portfolio_value": "0.00", "start_date": "2022-03-01"}]
         userToFind = userData[3]
         #Load data into database
         for acctInfo in userData:
-            user = Account.objects.create(name = acctInfo["name"], email = acctInfo["email"], google_user_id = acctInfo["google_user_id"])
+            user = Account.objects.create(name = acctInfo["name"], email = acctInfo["email"], google_user_id = acctInfo["google_user_id"], start_date = acctInfo["start_date"])
             user.save()
         url = reverse("accounts:details", args=(userToFind["google_user_id"], ))
         data = Client().get(url).json()
@@ -469,7 +490,7 @@ class GeneralAccountTestCases(TestCase):
         self.assertEqual(data.status_code, 200)
         #Have it send 404 error when people do this and then remove the above line and uncomment below
         #self.assertEqual(data.status_code, 404)
-'''
+
 
 '''
 print("Name:", user.name)

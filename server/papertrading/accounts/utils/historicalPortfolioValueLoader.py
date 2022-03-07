@@ -7,6 +7,8 @@ class PortfolioValue:
     def load(account):
         if account.portfolio_value_history == {}:
             account.portfolio_value_history["data"] = {}
+        if account.transaction_history == {}:
+            account.transaction_history["history"] = []
         startDate = PortfolioValue.__getStartDateToLoadFrom(account)
         PortfolioValue.__fillDatabase(account.portfolio_value_history["data"], startDate, account.transaction_history["history"])
         account.save()

@@ -56,7 +56,7 @@ class AccountDetail(APIView):
         # EDIT: don't understand
         if AccountObj != None: # account exists
             serializer = AccountSerializer(AccountObj)
-            PortfolioValue.load(AccountObj)                 #Loads the portfolio value
+            PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
             return Response(serializer.data)
         else: # account doesn't exist, create new
             print("Account not found, sending None...")
