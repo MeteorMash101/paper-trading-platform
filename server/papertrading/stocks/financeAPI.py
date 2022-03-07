@@ -2,7 +2,7 @@ from yahoo_fin import stock_info as si
 import threading
 import queue
 
-class stock_info:
+class Stock_info:
     
     @staticmethod
     def get_quote_data(ticker):
@@ -39,11 +39,20 @@ class stock_info:
         }
         return jsonData
 
+    #For that sweet sweet slight time gain
+    @staticmethod
+    def __live_data_for_threading(d, symbol):
+        d.append(si.get_live_price(symbol))
+
     @staticmethod
     def get_full_stock_stats(ticker):
         try:
+            d = []
+            t = threading.Thread(target=lambda ticker: Stock_info.__live_data_for_threading(d, ticker), args= (ticker,))
+            t.start()
             data = si.get_quote_data(ticker) #To catch assertion errors
-            live_price = si.get_live_price(ticker) #to catch keyerrors with the key "timestamp" (these can't be sold anyways)
+            t.join()
+            live_price = d[0]
         except:
             return {
                 "symbol": ticker,
@@ -64,18 +73,18 @@ class stock_info:
             }
         jsonData = {
             "symbol": ticker,
-            "company_name": stock_info.__getName(data, ticker),
+            "company_name": Stock_info.__getName(data, ticker),
             "price": live_price,
-            "low_today": stock_info.__getDayLow(data),
-            "high_today": stock_info.__getDayHigh(data),
+            "low_today": Stock_info.__getDayLow(data),
+            "high_today": Stock_info.__getDayHigh(data),
             "percent_change": data["regularMarketChangePercent"],
             "change_direction": data["regularMarketChangePercent"] > 0,
-            "ft_week_high": stock_info.__ftWeekHigh(data),
-            "ft_week_low": stock_info.__ftWeekLow(data),
-            "volume": stock_info.__getMarketVol(data),
-            "average_volume": stock_info.__getAvgVol(data),
-            "pe_ratio": stock_info.__getPE(data),
-            "market_cap": stock_info.__getMarketCap(data),
+            "ft_week_high": Stock_info.__ftWeekHigh(data),
+            "ft_week_low": Stock_info.__ftWeekLow(data),
+            "volume": Stock_info.__getMarketVol(data),
+            "average_volume": Stock_info.__getAvgVol(data),
+            "pe_ratio": Stock_info.__getPE(data),
+            "market_cap": Stock_info.__getMarketCap(data),
             "revenue": 0.00000,
             "dividend_yield": 0.00000
         }
@@ -89,7 +98,7 @@ class stock_info:
         q = queue.Queue()
         threads = []
         for symbol in symbols[:10]:
-            t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
+            t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
             t.start()
             threads.append(t)
         for thread in threads:
@@ -104,7 +113,7 @@ class stock_info:
         q = queue.Queue()
         threads = []
         for symbol in POPULAR_STOCKS:
-            t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
+            t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
             t.start()
             threads.append(t)
         for thread in threads:
@@ -118,11 +127,11 @@ class stock_info:
         data = si.get_quote_data(ticker)
         jsonData = {
             "symbol": ticker,
-            "company_name": stock_info.__getName(data, ticker),
+            "company_name": Stock_info.__getName(data, ticker),
             "price": si.get_live_price(ticker),
             "percent_change": data["regularMarketChangePercent"],
             "change_direction": data["regularMarketChangePercent"] > 0,
-            "volume": stock_info.__getMarketVol(data)
+            "volume": Stock_info.__getMarketVol(data)
         }
         q.put(jsonData)
 
@@ -133,7 +142,7 @@ class stock_info:
         q = queue.Queue()
         threads = []
         for symbol in symbols:
-            t = threading.Thread(target=lambda ticker: stock_info.__queueJSON(q, ticker), args= (symbol,))
+            t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
             t.start()
             threads.append(t)
         for thread in threads:

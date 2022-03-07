@@ -3,14 +3,13 @@
 from this import d
 from accounts.models import Account
 from accounts.serializers import AccountSerializer, StockListSerializer, StockNumSerializer, PortfolioValueSerializer, TransactionHistorySerializer, BoolSerializer
-from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from stocks.financeAPI import stock_info as si
+from stocks.financeAPI import Stock_info as si
 from datetime import datetime, date, timedelta
 from decimal import Decimal
-from accounts.utils.portfolioValueLoader import PortfolioValue
+from accounts.utils.historicalPortfolioValueLoader import PortfolioValue
 
 from django.contrib.auth.models import User # we are extending Django's User
 
@@ -197,35 +196,47 @@ class AccountStocksOwned(APIView):
         return quantity
 
     #Adds the purchase of the stock to the list
+    # EDIT: This will likely be changed to accept the price from the frontend
+    #       making it really easy to test since we just give it the price
     def __purchaseStock(self, data, account):
-        print("HERE DATA IN PS:, ", data)
+        #While we don't send marketPrice from the frontend, just allow for it to be sent
+        if "marketPrice" in data.keys():
+            price = float(data["marketPrice"])
+        else:
+            price = si.get_live_price(data["stock"])
+
         owned = account.ownedStocks
         newPurchase = {
             "quantity": data["quantity"],
             "datePurchased": datetime.today().strftime("%Y-%m-%d"),
-            "purchasePrice": si.get_live_price(data["stock"])
+            "purchasePrice": price
         }
         if data["stock"].lower() in owned.keys():   #if the user already owns some stock
                 owned[data["stock"].lower()].append(newPurchase) #Convert to getting from server
         else:   #create new entry in the dictionary for the stock
             owned[data["stock"].lower()] = [newPurchase]
         self.__recordTransaction(account, "buy", newPurchase, data["stock"])
-        account.balance -= Decimal.from_float(float(data["quantity"])*si.get_live_price(data["stock"])) # EDIT: live price here cud be dif!, use same.
+        account.balance -= Decimal.from_float(float(data["quantity"])*price)
         return True
     
-    # EDIT: understnd this  ab it mroe
+    # EDIT: understnd this a bit mroe
+    # EDIT: This will accept the front end value for the stock?
     #Sells the given amount of stock
     #enough stock being owned is checked for in the client
+    #Format of a single stock would be:
+    '''
+    {"aapl": [{"quantity": "2", "datePurchased": "2022-03-04", "purchasePrice": 56.150001525878906},
+              {"quantity": "4", "datePurchased": "2022-03-05", "purchasePrice": 57.186511155551367}]}
+    '''
+    #So selling starts with the top (first) element in the list and removes as much as it can from there.
+    #If it removes all the list elements, it will delete the stock name from the dictionary (deleting "aapl").
     def __sellStock(self, data, account):
         owned = account.ownedStocks
-        if data["stock"].lower() not in owned.keys():
-            return False
+        self.__stockPurchasesExist(data["stock"], owned)
         stockPurchases = owned[data["stock"].lower()]
-        if len(stockPurchases) == 0:
-            return False
         toSell = int(data["quantity"])
         while toSell > 0:
-            if toSell > int(stockPurchases[0]["quantity"]):
+            if toSell > int(stockPurchases[0]["quantity"]): #If
                 toSell -= int(stockPurchases[0]["quantity"])
                 stockPurchases.pop(0)
             elif toSell < int(stockPurchases[0]["quantity"]):
@@ -235,17 +246,32 @@ class AccountStocksOwned(APIView):
                 toSell = 0
                 stockPurchases.pop(0)
                 if len(stockPurchases) == 0:
-                    owned.pop(data["stock"])
+                    owned.pop(data["stock"].lower())
+
+        #While we aren't guaranteed to pass marketPrice we'll just provide the option
+        #Is this safe? Like it allows people to essentially buy the stock at whatever price they want
+        #While it makes no sense for people to want to do this they could for competitions
+        if "marketPrice" in data.keys():
+            price = float(data["marketPrice"])
+        else:
+            price = si.get_live_price(data["stock"])
 
         newSale = {
             "quantity": data["quantity"],
             "datePurchased": datetime.today().strftime("%Y-%m-%d"),
-            "purchasePrice": si.get_live_price(data["stock"])
+            "purchasePrice": price           
         }
         self.__recordTransaction(account, "sell", newSale, data["stock"])
-        account.balance += Decimal.from_float(float(data["quantity"]) * si.get_live_price(data["stock"]))
+        account.balance += Decimal.from_float(float(data["quantity"]) * price)
         return True
     
+    def __stockPurchasesExist(self, stock, owned):
+        if stock.lower() not in owned.keys():
+            return False
+        if len(owned[stock.lower()]) == 0:
+            return False
+        return True
+
     #For displaying owned stocks on the home page, this returns the JSON for it
     def __ownedStocksForDisplay(self, owned):
         stocks = []
@@ -254,12 +280,11 @@ class AccountStocksOwned(APIView):
             totOwned = 0
             for purchase in owned[symbol]:
                 totOwned += int(purchase["quantity"])
-            price = price_and_percent[symbol]["price"]
             percent_change = price_and_percent[symbol]["percent_change"]
             stocks.append({
                 "symbol": symbol,
                 "shares": totOwned,
-                "price": price,
+                "price": price_and_percent[symbol]["price"],
                 "percent_change": percent_change,
                 "change_direction": percent_change > 0
             })
@@ -278,10 +303,7 @@ class AccountStocksOwned(APIView):
     def __recordTransaction(self, account, type, details, symbol):
         if account.transaction_history == {}:
             account.transaction_history["history"] = []
-        history = account.transaction_history
-        # if "history" not in history.keys():
-        #     history["history"] = []
-        history["history"].append({
+        account.transaction_history["history"].append({
             "type": type,
             "stock": symbol.lower(),
             "quantity": details["quantity"], 

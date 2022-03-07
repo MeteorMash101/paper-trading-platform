@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from stocks.financeAPI import stock_info as si
+from stocks.financeAPI import Stock_info as si
 
 class PortfolioValue:
     
@@ -96,9 +96,9 @@ class PortfolioValue:
                 currentlyOwned[symbol] = int(currentlyOwned[symbol]) - int(quantity)
         else:
             if symbol in currentlyOwned:
-                currentlyOwned[symbol] += quantity
+                currentlyOwned[symbol] += int(quantity)
             else:
-                currentlyOwned[symbol] = quantity
+                currentlyOwned[symbol] = int(quantity)
 
     #Returns the value of the stocks on the given day
     @staticmethod
