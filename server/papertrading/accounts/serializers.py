@@ -26,3 +26,6 @@ class TransactionHistorySerializer(serializers.Serializer):
 
 class BoolSerializer(serializers.Serializer):
     isPresent = serializers.BooleanField()
+
+class HistoricPortfolioValueSerializer(serializers.Serializer):
+    pv = serializers.JSONField()

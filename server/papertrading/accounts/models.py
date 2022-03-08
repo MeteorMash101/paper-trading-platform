@@ -12,16 +12,16 @@ class Account(models.Model):
     name = models.CharField(max_length=50, null=True)
     email = models.CharField(max_length=50, unique=True, null=True) # EDIT: add unique later
     google_user_id = models.CharField(max_length=50, unique=True, primary_key=True) # EDIT: just google ID for now...
-    MAX_DIGITS = 10000000000000 # EDIT: temp?
+    MAX_DIGITS = 1000 # EDIT: temp?
     # balance == 'buying power'
     balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=5000.00)
 
     # EDIT: PV is client-side store only (dynamically changes)
     portfolio_value = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=0.00)
-    ownedStocks = models.JSONField(null=True)
-    watchList = models.JSONField(null = True)
-    transaction_history = models.JSONField(null = True)
-    portfolio_value_history = models.JSONField(null = True)
+    ownedStocks = models.JSONField(null=True, default = dict)
+    watchList = models.JSONField(null = True, default = dict)
+    transaction_history = models.JSONField(null = True, default = dict)
+    portfolio_value_history = models.JSONField(null = True, default = dict)
     start_date = models.CharField(max_length=50, null=True)
     
     def __str__(self):
