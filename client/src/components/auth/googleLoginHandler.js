@@ -5,7 +5,7 @@ const baseURL = "http://localhost:8000";
 
 const googleLoginHandler = async (response) => {
   let userInfo = new Object();
-  console.log("res. obj: ", response.profileObj)
+  console.log("googleLoginHandler response profileObjj: ", response.profileObj)
   try {
     let res = await axios.post(`${baseURL}/auth/convert-token`, 
       {
@@ -16,7 +16,7 @@ const googleLoginHandler = async (response) => {
         client_secret: drfClientSecret,
       }
     )
-    console.log("res. data: ", res.data);
+    console.log("googleLoginHandler auth convert token res. data: ", res.data);
     const { access_token, refresh_token } = res.data;
     // Stored in local storage.
     localStorage.setItem("access_token", access_token);
@@ -26,10 +26,13 @@ const googleLoginHandler = async (response) => {
     userInfo.isLoggedIn = true;
     // For Account obj. instance
     userInfo.email = response.profileObj.email;
-
   } catch (err) {
-    console.log("ERROR: w/ Google login handler...", err);
+    console.log("ERROR: w/ googleLoginHandler...", err);
   }
+  // EDIT: temp. workaround for persistent User // (change this!)
+  localStorage.setItem("name", userInfo.name); 
+  localStorage.setItem("email", userInfo.email); 
+  localStorage.setItem("user_id", userInfo.user_id); 
   return userInfo
 };
 

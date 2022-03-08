@@ -1,10 +1,13 @@
 .container {
     /* border: 2px solid rgb(238, 138, 56); */
+    text-decoration: none;
     background-color: rgb(203, 209, 206);
+    color: rgb(182, 84, 4);
     border-radius: 10px;
     width: 300px;
-    height: 68px;
-    margin: .5rem .2rem;
+    height: 78px;
+    margin: .8rem .5rem;
+    padding: .2rem .2rem;
     display: flex;
     align-items: center;
 }
@@ -34,6 +37,11 @@
 
 .price {
     margin: 1rem 1rem;
+    color: black;
+}
+
+.shares {
+    font-weight: bold;
 }
 
 .posChange {

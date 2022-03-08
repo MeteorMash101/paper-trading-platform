@@ -8,12 +8,12 @@ const StockList = ({title, stockListURL}) => {
   	// From then on, ReactJS maintains separate state that is "in-sync" with the DB.
   	const [stockList, setStockList] = useState([]);
   	useEffect(() => {
-		const fetchStocks = async () => {
-			const stocksFromServer = await axios.get(stockListURL)
-			console.log("[DEBUG]: stocks received from db:", stocksFromServer.data)
-			setStockList(stocksFromServer.data)
+		const fetchData = async () => {
+			const dataFetched = await axios.get(stockListURL)
+			// console.log("[DEBUG]: stocks received from db:", stocksFromServer.data)
+			setStockList(dataFetched.data)
 		}
-		fetchStocks()
+		fetchData()
   	}, []) // this DB retreival should only execute the first time this App is loaded.
 	return (
 		<div className={classes.container}>

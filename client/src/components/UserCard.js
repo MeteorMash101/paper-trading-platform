@@ -6,28 +6,29 @@ import axios from 'axios';
 
 const UserCard = () => {
     const userCtx = useContext(UserContext);
-    // const [pvFetched, setPvFetched] = useState(false);
-    const API_SWITCH = false;
-    const MINUTE_MS = 3000; // 3 seconds = 3000
+    console.log("UserCard component re-rendered", userCtx)
+    // API CALL: Fetch User's PV.
     useEffect(() => {
-        const interval = setInterval(() => {
-            const fetchStock = async () => {
-                console.log('FETCHING PV...W/ USER CONTEXT:', userCtx)
-                const pvDataFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
-                    params: {
-                        info: "portfolio_value"
-                    }    
-                })
-                console.log("PV DATA:", pvDataFromServer.data)
-                userCtx.setPortfolioInfo(pvDataFromServer.data);
-                // setPvFetched(true);
-            }
-            if (!API_SWITCH) {
-                fetchStock()
-            }
-        }, MINUTE_MS);
-        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-    }, [])
+        if (!userCtx.isLoggedIn) {
+			userCtx.setPortfolioInfo({
+                portfolio_value: "0.00",
+                percent_change: "%",
+                change_direction: false,
+            });
+			return
+		}
+        const fetchData = async () => {
+            console.log('FETCHING USERS PV...W/ CONTEXT:\n', userCtx)
+            const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
+                params: {
+                    info: "portfolio_value"
+                }
+            })
+            userCtx.setPortfolioInfo(dataFetched.data);
+            console.log('userCtx PV Info set.') // EDIT: this should happen on every page re-load for now...?
+        }
+        fetchData()
+    }, [userCtx.isLoggedIn]);
     return ( 
         // EDIT: THERE IS A BUG THE CONTEXT ONLY GETS UPDATED AFTER GOING TO DIF PAGE N COMING BACK...
         <div>

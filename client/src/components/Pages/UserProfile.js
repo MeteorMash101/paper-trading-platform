@@ -7,11 +7,6 @@ import { Box } from '@material-ui/core';
 import StockHoldings from '../User/stockHoldings';
 import classes from './UserProfile.module.css';
 import MiniInfoBox from './MiniInfoBox';
-import BarItem from './BarItem';
-import { FaHome, FaSitemap } from "react-icons/fa";
-import { IoFastFoodSharp } from "react-icons/io5";
-import { GiNightSleep } from "react-icons/gi";
-import { AiOutlineSetting } from "react-icons/ai";
 
 const UserProfile = () => {
     const userCtx = useContext(UserContext);

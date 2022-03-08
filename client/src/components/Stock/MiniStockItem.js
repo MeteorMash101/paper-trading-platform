@@ -5,7 +5,7 @@ import { RiArrowUpCircleFill, RiArrowDownCircleFill } from "react-icons/ri";
 
 const MiniStockItem = ({symbol, shares, price, percent_change, change_direction}) => {
     return (
-        <div className={classes.container}>
+        <Link to={`/stock/${symbol}`} className={classes.container}>
             <div className={classes.leftContainer}>
                 <div className={classes.symbol}>{symbol}</div>
                 <div className={classes.shares}>x{shares}</div>
@@ -23,7 +23,7 @@ const MiniStockItem = ({symbol, shares, price, percent_change, change_direction}
             {/* {
             !change_direction && <RiArrowDownCircleFill size={25} className={classes.downArrow}/>
             } */}
-        </div>
+        </Link>
     );
 };
 

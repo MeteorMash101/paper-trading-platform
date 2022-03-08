@@ -24,11 +24,14 @@
     height: 13%;
 }
 
+/* EDIT: ADD MORE FLAIR TO LABELS PLZ  */
 .buyLabel {
     display: flex;
     align-items: center;
     justify-content: center;
     border-bottom: 2px solid rgb(150, 236, 183);
+    /* margin: 0 0; */
+    box-sizing: content-box;
     width: 50%;
     height: 100%;
     /* background-color: rgb(124, 126, 124); */
@@ -72,4 +75,8 @@
 
 .errorMsg {
     color: red;
+}
+
+.sharesAvailMsg {
+    color: rgb(98, 38, 98);
 }

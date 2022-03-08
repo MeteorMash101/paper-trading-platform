@@ -1,7 +1,6 @@
 import classes from './OrderWidget.module.css';
-import { useState } from 'react';
-import { useContext } from 'react';
 import UserContext from '../store/user-context';
+import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
 
@@ -9,16 +8,35 @@ const OrderWidget = ({livePrice, stock}) => {
     const userCtx = useContext(UserContext);
     const [orderType, setOrderType] = useState("BUY");
     const [shares, setShares] = useState(1);
+    const [sharesOwned, setSharesOwned] = useState(0);
     const [errorMsg, setErrorMsg] = useState("");
+    useEffect(() => {
+		if (!userCtx.isLoggedIn || orderType != "SELL") {
+			return
+		}
+		const fetchData = async() => {
+            console.log(stock.symbol)
+			const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
+				params: {
+					info: "num_of_ticker_stocks",
+                    symbol: stock.symbol.toLowerCase()
+				}
+			})
+            setSharesOwned(dataFetched.data.quantity_owned)
+		}
+		fetchData()
+	}, [userCtx.isLoggedIn, userCtx.balance, orderType])
 
     // specific style ID.
     const orderTypeStyle = orderType == "BUY" ? classes.buy : classes.sell;
     const marketPrice = livePrice;
     let estimatedCost = parseFloat((marketPrice * shares).toFixed(2));
     const setBuyOrder = () => {
+        setErrorMsg("") // same as resetting
         setOrderType("BUY");
     }
     const setSellOrder = () => {
+        setErrorMsg("") // same as resetting
         setOrderType("SELL");
     }
     const setSharesHandler = (event) => {
@@ -31,10 +49,10 @@ const OrderWidget = ({livePrice, stock}) => {
             setErrorMsg("Invalid! Balance too low.")
             return // exit early.
         }
-        // if (orderType == "SELL" && shares > sharesUserOwns) {
-        //     setErrorMsg("Invalid! Not enough shares.")
-        //     return // exit early.
-        // }
+        if (orderType == "SELL" && shares > sharesOwned) {
+            setErrorMsg("Invalid! Not enough shares.")
+            return // exit early.
+        }
         setErrorMsg("")
         // EDIT: can't sell more shares than user owns...
         const stockOrder = {
@@ -59,7 +77,7 @@ const OrderWidget = ({livePrice, stock}) => {
             }
         )
         console.log("SUCCESS:", dataFromServer.data)
-        userCtx.setBalance(estimatedCost); // EDIT: should be called 'updateBalance'
+        userCtx.updateBalance(estimatedCost); // EDIT: should be called 'updateBalance'
         setShares(1);
     }
     return ( 
@@ -84,6 +102,7 @@ const OrderWidget = ({livePrice, stock}) => {
             <div className={classes.options}><h4>Estimated Cost: </h4><h4>{estimatedCost}</h4></div> 
             <button className={classes.orderBtn}>Submit Order</button>
             <div className={classes.options}><h4>Current Balance: </h4><h4>{userCtx.balance}</h4></div>
+            {orderType == "SELL" && <p className={classes.sharesAvailMsg}>{`You have ${sharesOwned} shares available`}</p>}
             {errorMsg != "" && <p className={classes.errorMsg}>{errorMsg}</p>}
         </form>
     );

@@ -219,7 +219,7 @@ class AccountStocksOwned(APIView):
                 serializer = StockListSerializer({"stock_list":account.ownedStocks})
                 return Response(serializer.data)
             elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
-                numOfStock = self.countStock(account.ownedStocks, data["symbol"])
+                numOfStock = self.countStock(account.ownedStocks, request.query_params.get('symbol', None))
                 serializer = StockNumSerializer({"quantity_owned":numOfStock})
                 return Response(serializer.data)
             elif data == "portfolio_value":             #returns just the portfolio value
@@ -418,19 +418,19 @@ class AccountStocksOwned(APIView):
 class AccountWatchList(APIView):
 
     def get(self, request, goog_id):
-        data = request.data
+        data = request.query_params
         print(data)
         account = self.get_object(goog_id)
         if account != None:
-            if data["info"] == "stocks":            #Returns a list of just the symbols for watch list stocks
+            if data.get('info', None) == "stocks": # Returns a list of just the symbols for watch list stocks
                 serializer = StockListSerializer({"stock_list":account.watchList["stocks"]})
                 return Response(serializer.data)
-            elif data["info"] == "detailed_stocks":        #returns list with each stock's price, percent change, and change direction
+            elif data.get('info', None) == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
                 detailedList = self.getWatchListStockInfo(account.watchList)
                 serializer = StockListSerializer({"stock_list":detailedList})
                 return Response(serializer.data)
-            elif data["info"] == "check_stock":
-                serializer = BoolSerializer({"isPresent": data["symbol"] in account.watchList["stocks"]})
+            elif data.get('info', None) == "check_stock":
+                serializer = BoolSerializer({"isPresent": data.get('symbol', None) in account.watchList["stocks"]})
                 return Response(serializer.data)
             else:
                 return Response(None)
