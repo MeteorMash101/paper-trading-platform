@@ -13,8 +13,8 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MainFeed/>} exact/>
         <Route path="/stock/:symbol" element={<StockDetail/>}/>
-        <Route path="/user" element = {<UserProfile/>}/>
-        {/* <Route path="/user" element={<UserProfile postsList={postsList}/>}/> */}
+        {/* /user/:user_id */}
+        <Route path="/user/" element={<UserProfile/>}/>
       </Routes>
     </div>
   );

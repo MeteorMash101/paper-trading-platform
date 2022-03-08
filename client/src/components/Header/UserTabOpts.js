@@ -15,9 +15,7 @@ const UserTabOpts = ({onLogout}) => {
 			<button className={classes.selectOpt}>My Stocks</button>
 			<button className={classes.selectOpt}>History</button>
 			<button className={classes.selectOpt} onClick={onLogout}>Logout</button>
-
-
-		</div>
+	</div>
   );
 }
 

@@ -1,0 +1,53 @@
+.container {
+    /* border: 2px solid rgb(238, 138, 56); */
+    background-color: rgb(179, 184, 181);
+    border-radius: 10px;
+    width: 120vh;
+    height: 68px;
+    margin: .5rem .2rem;
+    display: flex;
+    align-items: center;
+}
+
+.leftContainer {
+    /* border: 2px solid #4d55c7; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    height: 100%;
+}
+
+.symbol {
+    /* border: 2px solid rgb(0, 0, 0); */
+    background-color: rgb(202, 201, 201);
+    border-radius: 10px;
+    color: whitesmoke;
+    font-weight: bold;
+    width: 80%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.price {
+    margin: 1rem 1rem;
+}
+
+.posChange {
+    color: green;
+}
+
+.negChange {
+    color: red;
+}
+
+.upArrow {
+    color: green;
+}
+
+.downArrow {
+    color: red;
+}

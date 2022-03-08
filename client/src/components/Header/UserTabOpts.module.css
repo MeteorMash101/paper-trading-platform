@@ -13,13 +13,13 @@
 .selectOpt {
     border: 2px solid rgb(35, 37, 66);
     border-radius: 1px;
-    background-color: rgb(88, 93, 167);
+    background-color: rgb(160, 218, 241);
     color: white;
     width: 100%;
     min-height: 60px;
 }
 
 .selectOpt:hover {
-    background-color: rgb(139, 143, 200);
+    background-color: rgb(140, 193, 243);
     cursor: pointer;
 }

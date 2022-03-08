@@ -6,7 +6,8 @@
     /* margin: 2.5rem; */
     /* height: 40vh; */
     /* width: 40vh; */
-    padding: 1rem 1rem;
+    margin-top: -20px;
+    padding: 1.4rem 1.4rem;
     text-align: left;
 }
 
@@ -14,7 +15,18 @@
 .label {
     /* margin: .3rem .3rem; */
     /* padding-bottom: 30px; */
-    color: grey;
+    color: rgb(62, 189, 211);
+    font-weight: bold;
+}
+
+.labelPos {
+    margin: .3rem .3rem;
+    color: rgb(98, 224, 125);
+}
+
+.labelNeg {
+    margin: .3rem .3rem;
+    color: rgb(224, 102, 98);
 }
 
 .message {
@@ -24,14 +36,14 @@
     font-size: larger;
 }
 
-.heading{
+.heading {
     text-align: center;
 }
 
-.userInfo{
-    padding-left: 25px;
+.value {
+    font-weight: bolder;
 }
 
-.value{
-    font-weight: bolder;
+.main{
+    margin-top: -130px;
 }

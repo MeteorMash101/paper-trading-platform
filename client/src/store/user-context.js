@@ -10,10 +10,14 @@ const UserContext = React.createContext({
 	user_id: "", // Hidden, is this UUID?
 	isLoggedIn: false,
 	balance: 5000.00, // EDIT: temp. val for testing
+	portfolioInfo: {},
 	setName: (name) => {},
 	setUserID: (user_id) => {},
 	setIsLoggedIn: (isLoggedIn) => {},
 	setBalance: (amount) => {},
+	setBalanceOnLogin: (amount) => {},
+	setPortfolioValue: (portfolioInfo) => {},
+	setUserOnLogin: (userInfo) => {}, // EDIT: temp. for DEMO, brokenaf.
 	setDefault: () => {}
 	// EDIT: store sessions here?
 	// EDIT: add username opt?

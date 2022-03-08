@@ -21,9 +21,6 @@ class Stock(models.Model):
     ft_week_high = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     ft_week_low = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     revenue = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
-    # many to one relationship: "One user has many stocks", etc.
-    # stock_owners = models.ForeignKey(Account, on_delete=models.DO_NOTHING, related_name='stock_owners') 
-    # stock_watchers = models.ForeignKey(Account, on_delete=models.DO_NOTHING, related_name='stock_watchers')
 
     def __str__(self):
         return self.company_name

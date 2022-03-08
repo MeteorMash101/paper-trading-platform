@@ -1,28 +1,47 @@
-import { useContext } from 'react';
 import classes from './UserCard.module.css';
+import { useContext } from 'react';
 import UserContext from '../store/user-context';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const UserCard = () => {
     const userCtx = useContext(UserContext);
+    // const [pvFetched, setPvFetched] = useState(false);
+    const API_SWITCH = false;
+    const MINUTE_MS = 3000; // 3 seconds = 3000
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const fetchStock = async () => {
+                console.log('FETCHING PV...W/ USER CONTEXT:', userCtx)
+                const pvDataFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
+                    params: {
+                        info: "portfolio_value"
+                    }    
+                })
+                console.log("PV DATA:", pvDataFromServer.data)
+                userCtx.setPortfolioInfo(pvDataFromServer.data);
+                // setPvFetched(true);
+            }
+            if (!API_SWITCH) {
+                fetchStock()
+            }
+        }, MINUTE_MS);
+        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [])
     return ( 
-        <div>
-            {/* <h1>Your Portfolio:</h1> */}
+        // EDIT: THERE IS A BUG THE CONTEXT ONLY GETS UPDATED AFTER GOING TO DIF PAGE N COMING BACK...
+        <div className={classes.main}>
+            <h2 className={classes.heading}>Your Portfolio:</h2>
             {!userCtx.isLoggedIn && <p className={classes.message}>Please login to see your personal stats</p>}
             <div className={classes.container}>
-                {/* <h2 className={classes.heading}> OVERVIEW </h2> */}
-                <div className={classes.userInfo}>
-                    <h3 className={classes.label}>ACCOUNT VALUE: </h3>
-                    <h1><span className={classes.value}> ${userCtx.balance} </span></h1>
-                    <h3 className={classes.label}>BUYING POWER: </h3>
-                    <h1> <span className={classes.value}> ${userCtx.balance} </span> </h1>
-                    <h3 className={classes.label}>TODAY'S CHANGE: </h3>
-                    {/* hardcoded values, change eventually */}
-                    <h1><span className={classes.value}> + $0.00 </span></h1>
-                    <h3 className={classes.label}>OVERALL CHANGE: </h3>
-                    <h1><span className={classes.value}> + $0.00 </span></h1>
-                </div>
-                {/* <b>**[Insert Graph Here]**</b> */}
-                {/* <p className={classes.label}>More Info.</p> */}
+                <h2 className={classes.label}>Portfolio Value:</h2>
+                <h2>${userCtx.portfolioInfo.portfolio_value}</h2>
+                <h2 className={classes.label}>Buying Power:</h2>
+                <h2>${userCtx.balance}</h2>
+                {/* {userCtx.portfolioInfo.change_direction && <h5 className={classes.labelPos}>{userCtx.portfolioInfo.percent_change}%</h5>}
+                {!userCtx.portfolioInfo.change_direction && <h5 className={classes.labelNeg}>{userCtx.portfolioInfo.percent_change}%</h5>} */}
+                {/* <p className={classes.label}>[Today]</p>
+                <p className={classes.label}>More Info.</p> */}
             </div>
         </div>
     );

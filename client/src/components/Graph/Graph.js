@@ -14,7 +14,6 @@ import axios from 'axios';
 export default function Graph({stockURL}) {
 
   const [stock, setStock] = useState("");
-  let StockSymbol = 'goog';
 
   useEffect(() => {
     const fetchStock = async () => {
@@ -29,7 +28,9 @@ export default function Graph({stockURL}) {
   const portfolioData = {
     name: "Portfolio",
     color: "grey",
-    items: stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+    items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+    
     
   };
   const schcData = {

@@ -1,22 +1,35 @@
+.container {
+    /* border: 2px solid rgb(202, 178, 38); */
+    display: flex;
+    /* flex-direction: column; */
+    align-items: left;
+    justify-content: left;
+}
+
 .listContainer {
     /* border: 2px solid rgb(189, 255, 183); */
     display: flex;
     flex-direction: column;
-    height: auto;
+    /* height: auto; */
 }
 
-.container {
-    /* border: 2px solid rgb(202, 178, 38); */
+.list {
+    padding: 1.2rem;
+}
+
+.userContainer {
+    border: 1px solid rgb(158, 158, 158);
+    border-radius: 1.6rem;
+    width: 50vh;
+    height: max-content;
+    margin-top: 50px;
     display: flex;
-    align-items: left;
-    justify-content: left;
-
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
 }
 
-.list1{
-    padding: 20px;
+.userinfo{
+   margin-top: 14vh; 
 }
 
-.list2{
-    padding: 20px;
-}

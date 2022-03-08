@@ -1,3 +1,5 @@
+/* DEPRECIATED */
+
 import  React, { useState } from 'react';
 import classes from './SearchBar.module.css';
 import { AiOutlineSearch } from "react-icons/ai";

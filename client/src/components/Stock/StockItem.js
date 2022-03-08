@@ -1,6 +1,7 @@
 import classes from './StockItem.module.css';
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
+import { GrAddCircle } from "react-icons/gr";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -28,9 +29,13 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
       }, MINUTE_MS);
       return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [])
+  const addToWatchListHandler = (event) => {
+    console.log("added to WL");
+    // setShares(event.target.value);
+  }
   return (
     <Link to={`/stock/${symbol}`} className={classes.stockLink}>
-      <div className={classes.container} onClick={() => console.log("Clicked on a stock.")}>
+      <div className={classes.container}>
         <h4 className={classes.symbol} id={colorStyle}>{symbol}</h4>
         <p className={classes.company_name}>{company_name}</p>
         <p className={classes.price}> $ {livePrice}</p>
@@ -46,6 +51,10 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
         {
           !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
         }
+        <GrAddCircle size={23} onClick={addToWatchListHandler}/>
+        {/* {
+          !inWatchList && <IoIosCheckmarkCircleOutline size={23} onClick={addToWatchListHandler}/>
+        } */}
       </div>
     </Link>
   );

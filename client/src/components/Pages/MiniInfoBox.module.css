@@ -1,0 +1,24 @@
+.miniInfoBox {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    padding: 2px;
+    margin: 3%;
+}
+
+.label {
+    color: rgb(107, 215, 230);
+    font-size: x-large;
+    font-weight: bolder;
+}
+
+.val {
+    color: rgb(117, 117, 117);
+    font-weight: bold;
+    font-size: x-large;
+}
+
+.units {
+    color: rgb(136, 135, 135);
+    font-weight: lighter;
+}

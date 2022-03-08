@@ -54,7 +54,6 @@ const StockDetail = () => {
                 <div className={classes.leftSec}>
 
                     <div className={classes.graph}>
-                        {/* <Graph/> */}
                         <Graph stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
                     </div>
 
