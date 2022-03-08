@@ -26,7 +26,7 @@ class Stock_info:
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-
+    '''
     @staticmethod
     def get_stock_historical_data(ticker):
         data = si.get_data(ticker)
@@ -38,7 +38,20 @@ class Stock_info:
             "historical_data": data.to_dict("records")
         }
         return jsonData
-
+    '''
+    # EDIT this one provides data in the front end preferred style
+    # So maybe adjust above to do this but for now we just directly switch
+    @staticmethod
+    def get_stock_historical_data(ticker):
+        data = si.get_data(ticker, "2021-03-15")
+        data.reset_index(level=0, inplace=True)
+        data.rename(columns={"index": "date"}, inplace = True)
+        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
+        data = data.drop(columns = ["ticker", "high", "low", "close", "adjclose"])
+        jsonData = {
+            "historical_data": data.to_dict("records")
+        }
+        return jsonData
     #For that sweet sweet slight time gain
     @staticmethod
     def __live_data_for_threading(d, symbol):
@@ -107,9 +120,10 @@ class Stock_info:
         while not q.empty():
             stocks.append(q.get())
         return sorted(stocks, key = lambda x: x["volume"], reverse=True)
+    
     @staticmethod
     def get_popular_stocks():
-        POPULAR_STOCKS = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM"]
+        POPULAR_STOCKS = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM", "EBAY"]
         q = queue.Queue()
         threads = []
         for symbol in POPULAR_STOCKS:

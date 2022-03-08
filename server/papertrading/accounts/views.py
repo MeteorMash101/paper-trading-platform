@@ -2,7 +2,7 @@
 # Create your views here.
 from this import d
 from accounts.models import Account
-from accounts.serializers import AccountSerializer, StockListSerializer, StockNumSerializer, PortfolioValueSerializer, TransactionHistorySerializer, BoolSerializer
+from accounts.serializers import AccountSerializer, StockListSerializer, StockNumSerializer, PortfolioValueSerializer, TransactionHistorySerializer, BoolSerializer, HistoricPortfolioValueSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -109,6 +109,7 @@ class AccountStocksOwned(APIView):
         data = request.query_params.get('info', None)
         print("IN GET...w/ data", data)
         account = self.get_object(goog_id)
+        
         if account != None:
             if data == "stock_list_detailed":            #Returns list of all their transactions with stocks they currently own.
                 serializer = StockListSerializer({"stock_list":account.ownedStocks})
@@ -129,7 +130,11 @@ class AccountStocksOwned(APIView):
                 serializer = StockListSerializer({"stock_list":stockList})
                 return Response(serializer.data)
             elif data == "buying_power_history":
-                history = self.builBuyingPowerHistory(account)
+                history = self.buildBuyingPowerHistory(account)
+                serializer = TransactionHistorySerializer({"transaction_history":history})
+                return Response(serializer.data)
+            elif data == "transaction_history":
+                history = account.transaction_history["history"]
                 serializer = TransactionHistorySerializer({"transaction_history":history})
                 return Response(serializer.data)
             else:
@@ -312,7 +317,7 @@ class AccountStocksOwned(APIView):
         })
 
     # EDIT: need to understand this.
-    def builBuyingPowerHistory(self, account):
+    def buildBuyingPowerHistory(self, account):
         startDate = account.start_date
         if "history" not in account.transaction_history.keys():
             return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
@@ -326,16 +331,16 @@ class AccountStocksOwned(APIView):
         for transaction in history[::-1]:
             if transaction["date"] == curDate:
                 if transaction["type"] == "buy":
-                    balance += Decimal.from_float(transaction["quantity"]*transaction["stockPrice"])
+                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
                 else:
-                    balance -= Decimal.from_float(transaction["quantity"]*transaction["stockPrice"])
+                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
             else:
                 curDate = transaction["date"]
                 balanceHistory[curDate] = balance
                 if transaction["type"] == "buy":
-                    balance += Decimal.from_float(transaction["quantity"]*transaction["stockPrice"])
+                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
                 else:
-                    balance -= Decimal.from_float(transaction["quantity"]*transaction["stockPrice"])
+                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
         if startDate not in balanceHistory.keys():
             balanceHistory[startDate] = balance
         return {"data": balanceHistory}
@@ -411,3 +416,90 @@ class AccountWatchList(APIView):
                 "changedir": percent_change > 0
             })
         return stocks
+
+class AccountHistoricPV(APIView):
+    def get(self, request, goog_id):
+        account = self.get_object(goog_id)
+        
+        if account != None:
+            balanceHistory = self.buildBuyingPowerHistory(account)
+            performance = self.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
+            data = self.convertToListOfDicts(account.portfolio_value_history["data"])
+            
+            serializer = HistoricPortfolioValueSerializer({"pv":data})
+            return Response(serializer.data)
+        else:
+            print("Account not found, sending None...")
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+    # EDIT duplicate function
+    # Returns the account object
+    def get_object(self, request, *args, **kwargs):
+        print("IN GETOBJ...")
+        pk = self.kwargs.get('goog_id')
+        try:
+            return Account.objects.get(pk=pk)
+        except Account.DoesNotExist:
+            return None
+
+    #converts the portfolio value history into a format that frontend likes
+    def convertToListOfDicts(self, data):
+        returnList = []
+        for key, value in data.items():
+            returnList.append({"date": key, "value": value})
+        return returnList
+
+    #Adds the balance history to the portfolio value history
+    def addBalance(self, pv, balance):
+        balance = self.fillBalance(balance, sorted(pv.keys())[-1])
+
+        for key in pv.keys():
+            pv[key] = pv[key] + balance[key]*100
+        return pv
+
+    #Balance is a sparse dictionary, only made of dates that the balance changed
+    #This adds the balance for days inbetween, up until the end date
+    def fillBalance(self, balance, endDate):
+        for key in balance.keys():
+            balance[key] = round(balance[key], 2)
+        dates = sorted(balance, key=lambda x: balance[x], reverse=True)
+        day = datetime.fromisoformat(dates[0])
+        oneDay = timedelta(days=1)
+        endDate = datetime.fromisoformat(endDate)
+        while day <= endDate:
+            dayStr = day.strftime("%Y-%m-%d")
+            if dayStr in balance.keys():
+                curBalance = balance[dayStr]
+            else:
+                balance[dayStr] = curBalance
+            day += oneDay
+        return balance
+
+    # EDIT: need to understand this.
+    def buildBuyingPowerHistory(self, account):
+        startDate = account.start_date
+        if "history" not in account.transaction_history.keys():
+            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
+        history = account.transaction_history["history"]
+        if len(history) == 0:
+            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
+
+        balance = account.balance
+        balanceHistory = {datetime.today().strftime("%Y-%m-%d"): account.balance}
+        curDate = datetime.today().strftime("%Y-%m-%d")
+        for transaction in history[::-1]:
+            if transaction["date"] == curDate:
+                if transaction["type"] == "buy":
+                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
+                else:
+                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
+            else:
+                curDate = transaction["date"]
+                balanceHistory[curDate] = balance
+                if transaction["type"] == "buy":
+                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
+                else:
+                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
+        if startDate not in balanceHistory.keys():
+            balanceHistory[startDate] = balance
+        return {"data": balanceHistory}
