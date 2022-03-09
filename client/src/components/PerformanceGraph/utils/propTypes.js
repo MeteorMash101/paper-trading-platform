@@ -3,8 +3,8 @@ import { arrayOf, shape, string, date as dateProp, number } from "prop-types";
 export const MultiLineDataItemsPropTypes = arrayOf(
   shape({
     date: dateProp,
-    open: number,
-    volume: number
+    value: number,
+    // volume: number
   })
 );
 

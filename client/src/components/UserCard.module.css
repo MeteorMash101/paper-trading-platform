@@ -1,11 +1,13 @@
 .container {
     display: flex;
     flex-direction: column;
-    /* border: 1px solid rgb(173, 175, 173); */
+    border: 1px solid rgb(173, 175, 173);
+    border-radius: 10px;
     /* background-color: rgb(176, 230, 176); */
-    /* margin: 2.5rem; */
+    margin: .5rem .5 rem;
+    margin-bottom: 20px;
     /* height: 40vh; */
-    /* width: 40vh; */
+    width: 40vh;
     padding: 1.4rem 1.4rem;
     text-align: left;
 }
@@ -14,7 +16,18 @@
 .label {
     /* margin: .3rem .3rem; */
     /* padding-bottom: 30px; */
-    color: grey;
+    color: rgb(62, 189, 211);
+    font-weight: bold;
+}
+
+.labelPos {
+    margin: .3rem .3rem;
+    color: rgb(98, 224, 125);
+}
+
+.labelNeg {
+    margin: .3rem .3rem;
+    color: rgb(224, 102, 98);
 }
 
 .labelPos {
@@ -43,4 +56,8 @@
 
 .value {
     font-weight: bolder;
+}
+
+.main{
+    margin-top: -130px;
 }

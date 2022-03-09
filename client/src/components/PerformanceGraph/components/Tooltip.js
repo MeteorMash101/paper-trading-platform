@@ -66,13 +66,13 @@ const Tooltip = ({
   const onChangePosition = React.useCallback((d, i, isVisible) => {
     d3.selectAll(".performanceItemValue")
       .filter((td, tIndex) => tIndex === i)
-      .text(isVisible ? (d.volume) : "");
+      .text(isVisible ? (d.value) : "");
       // .text(isVisible ? formatPercent(d.volume) : "");
 
     d3.selectAll(".performanceItemMarketValue")
       .filter((td, tIndex) => tIndex === i)
       .text(
-        d.open && !isVisible ? "No data" : formatPriceUSD(d.open)
+        d.value && !isVisible ? "No data" : formatPriceUSD(d.value)
       );
 
     const maxNameWidth = d3.max(
@@ -107,7 +107,7 @@ const Tooltip = ({
         const d0 = data[i].items[index - 1];
         const d1 = data[i].items[index];
         const d = xDate - d0?.date > d1?.date - xDate ? d1 : d0;
-        if (d.date === undefined && d.open === undefined) {
+        if (d.date === undefined && d.value === undefined) {
           // move point out of container
           return "translate(-100,-100)";
         }
@@ -120,7 +120,7 @@ const Tooltip = ({
         if (xPos !== baseXPos) {
           isVisible = false;
         }
-        const yPos = yScale(d.open);
+        const yPos = yScale(d.value);
 
         onChangePosition(d, i, isVisible);
 

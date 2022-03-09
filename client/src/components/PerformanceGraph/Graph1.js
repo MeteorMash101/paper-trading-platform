@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 
-export default function Graph({stockURL}) {
+export default function Graph1({stockURL}) {
 
   const [stock, setStock] = useState("");
 
@@ -19,7 +19,7 @@ export default function Graph({stockURL}) {
     const fetchStock = async () => {
         const stockFromServer = await axios.get(stockURL)
         // const jsonResponse = await stockFromServer.json();
-        console.log("[DEBUG]: history stock received from db:", stockFromServer.data)
+        console.log("[DEBUG]: pv received from db:", stockFromServer.data)
         setStock(stockFromServer.data)
     }
     fetchStock()
@@ -28,10 +28,8 @@ export default function Graph({stockURL}) {
   const portfolioData = {
     name: "Portfolio",
     color: "grey",
-    items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-    
-    
+    items: stock != "" ? stock['pv'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['pv'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
   const schcData = {
     name: "SCHC",

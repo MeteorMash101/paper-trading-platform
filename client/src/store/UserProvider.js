@@ -40,6 +40,21 @@ const userReducer = (state, action) => { // NOTE: we are guranteed by useReducer
 				isLoggedIn: action.isLoggedIn,
 				balance: parseFloat(action.balance),
 			}
+		case SET_PORTFOLIO_INFO:
+			console.log("portfolioInfo obj:", action.portfolioInfo)
+			return {
+				...state,
+				portfolioInfo: action.portfolioInfo // EDIT: temp, this is an obj
+			}
+		case SET_USER_ON_LOGIN:
+			return {
+				...state,
+				name: action.name,
+				user_id: action.user_id,
+				isLoggedIn: action.isLoggedIn,
+				balance: parseFloat(action.balance),
+				// portfolioInfo: parseFloat(action.portfolioInfo)
+			}
 		case SET_DEFAULT:
 			return defaultUserState;
 		default: // safety

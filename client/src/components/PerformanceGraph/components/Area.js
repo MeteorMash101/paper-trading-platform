@@ -21,7 +21,7 @@ const Area = ({ xScale, yScale, color, data, disableAnimation, ...props }) => {
     const area = d3
       .area()
       .x(({ date }) => xScale(date))
-      .y1(({ open }) => yScale(open))
+      .y1(({ value }) => yScale(value))
       .y0(() => yScale(yScale.domain()[0]));
     return area(data);
   }, [xScale, yScale, data]);
@@ -57,7 +57,7 @@ Area.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
       date: PropTypes.date,
-      open: PropTypes.number
+      value: PropTypes.number
     })
   ),
   color: PropTypes.string,

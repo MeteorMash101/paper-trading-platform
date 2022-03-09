@@ -9,6 +9,8 @@ import axios from 'axios';
 
 const StockItem = ({colorStyle, symbol, company_name, price, percent_change, change_direction}) => {
   const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!
+  const test = process.env.PRODUCTION_MODE
+  console.log("THIS", test, typeof(process.env.PRODUCTION_MODE))
   const [livePrice, setLivePrice] = useState(price);
   const MINUTE_MS = 5000; // 5 seconds
   useEffect(() => {
