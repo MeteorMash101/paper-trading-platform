@@ -2,4 +2,4 @@ Senior design project where we worked with a client from Google to create a plat
 
 Snapshots:
 
-![alt text](https://imgur.com/ay4Zj6g)
+![alt text](https://imgur.com/ay4Zj6g.png)
