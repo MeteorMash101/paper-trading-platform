@@ -3,7 +3,7 @@
 # Source: https://www.django-rest-framework.org/tutorial/3-class-based-views/
 
 from stocks.models import Stock
-from stocks.serializers import StockSerializer, HistSerializer, ShortSerializer, LivePriceSerializer, EarningsSerializer
+from stocks.serializers import *
 from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -67,7 +67,11 @@ class CompanyEarnings(APIView):
         serializer = EarningsSerializer(jsonData).data
         return Response(serializer)
 
-
+class SearchBar(APIView):
+    def get(self, request):
+        jsonData = si.symbolNames()
+        serializer = searchSerializer(jsonData, many=True).data
+        return Response(serializer)
 
 '''
 Ok we need to error check everything::

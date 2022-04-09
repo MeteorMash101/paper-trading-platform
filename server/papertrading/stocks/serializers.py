@@ -50,3 +50,7 @@ class ShortSerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     percent_change = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     change_direction = serializers.BooleanField() # True => + change, False => - change
+
+class searchSerializer(serializers.Serializer):
+    company_name = serializers.CharField(max_length=50)
+    symbol = serializers.CharField(max_length=6)
