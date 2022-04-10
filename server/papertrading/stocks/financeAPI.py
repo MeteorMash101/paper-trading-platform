@@ -1,6 +1,8 @@
 from yahoo_fin import stock_info as si
 import threading
 import queue
+import pandas as pd
+import os
 
 class Stock_info:
     
@@ -166,6 +168,13 @@ class Stock_info:
             stock = q.get()
             stocks[stock["symbol"]] = stock
         return stocks
+
+    @staticmethod
+    def symbolNames():
+        os.chdir("stocks")
+        names = pd.read_csv("ticker_names.csv")
+        os.chdir()
+        return names.to_dict("records")
 
     @staticmethod
     def __getName(data, ticker):
