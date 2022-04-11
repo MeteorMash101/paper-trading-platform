@@ -173,7 +173,7 @@ class Stock_info:
     def symbolNames():
         os.chdir("stocks")
         names = pd.read_csv("ticker_names.csv")
-        os.chdir()
+        os.chdir("..")
         return names.to_dict("records")
 
     @staticmethod
