@@ -100,9 +100,9 @@ class AccountStocksOwned(APIView):
     stock_list_display      A list of every stock the user owns, its quantity, current price, change %, and change direction
 
     Examples: 
-    curl -d '{"info":"stock_list_display"}' -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
+    curl -d "{"info":"stock_list_display"}" -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
 
-    curl -d '{"info":"num_of_ticker_stocks", "symbol": "tsla"}' -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
+    curl -d "{"info":"num_of_ticker_stocks", "symbol": "tsla"}" -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
     '''
     def get(self, request, goog_id):
         # data = request.data

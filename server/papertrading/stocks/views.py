@@ -26,33 +26,10 @@ class StockList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-'''For historical data for the specific stock.
-   start_date is optional but the default end up being all time
-   minutes is optional and determines if user wants minute granularity, in which case it is supplied
-   for the current day (or previous if current just started)
-
-   curl -d '{"start_date":"04/12/2022", "minutes":"True"}' -H "Content-type: application/json" -X get http://127.0.0.1:8000/stocks/hist/aapl/
-   '''
+'''For historical data for the specific stock'''
 class StockHistData(APIView):
     def get(self, request, ticker):
-        #Remove if-else once we stick with request.query_params.get()
-        #They are here because of a depracted calling method
-        if "start_date" in request.data.keys():
-            start_date = request.data["start_date"]
-        else:
-            start_date = request.query_params.get('start_date', None)
-        
-        minuteIntervals = request.query_params.get('minutes', False)
-        
-        if "version" in request.data.keys():
-            newVersion = request.data["version"] == "new"
-        else:
-            newVersion = request.query_params.get('version', False)
-
-        if newVersion:
-            jsonData = si.get_stock_historical_data(ticker, start_date = start_date, minute = (minuteIntervals or minuteIntervals == "True"))
-        else:
-            jsonData = si.get_stock_historical_data_deprecated(ticker)
+        jsonData = si.get_stock_historical_data(ticker)
         results = HistSerializer(jsonData).data
         return Response(results)
 
