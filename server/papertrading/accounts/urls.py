@@ -1,5 +1,5 @@
 from django.urls import path
-from accounts.views import AccountList, AccountDetail, AccountStocksOwned, AccountWatchList, AccountHistoricPV
+from accounts.views import AccountList, AccountDetail, AccountStocksOwned, AccountWatchList, AccountHistoricPV, AccountReset
 from . import views
 
 app_name = "accounts"
@@ -12,5 +12,6 @@ urlpatterns = [
     # '/stocklist', 'watchlist', '/portval'
     path('<str:goog_id>/getStocks/', AccountStocksOwned.as_view(), name = "ownedStockList"),
     path('<str:goog_id>/watchList/', AccountWatchList.as_view(), name = "watchList"),
-    path('<str:goog_id>/historicPV/', AccountHistoricPV.as_view(), name = "watchList"),
+    path('<str:goog_id>/historicPV/', AccountHistoricPV.as_view(), name = "pvHistory"),
+    path('<str:goog_id>/reset/', AccountReset.as_view(), name = "reset"),
 ]

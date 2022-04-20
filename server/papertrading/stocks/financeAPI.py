@@ -5,6 +5,10 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 
+from memory_profiler import profile
+
+from ctypes import cdll, CDLL
+
 class Stock_info:
     
     @staticmethod
@@ -133,7 +137,6 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        print("----------------------", symbols)
         q = queue.Queue()
         threads = []
         for symbol in symbols[:10]:
@@ -193,7 +196,16 @@ class Stock_info:
             stocks[stock["symbol"]] = stock
         return stocks
 
+    '''
+        try:
+            cdll.LoadLibrary("libc.so.6")
+            libc = CDLL("libc.so.6")
+            libc.malloc_trim(0)
+        except (OSError, AttributeError):
+            libc = None
+    '''
     @staticmethod
+    @profile
     def symbolNames():
         os.chdir("stocks")
         names = pd.read_csv("ticker_names.csv")

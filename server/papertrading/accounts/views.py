@@ -22,12 +22,35 @@ class AccountList(APIView):
         serializer = AccountSerializer(accounts, many=True)
         return Response(serializer.data)
 
+class AccountReset(APIView):
+
+    def get_object(self, request, *args, **kwargs):
+        pk = self.kwargs.get('goog_id')
+        try:
+            return Account.objects.get(pk=pk)
+        except Account.DoesNotExist:
+            return None
+
+    def get(self, request, goog_id):
+        account = self.get_object(goog_id)
+        account.start_date = datetime.today().strftime("%Y-%m-%d")
+        account.portfolio_value_history = {"data": {}}
+        account.transaction_history = {"history": []}
+        account.ownedStocks = {}
+        account.balance = 5000
+        account.save()
+        serializer = AccountSerializer(account)#, data=request.data)
+        return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        #if serializer.is_valid():
+        #    serializer.save() # saves to DB
+        #    return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class AccountDetail(APIView):
     """
     Create, retrieve, update or delete a Account instance.
     """
     def post(self, request, *args, **kwargs):
-        print("IN POST AccountDetail...w/ data:", request.data)
         # EDIT: need way to add User's pk to req. data to map this Account -> User.
         # tried: User.objects.get(email=request.data['email']), request.data['email'].split('@')[0]
         # request.data['user'] = ?
@@ -37,12 +60,9 @@ class AccountDetail(APIView):
         if serializer.is_valid():
             serializer.save() # saves to DB
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        print("ERROR: ",serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
     def get_object(self, request, *args, **kwargs):
-        print("IN GETOBJ...")
         pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)
@@ -51,7 +71,6 @@ class AccountDetail(APIView):
 
     def get(self, request, goog_id):
         
-        print("IN GET...w/ goog_id:", goog_id)
         AccountObj = self.get_object(goog_id)
         # EDIT: don't understand
         if AccountObj != None: # account exists
@@ -59,7 +78,6 @@ class AccountDetail(APIView):
             PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
             return Response(serializer.data)
         else: # account doesn't exist, create new
-            print("Account not found, sending None...")
             return Response(None)
 
     def put(self, request, goog_id):
@@ -107,7 +125,6 @@ class AccountStocksOwned(APIView):
     def get(self, request, goog_id):
         # data = request.data
         data = request.query_params.get('info', None)
-        print("IN GET...w/ data", data)
         account = self.get_object(goog_id)
         
         if account != None:
@@ -123,7 +140,6 @@ class AccountStocksOwned(APIView):
                 portfolio_value = self.__calculateValue(account.ownedStocks)
                 portfolio_change = self.__calculatePortfolioChange(account.ownedStocks, portfolio_value)
                 serializer = PortfolioValueSerializer({"portfolio_value":portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
-                print("sending PV")
                 return Response(serializer.data)
             elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
                 stockList = self.__ownedStocksForDisplay(account.ownedStocks)
@@ -140,7 +156,6 @@ class AccountStocksOwned(APIView):
             else:
                 return Response(None)
         else:
-            print("Account not found, sending None...")
             return Response(None)
 
     '''
@@ -157,7 +172,6 @@ class AccountStocksOwned(APIView):
     def put(self, request, goog_id):
         account = self.get_object(goog_id)
         if account == None:
-            print("Account not found, sending None...")
             return Response(None)
 
         data = request.data
@@ -176,7 +190,6 @@ class AccountStocksOwned(APIView):
     # EDIT: duplicate
     #Returns the account object
     def get_object(self, request, *args, **kwargs):
-        print("IN GETOBJ...")
         pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)
@@ -349,7 +362,6 @@ class AccountWatchList(APIView):
 
     def get(self, request, goog_id):
         data = request.query_params
-        print(data)
         account = self.get_object(goog_id)
         if account != None:
             if data.get('info', None) == "stocks": # Returns a list of just the symbols for watch list stocks
@@ -365,10 +377,8 @@ class AccountWatchList(APIView):
             else:
                 return Response(None)
         else:
-            print("Account not found, sending None...")
             return Response(None)
         
-
     #Acts as a switch. Simply make a put request with the "symbol" of the data being the 
     #Ticker you wish to toggle. If the ticker is in the list it is removed, if it is 
     #not in the list it is added. So if there is say a start symbol next to stocks,
@@ -376,7 +386,6 @@ class AccountWatchList(APIView):
     def put(self, request, goog_id):
         account = self.get_object(goog_id)
         if account == None:
-            print("Account not found, sending None...")
             return Response(None)
 
         data = request.data
@@ -392,7 +401,6 @@ class AccountWatchList(APIView):
 
     #Returns the account object
     def get_object(self, request, *args, **kwargs):
-        print("IN GETOBJ...")
         pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)
@@ -429,13 +437,11 @@ class AccountHistoricPV(APIView):
             serializer = HistoricPortfolioValueSerializer({"pv":data})
             return Response(serializer.data)
         else:
-            print("Account not found, sending None...")
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
     # EDIT duplicate function
     # Returns the account object
     def get_object(self, request, *args, **kwargs):
-        print("IN GETOBJ...")
         pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)

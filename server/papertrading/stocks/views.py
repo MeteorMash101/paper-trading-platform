@@ -9,6 +9,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from stocks.financeAPI import Stock_info as si
+from datetime import datetime
+import pandas as pd
+import finnhub
+
+from memory_profiler import profile
 
 class StockList(APIView):
     """
@@ -68,6 +73,7 @@ class StockDetail(APIView):
 
 # For showing "Top Movers"...
 class TopStocks(APIView):
+    @profile
     def get(self, request):
         stocks = si.get_top_stocks()
         serializer = ShortSerializer(stocks, many=True)
@@ -91,10 +97,23 @@ class CompanyEarnings(APIView):
         return Response(serializer)
 
 class SearchBar(APIView):
+    @profile
     def get(self, request):
         jsonData = si.symbolNames()
         serializer = searchSerializer(jsonData, many=True).data
         return Response(serializer)
+
+class GeneralNews(APIView):
+    #This will return general news, not even necessarily relating to a specific company
+    def get(self, request):
+        useful = set(["datetime", "headline", "image", "summary", "url"])
+        fin = finnhub.Client(api_key="c7np72iad3ifj5l0i6eg").general_news("general")
+        df = pd.DataFrame.from_dict(fin)
+        unnecessary = set(df.columns) - useful
+        df = df.drop(columns = unnecessary)
+        df['datetime'] = df['datetime'].apply(lambda x: datetime.fromtimestamp(x))
+        serializer = NewsSerializer(df.to_dict("records"), many=True)
+        return Response(serializer.data)
 
 '''
 Ok we need to error check everything::

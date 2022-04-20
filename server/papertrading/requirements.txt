@@ -6,3 +6,6 @@ oauth2-provider==0.0
 social-auth-app-django==5.0.0
 drf-social-oauth2==1.2.1
 yahoo_fin==0.8.9.1
+
+memory-profiler==0.60.0
+finnhub-python==2.4.13

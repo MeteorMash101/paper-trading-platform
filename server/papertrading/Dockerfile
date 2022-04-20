@@ -1,8 +1,9 @@
 FROM python:3.9-bullseye
 
-COPY . /home/server
+ADD ./requirements.txt /home/server/requirements.txt
 WORKDIR /home/server
 RUN pip install -r requirements.txt
-RUN sed -i 's/^DEBUG = True/DEBUG = False/' papertrading/settinsg.py
+ADD . /home/server
+RUN sed -i 's/^DEBUG = True/DEBUG = False/' papertrading/settings.py
 CMD ["python","manage.py", "makemigrations"]
 CMD ["python","manage.py", "runserver", "0.0.0.0:8000"]
