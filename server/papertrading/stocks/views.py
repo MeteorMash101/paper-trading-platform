@@ -71,7 +71,6 @@ class StockDetail(APIView):
 
 # For showing "Top Movers"...
 class TopStocks(APIView):
-    @profile
     def get(self, request):
         stocks = si.get_top_stocks()
         serializer = ShortSerializer(stocks, many=True)
