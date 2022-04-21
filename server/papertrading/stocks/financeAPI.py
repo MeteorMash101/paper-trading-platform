@@ -192,14 +192,6 @@ class Stock_info:
             stocks[stock["symbol"]] = stock
         return stocks
 
-    '''
-        try:
-            cdll.LoadLibrary("libc.so.6")
-            libc = CDLL("libc.so.6")
-            libc.malloc_trim(0)
-        except (OSError, AttributeError):
-            libc = None
-    '''
     @staticmethod
     def symbolNames():
         os.chdir("stocks")
