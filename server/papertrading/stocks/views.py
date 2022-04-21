@@ -13,8 +13,6 @@ from datetime import datetime
 import pandas as pd
 import finnhub
 
-from memory_profiler import profile
-
 class StockList(APIView):
     """
     List all stocks, or create a new stock.
@@ -97,7 +95,6 @@ class CompanyEarnings(APIView):
         return Response(serializer)
 
 class SearchBar(APIView):
-    @profile
     def get(self, request):
         jsonData = si.symbolNames()
         serializer = searchSerializer(jsonData, many=True).data
