@@ -5,10 +5,6 @@ import pandas as pd
 import os
 from datetime import datetime, timedelta
 
-from memory_profiler import profile
-
-from ctypes import cdll, CDLL
-
 class Stock_info:
     
     @staticmethod
@@ -205,7 +201,6 @@ class Stock_info:
             libc = None
     '''
     @staticmethod
-    @profile
     def symbolNames():
         os.chdir("stocks")
         names = pd.read_csv("ticker_names.csv")
