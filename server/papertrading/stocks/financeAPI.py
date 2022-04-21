@@ -133,7 +133,6 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        print("----------------------", symbols)
         q = queue.Queue()
         threads = []
         for symbol in symbols[:10]:
