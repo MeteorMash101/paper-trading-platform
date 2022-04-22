@@ -10,7 +10,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-
 export default function Graph1({stockURL}) {
 
   const [stock, setStock] = useState("");
@@ -56,7 +55,7 @@ export default function Graph1({stockURL}) {
   };
 
   return (
-    <div className="Graph">
+    <div>
       <Legend
         data={legendData}
         selectedItems={selectedItems}

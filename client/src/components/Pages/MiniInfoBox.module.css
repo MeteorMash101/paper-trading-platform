@@ -7,18 +7,19 @@
 }
 
 .label {
-    color: rgb(107, 215, 230);
-    font-size: x-large;
-    font-weight: bolder;
+    color: rgb(50, 180, 197);
+    font-size: medium;
+    font-weight: 900;
+    margin-top: 10px;
 }
 
 .val {
     color: rgb(117, 117, 117);
-    font-weight: bold;
+    font-weight: 900;
     font-size: x-large;
+
 }
 
 .units {
-    color: rgb(136, 135, 135);
-    font-weight: lighter;
+    color: rgb(117, 117, 117);
 }

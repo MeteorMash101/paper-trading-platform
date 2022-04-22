@@ -4,13 +4,19 @@ import { RiArrowUpCircleFill, RiArrowDownCircleFill } from "react-icons/ri";
 
 
 const MiniStockItem = ({symbol, shares, price, percent_change, change_direction}) => {
+
+    var value = shares*price
+
     return (
         <div className={classes.container}>
-            <div className={classes.leftContainer}>
-                <div className={classes.symbol}>{symbol}</div>
-                <div className={classes.shares}>x{shares}</div>
-            </div>
+
+            <div className={classes.check}> <input type="checkbox" name="checkbox" /> </div>
+            
+            <div className={classes.symbol}>{symbol}</div>
+            <div className={classes.shares}>{shares}</div>
+        
             <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
+            <div className={classes.value}> ${parseInt(value).toFixed(2)} </div>
             {
             change_direction && <p className={classes.posChange}>+{parseInt(percent_change).toFixed(2)}%</p>
             }

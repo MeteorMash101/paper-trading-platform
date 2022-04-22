@@ -1,13 +1,10 @@
 .container {
-    /* border: 1px solid rgb(173, 173, 173); */
-    border-radius: 3%;
-    width: 1000px;
-    margin-top: 2%;
-    margin-left: 5%;
+    border: 1px solid rgb(173, 173, 173);
+    border-radius: 1.6rem;
+    width: 100%;
 }
 
 .title {
-    /* margin: .8rem 1.5rem; */
     text-align: left;
     padding: 10px;
     margin-left: 30px;

@@ -51,7 +51,7 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
         {
           !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
         }
-        <GrAddCircle size={23} onClick={addToWatchListHandler}/>
+        < GrAddCircle className={classes.watchlist} size={20} onClick={addToWatchListHandler}/>
         {/* {
           !inWatchList && <IoIosCheckmarkCircleOutline size={23} onClick={addToWatchListHandler}/>
         } */}

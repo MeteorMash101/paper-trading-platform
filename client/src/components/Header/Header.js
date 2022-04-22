@@ -1,12 +1,13 @@
 import classes from './Header.module.css';
 import GoogleSocialAuth from '../auth/GoogleSocialAuth';
 import SearchBar from './SearchBar';
-import LogoNTitle from './LogoNTitle';
 import { Fragment, useContext } from 'react';
 import UserContext from '../../store/user-context';
 import UserTab from './UserTab';
 import axios from 'axios';
 import NewSearchBar from './newSearchBar';
+import tempLogo from './templogo.jpg';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -32,6 +33,7 @@ const Header = () => {
         userInfo.balance = accountFromServer.data.balance
         console.log("IN onLoginHandler", userInfo)
         userCtx.setUserOnLogin(userInfo)
+        
     };
     const onLogoutHandler = () => { // workaround to 'only being able to use hooks inside func. component' rule.
         userCtx.setDefault()
@@ -44,16 +46,22 @@ const Header = () => {
     return (
         <Fragment>
             <div className={classes.container}>
-                <LogoNTitle/>
-                {/* <SearchBar/> */}
-                <NewSearchBar stockListURL={"http://127.0.0.1:8000/stocks/"}/>
+                <div className={classes.title}>
+                    <Link to={`/`} className={classes.logoandtitle}>
+                        <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>
+                        <h2 className={classes.heading}>SWAT PAPER TRADING</h2>
+                    </Link>
+                </div>
+                
+                <div className={classes.searchbar}>
+                    <NewSearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
+                </div>
                 <div className={classes.signin}>
                     {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>}
                     {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
                 </div>
             </div>
             {/* EDIT: HAVE THIS msg FADE... */}
-            {/* {userCtx.isLoggedIn && <h2>Welcome {userCtx.name}!</h2>} */}
         </Fragment>
     );
 };

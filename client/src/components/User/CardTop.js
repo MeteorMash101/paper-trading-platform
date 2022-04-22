@@ -43,7 +43,6 @@ const CardTop = () => {
     return (
         <div>
             <div className={classes.cardTop}>
-                    {/* <img className={classes.img} src="https://i.pinimg.com/564x/da/22/8e/da228ee2873e20fa669200eb21cc5744.jpg"></img> */}
                     <Avatar className={classes.img} sx={{ width: 70, height: 70, bgcolor: "#b3e5fc" }}>{userCtx.name.charAt(0)}</Avatar>
                     <h2 className={classes.heading}>{userCtx.name}</h2>
             </div>

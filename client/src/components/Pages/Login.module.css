@@ -1,0 +1,64 @@
+.border{
+    width: 100%;
+}
+
+.heading{
+    padding-bottom: 10%;
+    font-family: Andale Mono, monospace;
+}
+
+.left{
+    width: 30%;
+    height: 100vh;
+    float: left;
+    box-sizing: border-box;
+    background-color: white;
+}
+
+.right{
+    width: 70%;
+    height: 100vh;
+    float: left;
+    box-sizing: border-box;
+    background: radial-gradient(circle, rgba(206,235,235,1) 25%, rgba(197,248,250,1) 48%, rgba(105,182,172,1) 100%);
+}
+
+.tempLogo {
+    max-width: 13%;
+    max-height: 13%;
+    background-color: transparent;
+    border-radius: 1.6rem;
+}
+
+.name{
+    font-size: medium;
+    font-family: Andale Mono, monospace;
+    margin: 5% 5%;  
+    z-index: 100;
+    border-bottom: 1px solid black;
+}
+
+.signin{
+    height: 20vh;
+    font-size: large;
+    padding: 10%;
+    border-radius: 1.6rem;
+    margin: 30% 10%; 
+    background: rgba(171, 249, 249, 0.5);
+}
+
+@media (max-width:1000px) {
+
+    .left{
+        width: 100%;
+        float: left;
+        padding: 15px;
+    }
+    
+    .right{
+        width: 0%;
+    }
+
+}
+
+

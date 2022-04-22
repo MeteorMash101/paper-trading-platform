@@ -5,7 +5,7 @@ import UserContext from '../../store/user-context';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const MiniStockList = ({title, usersStocksURL}) => {
+const MiniStockList = ({title}) => {
 	const userCtx = useContext(UserContext);
   	const [usersStocks, setUsersStocks] = useState([
 		{
@@ -29,7 +29,7 @@ const MiniStockList = ({title, usersStocksURL}) => {
 	})
 	return (
 		<div className={classes.container}>
-			<h1 className={classes.title}>{title}</h1>
+			{/* <h1 className={classes.title}>{title}</h1> */}
 			{usersStocks.map((stock) => (
 				<MiniStockItem
 					key={stock.id} // required for React warning...
@@ -37,6 +37,7 @@ const MiniStockList = ({title, usersStocksURL}) => {
                     shares={stock.shares}
 					price={stock.price}
 					percent_change={stock.percent_change}
+					// value={(stock.price*stock.shares)}
                     change_direction={stock.change_direction}
 				/>
 			))}

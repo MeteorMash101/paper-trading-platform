@@ -2,11 +2,8 @@
 import React from "react";
 import MultilineChart from "./views/MultilineChart";
 import Legend from "./components/Legend";
-import schc from "./SCHC.json";
-import vcit from "./VCIT.json";
 import portfolio from "./portfolio.json";
 import "./styles.css";
-import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -23,38 +20,45 @@ export default function Graph({stockURL}) {
         setStock(stockFromServer.data)
     }
     fetchStock()
-}, [])
+  }, [])
   
-  const portfolioData = {
-    name: "Portfolio",
+  const ytdData = {
+    name: "YTD",
     color: "grey",
     items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-    
-    
-  };
-  const schcData = {
-    name: "SCHC",
-    color: "#d53e4f",
-    items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
-  };
-  const vcitData = {
-    name: "VCIT",
-    color: "#5e4fa2",
-    items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
-  const [selectedItems, setSelectedItems] = React.useState([]);
-  const legendData = [portfolioData, schcData, vcitData];
-  const chartData = [
-    portfolioData,
-    ...[schcData, vcitData].filter((d) => selectedItems.includes(d.name))
+
+  const oneMonthData = {
+    name: "One month",
+    color: "#d53e4f",
+    items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })).slice(0,30) :
+    portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const threeMonthsData = {
+    name: "Three months",
+    color: "#5e4fa2",
+    items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })).slice(0,90) :
+    portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const sixMonthsData = {
+    name: "Six months",
+    color: "aqua",
+    items: stock != "" ? stock['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })).slice(0,180) :
+    portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const [selectedItems, setSelectedItems] = React.useState(["YTD"]);
+  const legendData = [ytdData, oneMonthData, threeMonthsData, sixMonthsData];
+  let chartData = [
+    ...[oneMonthData, threeMonthsData, sixMonthsData, ytdData].filter((d) => selectedItems.includes(d.name))
   ];
+
   const onChangeSelection = (name) => {
-    const newSelectedItems = selectedItems.includes(name)
-      ? selectedItems.filter((item) => item !== name)
-      : [...selectedItems, name];
-    setSelectedItems(newSelectedItems);
+    setSelectedItems([name]);
   };
 
   return (
@@ -63,8 +67,10 @@ export default function Graph({stockURL}) {
         data={legendData}
         selectedItems={selectedItems}
         onChange={onChangeSelection}
+        // onClick={onChangeSelection}
       />
       <MultilineChart data={chartData} />
+      <h4>{selectedItems}</h4>
     </div>
   );
 }

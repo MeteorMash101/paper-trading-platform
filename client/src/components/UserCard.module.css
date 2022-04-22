@@ -1,20 +1,4 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    /* border: 1px solid rgb(173, 175, 173); */
-    /* background-color: rgb(176, 230, 176); */
-    /* margin: 2.5rem; */
-    /* height: 40vh; */
-    /* width: 40vh; */
-    margin-top: -20px;
-    padding: 1.4rem 1.4rem;
-    text-align: left;
-}
-
-
 .label {
-    /* margin: .3rem .3rem; */
-    /* padding-bottom: 30px; */
     color: rgb(62, 189, 211);
     font-weight: bold;
 }
@@ -29,13 +13,6 @@
     color: rgb(224, 102, 98);
 }
 
-.message {
-    color: rgb(207, 200, 200);
-    margin-bottom: -10px;
-    font-weight: bold;
-    font-size: larger;
-}
-
 .heading {
     text-align: center;
 }
@@ -44,6 +21,17 @@
     font-weight: bolder;
 }
 
-.main{
-    margin-top: -130px;
+.attribute{
+    font-weight: bolder;
+    color: rgb(159, 161, 161);
+}
+
+.value{
+    color: rgb(15, 15, 15);
+    font-weight: 500;
+}
+.graph{
+    width: 100%;
+    border-radius: 1.6rem;
+    margin-bottom: 5%;
 }

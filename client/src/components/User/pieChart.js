@@ -1,7 +1,6 @@
-import React from 'react';
-import { PieChart, Pie} from 'recharts';
-  
-  
+import { PieChart, Pie, ResponsiveContainer} from 'recharts';
+import classes from './pieChart.module.css'
+   
 const PieGraph = () => {
   
 // Sample data, change later
@@ -13,11 +12,14 @@ const data = [
   
   
 return (
-      <div>
+      <div className={classes.main}>
         <h2> PORTFOLIO DIVERSITY</h2>
-        <PieChart width={400} height={400}>
-          <Pie data={data} dataKey="students" outerRadius={100} fill="red" />
-        </PieChart>
+        <ResponsiveContainer width={'99%'} height={300}>
+          <PieChart width={400} height={400}>
+            <Pie data={data} dataKey="students" outerRadius={100}/>
+          </PieChart>
+        </ResponsiveContainer>
+        
       </div>
       
 );

@@ -1,8 +1,7 @@
 .container {
     position: sticky;
     top: 0;
-    /* border: 2px solid black; */
-    background-color: rgb(212, 244, 250);
+    background-color: rgb(229, 248, 252);
     height: 60px;
     width: 100%;
     display: flex;
@@ -11,6 +10,43 @@
     z-index: 2;
 }
 
+@media (max-width:950px) {
+    .heading {
+    font-size: 0px !important;
+  }
+  
+  .tempLogo {
+    font-size: 20px !important;
+  }
+}
+
+  .logoandtitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 50px;
+    text-decoration: none;
+    color: rgb(90, 89, 89);
+}
+
+.tempLogo {
+    max-width: 100%;
+    max-height: 100%;
+    background-color: transparent;
+    border-radius: 1.6rem;
+}
+
+.searchbar{
+    width: 30%;
+}
+
 .signin{
     margin-right: 30px;
+    height: fit-content;
+    width: max-content;
+}
+
+.title{
+    width: 20%;
 }

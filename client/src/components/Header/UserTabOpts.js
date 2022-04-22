@@ -12,9 +12,17 @@ const UserTabOpts = ({onLogout}) => {
 	  	<Link to="/user" style={{ textDecoration: 'none' }}>
 			<button className={classes.selectOpt}>Profile</button>
 		</Link>
+
+		<Link to="/stocks" style={{ textDecoration: 'none' }}>
 			<button className={classes.selectOpt}>My Stocks</button>
+		</Link>
+
+		<Link to = "/history" style={{ textDecoration: 'none' }}>
 			<button className={classes.selectOpt}>History</button>
-			<button className={classes.selectOpt} onClick={onLogout}>Logout</button>
+		</Link>
+			
+		<button className={classes.selectOpt} onClick={onLogout}>Logout</button>
+
 	</div>
   );
 }

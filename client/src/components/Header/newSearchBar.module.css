@@ -1,11 +1,9 @@
 .container {
-    /* border: 1px solid rgb(241, 132, 132); */
     display: flex;
-    width: 25%;
 }
 
 .searchInput {
-    width: 400px;
+    width: 100%;
     height: 40px;
     font-size: 17px;
     background-color: rgb(255, 250, 250);
@@ -13,14 +11,8 @@
     padding: 0 3.5rem 0 1.5rem;
     outline: none;
     border: none;
-    /* border-radius: 35%; */
+    overflow-y: scroll;
 }
-
-/* .searchBtn {
-    width: 13%;
-    height: 43px;
-    border-radius: 5%;
-} */
 
 .stockLink {
     color: black;
@@ -35,21 +27,27 @@
 .dataResult {
     position: absolute; 
     margin-top: 35px;
-    width: 390px;
+    width: 29%;
     height: 150px;
     margin-left: 5px;
-    /* border-radius: 1.625rem; */
     border-bottom-left-radius: 1.625rem;
     border-bottom-right-radius: 1.625rem;
     border-top: none;
     background-color: rgb(255, 250, 250);
-    /* opacity: 50%; */
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    overflow: hidden;
-    overflow-y: auto;
-  }
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+    overflow-y: scroll;
+    text-align: center;
+}
 
-  .dataResult::-webkit-scrollbar {
-    display: none;
-  }
+.stockLink:hover {
+    background-color: rgb(232, 232, 232);
+}
+
+.symbol{
+    font-weight: 900;
+    font-size: small;
+    margin-right: 35px;
+    margin-left: 20px;
+    color: rgb(110, 110, 110);
+}
 

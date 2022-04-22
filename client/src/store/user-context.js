@@ -18,9 +18,10 @@ const UserContext = React.createContext({
 	setBalanceOnLogin: (amount) => {},
 	setPortfolioValue: (portfolioInfo) => {},
 	setUserOnLogin: (userInfo) => {}, // EDIT: temp. for DEMO, brokenaf.
-	setDefault: () => {}
+	setDefault: () => {},
 	// EDIT: store sessions here?
 	// EDIT: add username opt?
+
 });
 
 export default UserContext;

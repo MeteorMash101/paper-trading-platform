@@ -4,8 +4,9 @@ const Legend = ({ data, selectedItems, onChange }) => (
   <div className="legendContainer">
     {data.map((d) => (
       <div className="checkbox" style={{ color: d.color }} key={d.name}>
-        <label>
-          {d.name !== "Portfolio" && (
+        {/* <h4>Performance Graph</h4> */}
+        {/* <label>
+          {d.name !== "Performance Graph" && (
             <input
               type="checkbox"
               value={d.name}
@@ -14,7 +15,7 @@ const Legend = ({ data, selectedItems, onChange }) => (
             />
           )}
           {d.name}
-        </label>
+        </label> */}
       </div>
     ))}
   </div>

@@ -1,7 +1,6 @@
 .stockLink {
     color: black;
     text-decoration: none;
-    width: 9-100px;
     height: 50px;
     margin: 1rem 1rem;
     padding: 0px 5px;
@@ -14,20 +13,19 @@
     position: relative;
     display: flex;
     border-bottom: 1px solid rgb(173, 173, 173);
-    /* border: 2px solid rgb(180, 178, 178); */
-    /* background-color: rgb(136, 161, 149); */
     width: 820px;
     height: 50px;
     margin: 1rem 1rem;
-    padding: 0px 3px;
-    padding-bottom: -5px;
     align-items: center;
     justify-content: space-between;
+    width: 100%;
+
 }
 
 .container:hover {
     background-color: rgb(226, 244, 247);
     cursor: pointer;
+    border-radius: 1.1rem;
 }
 
 .symbol {
@@ -76,11 +74,47 @@
 .upArrow {
     position: absolute;
     color: rgba(25, 139, 95, 0.884);
-    left: 90%;
+    left: 85%;
 }
 
 .downArrow {
     position: absolute;
     color: rgb(185, 52, 19);
-    left: 90%;
+    left: 85%;
+}
+
+.watchlist{
+    left:93%;
+    position: absolute;
+}
+
+@media (max-width:900px) {
+    .percent_change {
+    font-size: 0px !important;
+  }
+
+  .price {
+    font-size: 0px !important;
+  }
+
+  .upArrow {
+    width: 0px !important;
+  }
+
+  .downArrow {
+    width: 0px !important;
+  }
+  
+  .symbol {
+    width: 30% !important;
+  }
+
+    .company_name {
+    width: 100% !important;
+  }
+
+  .watchlist{
+      width: 0px;
+  }
+
 }

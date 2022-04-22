@@ -1,39 +1,35 @@
 .container {
-    /* border: 2px solid rgb(238, 138, 56); */
-    background-color: rgb(179, 184, 181);
-    border-radius: 10px;
-    width: 120vh;
-    height: 68px;
-    margin: .5rem .2rem;
+    border-bottom: 1px solid rgb(207, 206, 206);
+    width: 100%;
+    height: 50px;
+    margin: .3rem 0;
     display: flex;
     align-items: center;
-}
-
-.leftContainer {
-    /* border: 2px solid #4d55c7; */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 70%;
-    height: 100%;
 }
 
 .symbol {
-    /* border: 2px solid rgb(0, 0, 0); */
-    background-color: rgb(202, 201, 201);
-    border-radius: 10px;
-    color: whitesmoke;
     font-weight: bold;
-    width: 80%;
+    width: 20%;
     height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.value{
+    width: 40%;
+}
+
+.check{
+    width:10%
+}
+
+.shares{
+    width: 10%;
+}
 .price {
     margin: 1rem 1rem;
+    width: 20%;
 }
 
 .posChange {

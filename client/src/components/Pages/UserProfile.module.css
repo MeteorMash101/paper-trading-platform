@@ -1,77 +1,43 @@
-
-.wrapper {
-    display: grid;
-    margin-top: 50px;
-    grid-template-columns:8;
-    justify-content: center;
-    gap: 30px;
-    grid-auto-rows: 8;
+.container{
+    width: 100%;
 }
 
-.cardTop{
-    align-items: center;
-    justify-content: center;
-    align-content: center;
+.wrapper{
+    margin: 2% 8%;
 }
-  
-.userCard{
-    grid-column: 1/4;
-    grid-row: 1/3;
-    height: 50vh;
-    width: 40vh;
-    border: 1px solid rgb(199, 198, 198);
+
+.pieChart{
+    width: 30%;
+    float: left;
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid rgb(173, 173, 173);
     border-radius: 1.6rem;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    grid-template-areas:
-      "aside main"
-      "aside main";
-
+    margin: 2%;
 }
 
 .lineChart{
-    grid-column: 5/8;
-    grid-row: 1/3;
-    height: 50vh;
-    width: 90vh;
-    border: 1px solid rgb(199, 198, 198);
+    width: 61%;
+    /* height: 50vh; */
+    float: left;
+    box-sizing: border-box;
+    padding: 15px;
+    border: 1px solid rgb(173, 173, 173);
     border-radius: 1.6rem;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    grid-template-areas:
-      "aside main"
-      "aside main";
-  }
-
- .pieChart{
-    grid-column: 1/4;
-    grid-row: 4/8;
-    width: 40vh;
-    height: 50vh;
-    border: 1px solid rgb(199, 198, 198);
-    border-radius: 1.6rem;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    grid-template-areas:
-      "aside main"
-      "aside main";
+    margin: 2%;
 }
 
-.stockHoldings{
-    grid-column: 1/8;
-    grid-row: 4/8;
-    width: 135vh;
-    height: 40vh;
-    border: 1px solid rgb(199, 198, 198);
-    border-radius: 1.6rem;
-    justify-content: center;
-    margin-bottom: 50px;
-    align-items: center;
-    align-content: center;
-    grid-template-areas:
-      "aside main"
-      "aside main";
-  }
+@media (max-width:950px) {
+  
+    .pieChart{
+        width: 100%;
+        float: left;
+        padding: 15px;
+    }
+    
+    .lineChart{
+        width: 100%;
+        float: left;
+        padding: 15px;
+    }
+}
