@@ -108,6 +108,20 @@ class AccountDetail(APIView):
 #         #     return Response(serializer.data)
 #         return Response(None)
 
+class AccountTransactionHistory(APIView):
+    def get_object(self, request, *args, **kwargs):
+        pk = self.kwargs.get('goog_id')
+        try:
+            return Account.objects.get(pk=pk)
+        except Account.DoesNotExist:
+            return None
+
+    def get(self, request, goog_id):
+        account = self.get_object(goog_id)
+        history = account.transaction_history["history"]
+        serializer = TransactionHistorySerializer({"transaction_history":history})
+        return Response(serializer.data)
+
 class AccountStocksOwned(APIView):
     '''
     When making a get request, the data only needs one field "info". It may also need "symbol" depending on what you want
