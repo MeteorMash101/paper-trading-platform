@@ -163,7 +163,7 @@ class AccountStocksOwned(APIView):
                 history = self.buildBuyingPowerHistory(account)
                 serializer = TransactionHistorySerializer({"transaction_history":history})
                 return Response(serializer.data)
-            elif data == "transaction_history" or request.data["info"] == "transaction_history":
+            elif data == "transaction_history":
                 history = account.transaction_history["history"]
                 serializer = TransactionHistorySerializer({"transaction_history":history})
                 return Response(serializer.data)
