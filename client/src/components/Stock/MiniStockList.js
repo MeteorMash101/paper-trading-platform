@@ -1,59 +1,64 @@
 import classes from './MiniStockList.module.css';
 import MiniStockItem from './MiniStockItem';
-import { useContext } from 'react';
-import UserContext from '../../store/user-context';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useContext } from 'react';
+import UserContext from '../../store/user-context';
+import WatchlistContext from '../../store/watchlist-context';
 
-const MiniStockList = ({title, usersStocksURL}) => {
+const MiniStockList = ({title, usersStocksURL, paramsInfo}) => {
 	const dummyData = [ // temp
 		{
-			symbol: "dummy",
+			symbol: "AAPL",
 			shares: "[count]",
 			price: "[currPrice]",
 			percent_change: "[0.00]",
 			change_direction: true
 		},
 		{
-			symbol: "dummy",
+			symbol: "TSLA",
 			shares: "[count]",
 			price: "[currPrice]",
 			percent_change: "[0.00]",
 			change_direction: false
 		}
 	]
+	const watchlistCtx = useContext(WatchlistContext);
 	const userCtx = useContext(UserContext);
   	const [usersStocks, setUsersStocks] = useState(dummyData);
+	const [isLoading, setIsLoading] = useState(false);
 	// API CALL: Fetch user's owned stocklist
 	useEffect(() => {
-		if (!userCtx.isLoggedIn) {
-			setUsersStocks(dummyData)
-			return
-		}
-		console.log('FETCHING USERS STOCKLIST...W/ CONTEXT:\n', userCtx)
+		setIsLoading(true)
 		const fetchData = async() => {
-			const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
+			console.log("FETCHING MINISTOCKLIST W/ URL:", usersStocksURL)
+			const dataFetched = await axios.get(usersStocksURL, {
 				params: {
-					info: "stock_list_display"
+					info: paramsInfo
 				}
 			})
 			setUsersStocks(dataFetched.data.stock_list);
+			setIsLoading(false)
 		}
 		fetchData()
-	}, [userCtx.isLoggedIn])
+	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
 	return (
 		<div className={classes.container}>
 			<h1 className={classes.title}>{title}</h1>
-			{usersStocks.map((stock) => (
-				<MiniStockItem
-					key={stock.id} // required for React warning...
-					symbol={stock.symbol.toUpperCase()}
-                    shares={stock.shares}
-					price={stock.price}
-					percent_change={stock.percent_change}
-                    change_direction={stock.change_direction}
-				/>
-			))}
+			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
+			{!isLoading &&
+				usersStocks.map((stock) => (
+					<MiniStockItem
+						key={stock.id} // required for React warning...
+						symbol={stock.symbol}
+						shares={stock.shares}
+						price={stock.price}
+						percent_change={stock.percent_change}
+						change_direction={stock.change_direction}
+						in_watch_list={watchlistCtx.watchlist.has(stock.symbol)}
+					/>
+				))
+			}
 		</div>
 	);
 };

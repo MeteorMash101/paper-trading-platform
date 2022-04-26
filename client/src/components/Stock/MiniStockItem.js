@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'; // needs to link to specific stock page
 import { RiArrowUpCircleFill, RiArrowDownCircleFill } from "react-icons/ri";
 
 
-const MiniStockItem = ({symbol, shares, price, percent_change, change_direction}) => {
+const MiniStockItem = ({symbol, shares, price, percent_change, change_direction, in_watch_list}) => {
     return (
-        <Link to={`/stock/${symbol}`} className={classes.container}>
+        // EDIT: not able to fade out!!! halp.
+        <Link to={`/stock/${symbol}`} className={classes.container} id={in_watch_list ? classes.fadeOut : classes.fadeIn}>
             <div className={classes.leftContainer}>
                 <div className={classes.symbol}>{symbol}</div>
                 <div className={classes.shares}>x{shares}</div>

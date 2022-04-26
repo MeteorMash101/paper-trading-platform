@@ -1,11 +1,12 @@
 import classes from './UserStockList.module.css';
 import MiniStockList from './Stock/MiniStockList';
 
-const UserStockList = () => {
+
+const UserStockList = ({title, usersStocksURL, paramsInfo}) => {
   return (
     <div className={classes.container}>
-        <h3>Stocks (I own):</h3>
-        <MiniStockList/>
+        <h3>{title}</h3>
+        <MiniStockList usersStocksURL={usersStocksURL} paramsInfo={paramsInfo}/>
     </div>
   );
 }

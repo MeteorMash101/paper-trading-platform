@@ -5,14 +5,16 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import UserProvider from './store/UserProvider';
-
+import WatchlistProvider from './store/WatchlistProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <UserProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <WatchlistProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </WatchlistProvider>
     </UserProvider>
   </React.StrictMode>,
   document.getElementById('root')

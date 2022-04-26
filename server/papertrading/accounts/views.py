@@ -346,20 +346,18 @@ class AccountStocksOwned(APIView):
         return {"data": balanceHistory}
 
 class AccountWatchList(APIView):
-
     def get(self, request, goog_id):
-        data = request.query_params
-        print(data)
+        data = request.query_params.get('info', None)
         account = self.get_object(goog_id)
         if account != None:
-            if data.get('info', None) == "stocks": # Returns a list of just the symbols for watch list stocks
-                serializer = StockListSerializer({"stock_list":account.watchList["stocks"]})
+            if data == "stocks": # Returns a list of just the symbols for watch list stocks
+                serializer = StockListSerializer({"stock_list":account.watchList.keys()})
                 return Response(serializer.data)
-            elif data.get('info', None) == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
+            elif data == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
                 detailedList = self.getWatchListStockInfo(account.watchList)
                 serializer = StockListSerializer({"stock_list":detailedList})
                 return Response(serializer.data)
-            elif data.get('info', None) == "check_stock":
+            elif data == "check_stock":
                 serializer = BoolSerializer({"isPresent": data.get('symbol', None) in account.watchList["stocks"]})
                 return Response(serializer.data)
             else:
@@ -367,7 +365,6 @@ class AccountWatchList(APIView):
         else:
             print("Account not found, sending None...")
             return Response(None)
-        
 
     #Acts as a switch. Simply make a put request with the "symbol" of the data being the 
     #Ticker you wish to toggle. If the ticker is in the list it is removed, if it is 
@@ -378,9 +375,9 @@ class AccountWatchList(APIView):
         if account == None:
             print("Account not found, sending None...")
             return Response(None)
-
         data = request.data
-        if account.watchList == {}:
+        print("INSIDE PUT: DATA = ", data)
+        if account.watchList == {} or account.watchList is None:
             account.watchList["stocks"] = []
         watched = account.watchList["stocks"]
         try:
@@ -392,7 +389,6 @@ class AccountWatchList(APIView):
 
     #Returns the account object
     def get_object(self, request, *args, **kwargs):
-        print("IN GETOBJ...")
         pk = self.kwargs.get('goog_id')
         try:
             return Account.objects.get(pk=pk)

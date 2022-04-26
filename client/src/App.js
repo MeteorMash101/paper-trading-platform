@@ -4,13 +4,14 @@ import Header from './components/Header/Header.js'
 import MainFeed from './components/Pages/MainFeed';
 import StockDetail from './components/Pages/StockDetail';
 import UserProfile from './components/Pages/UserProfile';
-import UserContext from './store/user-context';
 import { useContext, useEffect } from 'react';
+import UserContext from './store/user-context';
+import WatchlistContext from './store/watchlist-context';
 import axios from 'axios';
-
 
 const App = () => {
   const userCtx = useContext(UserContext);
+  const watchlistCtx = useContext(WatchlistContext);
   // EDIT: temp. workaround for persistent User // (change this!)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...")
@@ -46,10 +47,24 @@ const App = () => {
     // console.log("Setting context...")
     userCtx.setUserOnLogin(userInfo)
     // NOTE: after this run ends, then context is updated (so it is not immediate).
-
+    
+    // Below is fetching WL data.
+    const fetchData = async() => {
+      const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`, {
+        params: {
+          info: "detailed_stocks"
+        }
+      })
+      let listOfTickers = dataFetched.data.stock_list.map((obj) => {return obj.symbol})
+      console.log("we are (on login), sending over to ctx: ", listOfTickers)
+      watchlistCtx.setWatchlistOnLogin(listOfTickers);
+    }
+    fetchData()
+    
   }, [userCtx.isLoggedIn])
   return (
     <div className="App">    
+      {/* <div className="scroll"></div> */}
       {/* Header appears on every page. */}
       <Header/>
       <Routes>
@@ -63,3 +78,28 @@ const App = () => {
 }
 
 export default App;
+
+
+
+// DEPRECIATED:
+// useEffect(() => {
+//   if (!userCtx.isLoggedIn) {
+//     setUsersStocks(dummyData)
+//     return
+//   }
+//   const fetchData = async() => {
+//     console.log("FETCHING MINISTOCKLIST W/ URL:", usersStocksURL)
+//     const dataFetched = await axios.get(usersStocksURL, {
+//       params: {
+//         info: paramsInfo
+//       }
+//     })
+//     setUsersStocks(dataFetched.data.stock_list);
+//     if (paramsInfo == "detailed_stocks") {
+//       let listOfTickers = dataFetched.data.stock_list.map((obj) => {return obj.symbol})
+//       console.log("WAS A WL component^^^ (on login), sending over to ctx: ", listOfTickers)
+//       watchlistCtx.setWatchlistOnLogin(listOfTickers);
+//     }
+//   }
+//   fetchData()
+// }, [userCtx.isLoggedIn, watchlistCtx.watchlist])

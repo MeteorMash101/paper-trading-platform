@@ -3,19 +3,19 @@ import UserContext from '../store/user-context';
 import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 
-
 const OrderWidget = ({livePrice, stock}) => {
     const userCtx = useContext(UserContext);
     const [orderType, setOrderType] = useState("BUY");
     const [shares, setShares] = useState(1);
     const [sharesOwned, setSharesOwned] = useState(0);
     const [errorMsg, setErrorMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
 		if (!userCtx.isLoggedIn || orderType != "SELL") {
 			return
 		}
 		const fetchData = async() => {
-            console.log(stock.symbol)
 			const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
 				params: {
 					info: "num_of_ticker_stocks",
@@ -67,7 +67,7 @@ const OrderWidget = ({livePrice, stock}) => {
         if (orderType == "BUY") {
             estimatedCost = -Math.abs(estimatedCost)
         }
-        
+        setIsLoading(true)
         // post transaction log to db for this user
         const dataFromServer = await axios.put(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`,
             {
@@ -79,12 +79,13 @@ const OrderWidget = ({livePrice, stock}) => {
         console.log("SUCCESS:", dataFromServer.data)
         userCtx.updateBalance(estimatedCost); // EDIT: should be called 'updateBalance'
         setShares(1);
+        setIsLoading(false)
     }
     return ( 
         <form className={classes.container} id={orderTypeStyle} onSubmit={stockOrderHandler}>
             <div className={classes.orderType}>
-                <h3 className={classes.buyLabel} onClick={setBuyOrder}>Buy {stock.company_name}</h3>
-                <h3 className={classes.sellLabel} onClick={setSellOrder}>Sell {stock.company_name}</h3>
+                <h3 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder}>Buy {stock.company_name}</h3>
+                <h3 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder}>Sell {stock.company_name}</h3>
             </div>
             <div className={classes.options}><h4>Order Type: </h4><h4>"Fake Market Order"</h4></div> 
             <div className={classes.options}><h4>Shares: </h4>
@@ -100,7 +101,8 @@ const OrderWidget = ({livePrice, stock}) => {
             </div> 
             <div className={classes.options}><h4>Market Price: </h4><h4>{marketPrice}</h4></div> 
             <div className={classes.options}><h4>Estimated Cost: </h4><h4>{estimatedCost}</h4></div> 
-            <button className={classes.orderBtn}>Submit Order</button>
+            {isLoading && <div className={classes.loader}><div></div><div></div><div></div></div>}
+            {!isLoading && <button className={classes.orderBtn}>Submit Order</button>}
             <div className={classes.options}><h4>Current Balance: </h4><h4>{userCtx.balance}</h4></div>
             {orderType == "SELL" && <p className={classes.sharesAvailMsg}>{`You have ${sharesOwned} shares available`}</p>}
             {errorMsg != "" && <p className={classes.errorMsg}>{errorMsg}</p>}

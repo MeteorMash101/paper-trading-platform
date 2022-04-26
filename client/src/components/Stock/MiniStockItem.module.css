@@ -9,7 +9,41 @@
     margin: .8rem .5rem;
     padding: .2rem .2rem;
     display: flex;
-    align-items: center;
+    align-items: center; 
+    animation-name: FadeIn;
+    animation-duration: 1.3s;
+    transition-timing-function: linear;
+}
+
+/* fade in/out */
+#fadeIn {
+    animation-name: FadeIn;
+    animation-duration: 1.3s;
+    transition-timing-function: linear;
+}
+
+#fadeOut {
+    animation-name: FadeIn;
+    animation-duration: 1.3s;
+    transition-timing-function: linear;
+}
+
+@keyframes FadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+
+@keyframes FadeOut {
+    100% {
+      opacity: 1;
+    }
+    0% {
+      opacity: 0;
+    }
 }
 
 .leftContainer {
