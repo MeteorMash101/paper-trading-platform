@@ -1,0 +1,48 @@
+.img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 1px solid grey;
+    border-width: 2px;
+    left:48%;
+}
+
+.heading {
+    left: 47%;
+    margin-top: 10px;
+    position: absolute;
+    color: rgb(117, 117, 117);
+    font-weight: bold;
+}
+
+.cardMid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1.6rem;
+    border: 1px solid rgb(173, 173, 173);
+    margin: 2% 3%;
+    margin-top: 5%;
+}
+
+.cardBottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+@media (max-width:950px) {
+
+    .cardMid{
+        margin-top: 12%;
+    }
+
+    .img{
+        left:44%
+    }
+
+    .heading{
+        left:42%
+    }
+}

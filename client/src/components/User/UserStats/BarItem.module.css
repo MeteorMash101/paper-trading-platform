@@ -1,0 +1,16 @@
+.barItem {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    height: 38px;
+    padding: 3%;
+    margin: 10px;
+}
+.icon {
+    display: inline;
+}
+.label {
+    display: inline;
+    font-size: 1.3rem;
+    margin-left: 15%;
+}

@@ -1,11 +1,12 @@
 import classes from './Header.module.css';
 import GoogleSocialAuth from '../auth/GoogleSocialAuth';
-import LogoNTitle from './LogoNTitle';
-import { Fragment, useContext } from 'react';
 import UserContext from '../../store/user-context';
-import UserTab from './UserTab';
+import UserTab from '../User/UserUtils/UserTab';
+import SearchBar from './SearchBar';
+import tempLogo from './templogo.jpg';
+import { Link } from 'react-router-dom';
+import { Fragment, useContext } from 'react';
 import axios from 'axios';
-import NewSearchBar from './NewSearchBar';
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -48,16 +49,22 @@ const Header = () => {
     return (
         <Fragment>
             <div className={classes.container}>
-                <LogoNTitle/>
-                {/* <SearchBar/> */}
-                <NewSearchBar stockListURL={"http://127.0.0.1:8000/stocks/"}/>
+                <div className={classes.title}>
+                    <Link to={`/`} className={classes.logoandtitle}>
+                        <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>
+                        <h2 className={classes.heading}>SWAT PAPER TRADING</h2>
+                    </Link>
+                </div>
+                
+                <div className={classes.searchbar}>
+                    <SearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
+                </div>
                 <div className={classes.signin}>
                     {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>}
                     {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
                 </div>
             </div>
             {/* EDIT: HAVE THIS msg FADE... */}
-            {/* {userCtx.isLoggedIn && <h2>Welcome {userCtx.name}!</h2>} */}
         </Fragment>
     );
 };

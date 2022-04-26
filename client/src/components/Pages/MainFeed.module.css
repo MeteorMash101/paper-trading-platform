@@ -3,17 +3,26 @@
     display: flex;
     align-items: left;
     justify-content: left;
+    margin: 2% 8%;
+    width: 100%;
 }
 
 .listContainer {
-    /* border: 2px solid rgb(189, 255, 183); */
-    display: flex;
-    flex-direction: column;
-    /* height: auto; */
+    width: 70%;
+    float: left;
+    box-sizing: border-box;
+    padding: 15px;
 }
 
-.list {
-    padding: 1.2rem;
+.userContainer{
+    width: 30%;
+    float: left;
+    box-sizing: border-box;
+    padding: 15px;
+}
+
+.list{
+    margin: 1.5%;
 }
 
 .userContainer {
@@ -24,4 +33,28 @@
     width: auto;
     height: auto;
 }
+
+.userinfo {
+    border: 1px solid rgb(173, 173, 173);
+    margin-top: 3%;
+    border-radius: 1.6rem;
+
+}
+
+@media (max-width:1150px) {
+  
+    .userContainer{
+        width: 100%;
+        float: left;
+        padding: 15px;
+    }
+    
+    .listContainer{
+        width: 100%;
+        float: left;
+        padding: 15px;
+    }
+}
+
+
 

@@ -1,0 +1,40 @@
+.box{
+    display: flex;
+    width: 100%;
+    height: 50px;
+    margin: .3rem 0;
+    align-items: center;
+}
+
+.symbol{
+    display: inline-block;
+    width: 25%;
+    text-align: right;
+}
+
+.shares{
+    width: 12%;
+    text-align: right;   
+}
+
+.price{
+    width: 25%;
+    text-align: center; 
+}
+
+.value{
+    width: 30%;
+    text-align: center;   
+}
+
+.change{
+   display: inline-block;
+   text-align: left;
+}
+
+.list{
+    align-items: center;
+    text-align: center;
+    align-content: center;
+    justify-content: center;
+}

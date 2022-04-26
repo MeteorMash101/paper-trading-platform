@@ -18,6 +18,7 @@
     "dotenv": "^16.0.0",
     "luxon": "^2.3.1",
     "mdbreact": "^5.2.0",
+    "rc-table": "^7.24.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",

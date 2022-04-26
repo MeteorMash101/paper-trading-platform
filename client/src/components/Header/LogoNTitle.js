@@ -15,4 +15,3 @@ const LogoNTitle = () => {
 
 export default LogoNTitle;
 
-

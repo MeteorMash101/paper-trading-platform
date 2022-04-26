@@ -1,0 +1,137 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    width: 90%;
+    height: auto;
+}
+
+.stockLink {
+    color: black;
+    text-decoration: none;
+    /* width: 9-0px; */
+    width: 840px;
+    height: 50px;
+    margin: .5rem .5rem;
+    /* margin-right: -.2rem; */
+    padding: 0px 5px;
+    align-items: center;
+    position: relative;
+    display: flex;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    border-bottom: 1px solid rgb(173, 173, 173);
+    width: 820px;
+    height: 50px;
+    margin: 1rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+}
+
+.container:hover {
+    background-color: rgb(226, 244, 247);
+    cursor: pointer;
+    border-radius: 1.1rem;
+}
+
+.symbol {
+    /* border: 2px solid rgb(0, 0, 0); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 60px; 
+    height: 25px;
+    border-radius: 10px;
+    font-size: medium;
+}
+
+.company_name {
+    position: absolute;
+    left: 20%;
+}
+
+
+.price {
+    position: absolute;
+    left: 60%;
+    font-size: large;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10%;
+    height: 55%;
+}
+
+.percent_change {
+    position: absolute;
+    left: 74%;
+    font-size: large;
+}
+
+#posChange {
+    color: rgba(25, 139, 95, 0.884);
+}
+
+#negChange {
+    color: rgb(185, 52, 19);
+}
+
+.upArrow {
+    position: absolute;
+    color: rgba(25, 139, 95, 0.884);
+    left: 85%;
+}
+
+.downArrow {
+    position: absolute;
+    color: rgb(185, 52, 19);
+    left: 90%;
+}
+
+.watchListBtn:hover {
+    color:rgb(81, 88, 79);
+    overflow: hidden;
+    cursor: pointer;
+    left: 85%;
+}
+
+.watchlist {
+    left:93%;
+    position: absolute;
+}
+
+@media (max-width:900px) {
+    .percent_change {
+    font-size: 0px !important;
+  }
+
+  .price {
+    font-size: 0px !important;
+  }
+
+  .upArrow {
+    width: 0px !important;
+  }
+
+  .downArrow {
+    width: 0px !important;
+  }
+  
+  .symbol {
+    width: 30% !important;
+  }
+
+    .company_name {
+    width: 100% !important;
+  }
+
+  .watchlist{
+      width: 0px;
+  }
+
+}

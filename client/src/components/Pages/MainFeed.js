@@ -1,9 +1,10 @@
 import classes from './MainFeed.module.css';
-import StockList from '../Stock/StockList.js';
-import UserCard from '../UserCard.js';
-import UserStockList from '../UserStockList.js';
+import StockList from '../Stock/StockLists/StockList.js';
+import UserCard from '../User/UserStats/UserCard.js';
+import UserStockList from '../User/UserLists/UserStockList.js';
 import { useContext } from 'react';
 import UserContext from '../../store/user-context';
+import Header from '../Header/Header';
 
 const MainFeed = ({stockList}) => {
   const userCtx = useContext(UserContext);
@@ -18,7 +19,9 @@ const MainFeed = ({stockList}) => {
         </div>
       </div>
       <div className={classes.userContainer}>
-        <UserCard/>
+          <div className={classes.userinfo}>
+            <UserCard/>
+          </div>
         <UserStockList title={"Stocks (I own):"} usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`} paramsInfo={"stock_list_display"}/> 
         <UserStockList title={"Watchlist"} usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`} paramsInfo={"detailed_stocks"}/> 
       </div>

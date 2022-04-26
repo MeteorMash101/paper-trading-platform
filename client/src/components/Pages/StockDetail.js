@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import classes from './StockDetail.module.css';
 import axios from 'axios';
-import OrderWidget from '../OrderWidget';
-import Chart from '../Chart';
-import KeyStats from '../KeyStats';
-import Graph from '../Graph/Graph';
+import OrderWidget from '../User/UserUtils/OrderWidget';
+// import Chart from '../Stock/StockStats/Chart';
+// import KeyStats from '..Stock/StockStats/KeyStats';
+import Graph from '../GraphVisuals/Graph/Graph';
 
 const StockDetail = () => {
     const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!    const [stock, setStock] = useState("");
@@ -44,7 +44,11 @@ const StockDetail = () => {
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])
     return (
+
+        <div className={classes.everything}>
+        
         <div className={classes.container}>
+            
             <div className={classes.name}>
                 <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
                 <h3 className={classes.symbol}>{stock.symbol}</h3>
@@ -83,8 +87,8 @@ const StockDetail = () => {
                 </div>
                 
             </div>        
-            {/* <Chart/> */}
-            {/* <KeyStats/> */}
+        </div>
+
         </div>
     );
 }
