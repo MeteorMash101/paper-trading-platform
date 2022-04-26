@@ -1,6 +1,9 @@
 from yahoo_fin import stock_info as si
 import threading
 import queue
+import pandas as pd
+import os
+from datetime import datetime, timedelta
 
 class Stock_info:
     
@@ -41,8 +44,9 @@ class Stock_info:
     '''
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
+    
     @staticmethod
-    def get_stock_historical_data(ticker):
+    def get_stock_historical_data_deprecated(ticker):
         data = si.get_data(ticker, "2021-03-15")
         data.reset_index(level=0, inplace=True)
         data.rename(columns={"index": "date"}, inplace = True)
@@ -52,6 +56,28 @@ class Stock_info:
             "historical_data": data.to_dict("records")
         }
         return jsonData
+    
+    @staticmethod
+    def get_stock_historical_data(ticker, start_date = None, minute = False):
+        if minute:
+            today = datetime.today()
+            try:
+                data = si.get_data(ticker, start_date = today.strftime("%Y-%m-%d"), interval = "1m")
+            except KeyError: #When day changes but doesn't have data yet, use previous day
+                today = today - timedelta(days=1)
+                data = si.get_data(ticker, start_date = today.strftime("%Y-%m-%d"), interval = "1m")
+        else:
+            data = si.get_data(ticker, start_date = start_date)
+        data.reset_index(level=0, inplace=True)
+        data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
+        data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
+        data = data.drop(columns = ["ticker", "index"])
+        data = data.dropna()
+        jsonData = {
+            "historical_data": data.to_dict("records")
+        }
+        return jsonData
+
     #For that sweet sweet slight time gain
     @staticmethod
     def __live_data_for_threading(d, symbol):
@@ -107,7 +133,6 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        print("----------------------", symbols)
         q = queue.Queue()
         threads = []
         for symbol in symbols[:10]:
@@ -166,6 +191,13 @@ class Stock_info:
             stock = q.get()
             stocks[stock["symbol"]] = stock
         return stocks
+
+    @staticmethod
+    def symbolNames():
+        os.chdir("stocks")
+        names = pd.read_csv("ticker_names.csv")
+        os.chdir("..")
+        return names.to_dict("records")
 
     @staticmethod
     def __getName(data, ticker):

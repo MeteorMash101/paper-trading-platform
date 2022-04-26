@@ -50,3 +50,14 @@ class ShortSerializer(serializers.Serializer):
     price = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     percent_change = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     change_direction = serializers.BooleanField() # True => + change, False => - change
+
+class searchSerializer(serializers.Serializer):
+    company_name = serializers.CharField(max_length=50)
+    symbol = serializers.CharField(max_length=6)
+
+class NewsSerializer(serializers.Serializer):
+    headline = serializers.CharField(max_length=250)
+    image = serializers.CharField(max_length=250)
+    summary = serializers.CharField(max_length=500)
+    url = serializers.CharField(max_length=250)
+    datetime = serializers.DateTimeField()
