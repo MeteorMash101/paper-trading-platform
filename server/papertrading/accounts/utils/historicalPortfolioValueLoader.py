@@ -1,5 +1,7 @@
 from datetime import date, timedelta
 from stocks.financeAPI import Stock_info as si
+import queue
+import threading
 
 class PortfolioValue:
     
@@ -9,8 +11,12 @@ class PortfolioValue:
             account.portfolio_value_history["data"] = {}
         if account.transaction_history == {}:
             account.transaction_history["history"] = []
-        startDate = PortfolioValue.__getStartDateToLoadFrom(account)
-        PortfolioValue.__fillDatabase(account.portfolio_value_history["data"], startDate, account.transaction_history["history"])
+        startDate = PortfolioValue.__getStartDateToLoadFrom(account) #FINE 
+        
+        account.portfolio_value_history["data"] = PortfolioValue.__fillDatabase(
+            account.portfolio_value_history["data"], 
+            startDate, 
+            account.transaction_history["history"])
         account.save()
 
     #Determines the starting date to load portfolio value from
@@ -25,21 +31,22 @@ class PortfolioValue:
 
     #Actually fill the account portfolio value history
     @staticmethod
-    def __fillDatabase(d, starting: date, history):
-        dailyPortfolioValue = PortfolioValue.__portfolioValueGen(starting, history)
-        (day, value) = next(dailyPortfolioValue)
-        while day < date.today():
-            d[day.strftime("%Y-%m-%d")] = PortfolioValue.__toPennies(value)
-            
-            (day, value) = next(dailyPortfolioValue)
-        d[day.strftime("%Y-%m-%d")] = PortfolioValue.__toPennies(value)
+    def __fillDatabase(d,starting: date, history):
+        valueQueue = PortfolioValue.__generatePortfolioValues(starting, history)
+        count = 0
+        while not valueQueue.empty():
+            elem = valueQueue.get()
+            count += 1
+            d[elem[0].strftime("%Y-%m-%d")] = PortfolioValue.__toPennies(elem[1])
+        return {key:d[key] for key in sorted(d)}
     
     @staticmethod
     def __toPennies(value):
         return int(value*100)
 
     @staticmethod
-    def __portfolioValueGen(start_date, history):
+    def __generatePortfolioValues(start_date, history):
+        q = queue.Queue()
         daysStocks = PortfolioValue.__curOwnedStockGen(history, start_date)
         oneDay = timedelta(days=1)
         day = start_date
@@ -49,16 +56,21 @@ class PortfolioValue:
             (curDay, owned) = next(daysStocks)
         if curDay > start_date:          #If the history starts after the day we want
             while curDay > day:
-                yield (day, 0)
+                q.put((day, 0))
                 day += oneDay
-        while curDay <= date.today():     #actually calculating in line with history
-            print("Current day:", curDay)
-            try:
-                prevVal = PortfolioValue.__valueOf(owned, curDay)
-                yield (curDay, prevVal)
-            except KeyError:
-                yield(curDay, prevVal)
+        threads = []
+        
+        
+        #while curDay <= date.fromisoformat("2022-03-04"):
+        while curDay <= date.today():
+            t = threading.Thread(target=lambda owned, currentDay: PortfolioValue.__valueOf(q, owned.copy(), currentDay), args= (owned, curDay))
+            t.start()
+            threads.append(t)
             (curDay, owned) = next(daysStocks)
+        
+        for thread in threads:
+            thread.join()
+        return q
 
     #Returns a tuple with the first element being the date and the second element being
     #a dictionary of owned stocks and how much 
@@ -104,7 +116,7 @@ class PortfolioValue:
 
     #Returns the value of the stocks on the given day
     @staticmethod
-    def __valueOf(stocks, curDay):
+    def __valueOf(q, stocks, curDay):
         stockKeys = list(stocks.keys())
         if len(stockKeys) == 0:
             return 0
@@ -112,11 +124,13 @@ class PortfolioValue:
             return PortfolioValue.__curValueOf(stocks)
         (totPrice, lastOpenMarket) = PortfolioValue.__getLastOpenMarket(stocks, stockKeys[0], curDay)  
         if len(stockKeys) == 1:
+            q.put((curDay, totPrice))
             return totPrice
 
         for symbol, quantity in list(stocks.items())[1:]:
             totPrice += int(quantity) * PortfolioValue.__priceForStockOn(symbol, lastOpenMarket)
-        return totPrice
+        q.put((curDay, totPrice))
+        return
 
     #Finds the most recent previous open market day
     @staticmethod

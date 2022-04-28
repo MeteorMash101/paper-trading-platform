@@ -78,20 +78,10 @@ class Stock_info:
         }
         return jsonData
 
-    #For that sweet sweet slight time gain
-    @staticmethod
-    def __live_data_for_threading(d, symbol):
-        d.append(si.get_live_price(symbol))
-
     @staticmethod
     def get_full_stock_stats(ticker):
         try:
-            d = []
-            t = threading.Thread(target=lambda ticker: Stock_info.__live_data_for_threading(d, ticker), args= (ticker,))
-            t.start()
             data = si.get_quote_data(ticker) #To catch assertion errors
-            t.join()
-            live_price = d[0]
         except:
             return {
                 "symbol": ticker,
@@ -113,7 +103,7 @@ class Stock_info:
         jsonData = {
             "symbol": ticker,
             "company_name": Stock_info.__getName(data, ticker),
-            "price": live_price,
+            "price": data["regularMarketPrice"],
             "low_today": Stock_info.__getDayLow(data),
             "high_today": Stock_info.__getDayHigh(data),
             "percent_change": data["regularMarketChangePercent"],
@@ -133,41 +123,36 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        q = queue.Queue()
-        threads = []
-        for symbol in symbols[:10]:
-            t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
-            t.start()
-            threads.append(t)
-        for thread in threads:
-            thread.join(2) # n is the number of seconds to wait before joining
-        stocks = []
-        while not q.empty():
-            stocks.append(q.get())
+        stocks = Stock_info.__data_for_list(symbols[:5])
         return sorted(stocks, key = lambda x: x["volume"], reverse=True)
     
     @staticmethod
     def get_popular_stocks():
         POPULAR_STOCKS = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM", "EBAY"]
+        return Stock_info.__data_for_list(POPULAR_STOCKS)
+    
+    @staticmethod
+    def __data_for_list(symbols):
         q = queue.Queue()
         threads = []
-        for symbol in POPULAR_STOCKS:
+        for symbol in symbols:
             t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
             t.start()
             threads.append(t)
         for thread in threads:
-            thread.join(2) # n is the number of seconds to wait before joining
+            thread.join(6) # n is the number of seconds to wait before joining
         stocks = []
         while not q.empty():
             stocks.append(q.get())
         return stocks
+
     #This is for the multithreaded functions
     def __queueJSON(q, ticker):
         data = si.get_quote_data(ticker)
         jsonData = {
             "symbol": ticker,
             "company_name": Stock_info.__getName(data, ticker),
-            "price": si.get_live_price(ticker),
+            "price": data["regularMarketPrice"],
             "percent_change": data["regularMarketChangePercent"],
             "change_direction": data["regularMarketChangePercent"] > 0,
             "volume": Stock_info.__getMarketVol(data)
@@ -178,18 +163,10 @@ class Stock_info:
     #Either way this is for Accounts when they want the stock list, we really only want price and percent change from this
     @staticmethod
     def get_price_and_change_for_list(symbols):
-        q = queue.Queue()
-        threads = []
-        for symbol in symbols:
-            t = threading.Thread(target=lambda ticker: Stock_info.__queueJSON(q, ticker), args= (symbol,))
-            t.start()
-            threads.append(t)
-        for thread in threads:
-            thread.join(2) # n is the number of seconds to wait before joining
+        data = Stock_info.__data_for_list(symbols)
         stocks = {}
-        while not q.empty():
-            stock = q.get()
-            stocks[stock["symbol"]] = stock
+        for entry in data:
+            stocks[entry["symbol"]] = entry
         return stocks
 
     @staticmethod

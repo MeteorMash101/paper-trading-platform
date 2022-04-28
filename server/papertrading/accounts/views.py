@@ -11,6 +11,8 @@ from datetime import datetime, date, timedelta
 from decimal import Decimal
 from accounts.utils.historicalPortfolioValueLoader import PortfolioValue
 
+import threading
+
 from django.contrib.auth.models import User # we are extending Django's User
 
 class AccountList(APIView):
@@ -75,7 +77,10 @@ class AccountDetail(APIView):
         # EDIT: don't understand
         if AccountObj != None: # account exists
             serializer = AccountSerializer(AccountObj)
-            PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
+
+            t = threading.Thread(target=PortfolioValue.load, args= (AccountObj,), daemon = True)
+            t.start()
+            #PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
             return Response(serializer.data)
         else: # account doesn't exist, create new
             return Response(None)
@@ -400,7 +405,6 @@ class AccountWatchList(APIView):
         if account == None:
             return Response(None)
         data = request.data
-        print("INSIDE PUT: DATA = ", data)
         if account.watchList == {} or account.watchList is None:
             account.watchList["stocks"] = []
         watched = account.watchList["stocks"]
