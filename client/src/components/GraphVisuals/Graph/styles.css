@@ -3,10 +3,11 @@
   background-color: #000000cc;
 } */
 
-/* .Graph { */
-  /* background-color: rgb(248, 245, 245); */
-  /* border: 1px solid rgb(61, 240, 240); */
-/* } */
+.Graph {
+  background-color: rgb(62, 62, 62);
+  border-left: 5px solid rgb(0, 0, 0);
+  border-bottom: 5px solid rgb(0, 0, 0);
+}
 
 .axisX text {
   text-anchor: start;
@@ -19,7 +20,7 @@
 
 .tooltip text {
   font-size: 12px;
-  fill: #0a0a0a;
+  fill: #efe7e7;
 }
 
 .tooltipLine {

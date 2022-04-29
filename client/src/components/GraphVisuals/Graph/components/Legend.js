@@ -1,8 +1,8 @@
 import React from "react";
 
-const Legend = ({ data, selectedItems, onChange }) => (
+const Legend = ({ legendData, selectedItems, onChange }) => (
   <div className="legendContainer">
-    {data.map((d) => (
+    {legendData.map((d) => (
       <div className="checkbox" style={{ color: d.color }} key={d.name}>
         <label>
           {(
