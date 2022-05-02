@@ -4,16 +4,16 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: .2rem .2rem;
-    /* EDIT: change to scroll */
     overflow: scroll;
+    margin-top: 1rem;
 }
+
 
 .title {
-    margin: 1px 1.5rem;
+    margin: 5px 1.5px;
+    margin-bottom: 2%;
     text-align: left;
 }
-
 
 .loader {
     display: inline-block;
@@ -70,4 +70,3 @@
         transform: translate(24px, 0);
     }
 }
-  

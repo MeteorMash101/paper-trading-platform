@@ -5,8 +5,8 @@
     width: 100%;
     height: 50px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: center; 
+    justify-content: space-around;
     animation-name: FadeIn;
     animation-duration: 1.3s;
     transition-timing-function: linear;
@@ -55,19 +55,12 @@
 }
 
 .value{
-    width: 20%;
+    width: 25%;
 }
 
-/* .check{
-    width:10%
-} */
-
-.shares{
-    width: 20%;
-}
 .price {
-    /* margin: 1rem 1rem; */
-    width: 20%;
+    margin: 1rem 1rem;
+    width: 25%;
 }
 
 .posChange {
@@ -79,11 +72,11 @@
 }
 
 .upArrow {
-    width: 20%;
+    width: 25%;
     color: rgba(25, 139, 95, 0.884);
 }
 
 .downArrow {
-    width: 20%;
+    width: 25%;
     color: rgb(185, 52, 19);
 }

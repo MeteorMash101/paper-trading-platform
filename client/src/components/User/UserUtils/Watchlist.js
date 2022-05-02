@@ -1,9 +1,9 @@
-import classes from './StockHoldings.module.css';
-import UserStockList from '../UserLists/UserStockList.js';
+import classes from './Watchlist.module.css';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
+import WatchlistList from '../UserLists/WatchlistList';
 
-const StockHoldings = () => {
+const Watchlist = () => {
   const userCtx = useContext(UserContext);
 
   return (
@@ -11,14 +11,15 @@ const StockHoldings = () => {
       <div className={classes.list}> 
         <div className={classes.box}>
           <h5 className={classes.symbol}> Symbol </h5>
-          <h5 className={classes.shares}> Quantity </h5>
           <h5 className={classes.price}> Price </h5>
           <h5 className={classes.change}> Daily Change</h5>
         </div>
-        <UserStockList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`} paramsInfo={"stock_list_display"}/> 
+        <div className={classes.watchlist}>
+          <WatchlistList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`} paramsInfo={"detailed_stocks"}/> 
+        </div> 
       </div>
     </div>
   )
 }
 
-export default StockHoldings;
+export default Watchlist;
