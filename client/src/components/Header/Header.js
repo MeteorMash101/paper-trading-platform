@@ -52,10 +52,10 @@ const Header = () => {
                 <div className={classes.title}>
                     <Link to={`/`} className={classes.logoandtitle}>
                         <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>
-                        <h2 className={classes.heading}>SWAT PAPER TRADING</h2>
+                        <h2 className={classes.heading}>SWAT PAPER TRADING
+                        </h2>
                     </Link>
                 </div>
-                
                 <div className={classes.searchbar}>
                     <SearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
                 </div>

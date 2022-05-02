@@ -12,7 +12,7 @@
 
 @media (max-width:950px) {
     .heading {
-    font-size: 0px !important;
+      font-size: 0px !important;
   }
   
   .tempLogo {
@@ -47,6 +47,6 @@
     width: max-content;
 }
 
-.title{
+.title {
     width: 20%;
 }
