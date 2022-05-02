@@ -1,24 +1,39 @@
 import React from "react";
 
-const Legend = ({ legendData, selectedItems, onChange }) => (
+const Legend = ({ legendData, selectedItems, currDateRange, onChange, labelMap }) => (
   <div className="legendContainer">
-    {legendData.map((d) => (
-      <div className="checkbox" style={{ color: d.color }} key={d.name}>
-        <label>
-          {(
-            <input
-              type="checkbox"
-              // type="button"
-              value={d.name}
-              checked={selectedItems.includes(d.name)}
-              onChange={() => onChange(d.name)}
-              // onClick={() => onClick(d.name)}
-            />
-          )}
-          {d.name}
-        </label>
-      </div>
-    ))}
+    <div className="dateRangeOptsContainer">
+      {/* EDIT: temp buttons, will activate later. */}
+      {(
+        <input
+          className="dateRangeOpt"
+          id="notAvail"
+          type="button"
+          disabled
+          value={"1D"}
+        />
+      )}
+      {(
+        <input
+          className="dateRangeOpt"
+          id="notAvail"
+          type="button"
+          disabled
+          value={"1W"}
+        />
+      )}
+      {legendData.map((d) => (
+        <input
+          className="dateRangeOpt"
+          key={d.name}
+          type="button"
+          id= {currDateRange == d.name ? "selected" : ""}
+          value={labelMap[d.name]}
+          checked={selectedItems.includes(d.name)}
+          onClick={() => onChange(d.name)}
+        />
+      ))}
+    </div>
   </div>
 );
 

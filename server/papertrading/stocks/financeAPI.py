@@ -59,13 +59,17 @@ class Stock_info:
     
     @staticmethod
     def get_stock_historical_data(ticker, start_date = None, minute = False):
+        print(
+            "[financeAPI.py]: ticker, start_date, minute in get_stock_historical_data(): ", 
+            ticker, start_date, minute
+        )
         if minute:
             today = datetime.today()
             try:
-                data = si.get_data(ticker, start_date = today.strftime("%Y-%m-%d"), interval = "1m")
+                data = si.get_data(ticker, start_date, interval = "1m")
             except KeyError: #When day changes but doesn't have data yet, use previous day
                 today = today - timedelta(days=1)
-                data = si.get_data(ticker, start_date = today.strftime("%Y-%m-%d"), interval = "1m")
+                data = si.get_data(ticker, start_date, interval = "1m")
         else:
             data = si.get_data(ticker, start_date = start_date)
         data.reset_index(level=0, inplace=True)

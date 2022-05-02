@@ -34,7 +34,7 @@ class StockList(APIView):
    minutes is optional and determines if user wants minute granularity, in which case it is supplied
    for the current day (or previous if current just started)
 
-   curl -d '{"start_date":"04/12/2022", "minutes":"True"}' -H "Content-type: application/json" -X get http://127.0.0.1:8000/stocks/hist/aapl/
+   curl -d '{"start_date":"04/30/2022", "minutes":"False"}' -H "Content-type: application/json" -X get http://127.0.0.1:8000/stocks/hist/aapl/
    '''
 class StockHistData(APIView):
     def get(self, request, ticker):
@@ -44,19 +44,18 @@ class StockHistData(APIView):
             start_date = request.data["start_date"]
         else:
             start_date = request.query_params.get('start_date', None)
-        
-        minuteIntervals = request.query_params.get('minutes', False)
-        
+        minuteIntervals = True if 'minutes' in request.query_params else False
         if "version" in request.data.keys():
             newVersion = request.data["version"] == "new"
         else:
             newVersion = request.query_params.get('version', False)
 
         if newVersion:
-            jsonData = si.get_stock_historical_data(ticker, start_date = start_date, minute = (minuteIntervals or minuteIntervals == "True"))
+            jsonData = si.get_stock_historical_data(ticker, start_date = start_date, minute = minuteIntervals)
         else:
             jsonData = si.get_stock_historical_data_deprecated(ticker)
         results = HistSerializer(jsonData).data
+        # print("[views.py] sending res: ", results)
         return Response(results)
 
 '''For the specific stock page general updating info'''

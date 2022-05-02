@@ -72,9 +72,10 @@
     grid-auto-rows: 1;
     border: 1px solid rgb(204, 202, 202);
     padding: 20px;
+    margin-top: 40px;
     margin-bottom: 40px;
-    border-bottom-left-radius: 1.4rem;
-    border-bottom-right-radius: 1.4rem;
+    border-radius: 1.4rem;
+    background-color: rgb(180, 255, 230);
   }
 
   .stats1 {

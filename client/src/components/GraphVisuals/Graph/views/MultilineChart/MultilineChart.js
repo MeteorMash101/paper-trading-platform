@@ -20,12 +20,12 @@ const MultilineChart = ({ data = [], margin = {} }) => {
     yScale,
     yScaleForAxis
   } = controller;
-
   return (
     <div ref={containerRef}>
       <svg width={svgWidth} height={svgHeight}>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          <GridLine
+          {/* NOTE: gridlines thing below? */}
+          {/* <GridLine
             type="vertical"
             scale={xScale}
             ticks={5}
@@ -38,7 +38,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
             ticks={2}
             size={width}
           />
-          {/* <GridLine
+          <GridLine
             type="horizontal"
             className="baseGridLine"
             scale={yScale}
@@ -52,19 +52,21 @@ const MultilineChart = ({ data = [], margin = {} }) => {
               data={items}
               xScale={xScale}
               yScale={yScale}
-              color={color}
+              color={"#99d1e7"}
             />
           ))}
           <Area data={data[0].items} xScale={xScale} yScale={yScale} />
-          <Axis
+          {/* NOTE: % thing below? */}
+          {/* <Axis
             type="left"
             scale={yScaleForAxis}
             transform="translate(0, -10)"
             ticks={5}
             tickFormat={yTickFormat}
-          />
+          /> */}
           <Overlay ref={overlayRef} width={width} height={height}>
-            <Axis
+            {/* NOTE: x-axis labels below */}
+            {/* <Axis
               type="bottom"
               className="axisX"
               anchorEl={overlayRef.current}
@@ -72,7 +74,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
               transform={`translate(10, ${height - height / 6})`}
               ticks={5}
               tickFormat={xTickFormat}
-            />
+            /> */}
             <Tooltip
               className="tooltip"
               anchorEl={overlayRef.current}

@@ -12,7 +12,7 @@ const MainFeed = ({stockList}) => {
   const userCtx = useContext(UserContext);
   return (
     <div className={classes.container}>
-      <NewsList/>
+      {/* <NewsList/> */}
       <div className={classes.listContainer}>
         <div className={classes.list}>
             <StockList title={"Top Movers"} stockListURL={"http://127.0.0.1:8000/stocks/"}/>

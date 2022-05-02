@@ -4,12 +4,61 @@ import MultilineChart from "./views/MultilineChart";
 import Legend from "./components/Legend";
 import portfolio from "./portfolio.json";
 import "./styles.css";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
 export default function Graph({stockURL}) {
   const [stock, setStock] = useState("");
-  var [date, setDate] = useState(new Date());
+  const rangeToLabel = { // EDIT: temp, just for label naming
+    "One day" : "1D",
+    "One month" : "1M",
+    "Three months": "3M",
+    "Six months": "6M",
+    "YTD" : "YTD"
+  }
+
+
+  const oneMonthData = {
+    name: "One month",
+    color: "#B6D0E2",
+    items: stock != "" ? 
+      stock.oneMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const threeMonthsData = {
+    name: "Three months",
+    color: "#CCCCFF",
+    items: stock != "" ? 
+      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const sixMonthsData = {
+    name: "Six months",
+    color: "#89CFF0",
+    items: stock != "" ? 
+      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const ytdData = {
+    name: "YTD",
+    color: "grey",
+    items: stock != "" ? 
+      stock.ytd['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const [selectedItems, setSelectedItems] = React.useState(["One month"]);
+  const legendData = [oneMonthData, threeMonthsData, sixMonthsData, ytdData];
+  const chartData = [
+    ...[oneMonthData, threeMonthsData, sixMonthsData, ytdData].filter((d) => selectedItems.includes(d.name))
+  ];
+
+  const onChangeSelection = (name) => {
+    setSelectedItems([name]);
+  };
 
   useEffect(() => {
     const fetchStock = async () => {
@@ -27,7 +76,7 @@ export default function Graph({stockURL}) {
         params : {
           // "start_date":"04/01/2017",
           "start_date": d.toLocaleDateString(),
-          // "minutes":"True",
+          // "minutes": true,
           "version": "new"
         }
       });
@@ -61,63 +110,22 @@ export default function Graph({stockURL}) {
   fetchStock()
   }, []);
   
-  const oneMonthData = {
-    name: "One month",
-    color: "#B6D0E2",
-    items: stock != "" ? 
-      stock.oneMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-  };
-
-  const threeMonthsData = {
-    name: "Three months",
-    color: "#CCCCFF",
-    items: stock != "" ? 
-      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-  };
-
-  const sixMonthsData = {
-    name: "Six months",
-    color: "#89CFF0",
-    items: stock != "" ? 
-      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-  };
-
-  const ytdData = {
-    name: "YTD",
-    color: "grey",
-    items: stock != "" ? 
-      stock.ytd['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
-  };
-
-  const [selectedItems, setSelectedItems] = React.useState(["YTD"]);
-  const legendData = [ytdData, oneMonthData, threeMonthsData, sixMonthsData];
-  const chartData = [
-    ...[oneMonthData, threeMonthsData, sixMonthsData, ytdData].filter((d) => selectedItems.includes(d.name))
-  ];
-
-  const onChangeSelection = (name) => {
-    setSelectedItems([name]);
-  };
-
-  console.log("[GRAPH.JS]: legendData: ", legendData)
-  console.log("[GRAPH.JS]: selectedItems: ", selectedItems)
+  // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
+  // console.log("[GRAPH.JS]: legendData: ", legendData)
   console.log("[GRAPH.JS]: chartData: ", chartData)
 
-
   return (
-    <div className="Graph">
-      <MultilineChart data={chartData}/>
-      <h4>{selectedItems}</h4>
+    <Fragment>
+      <div className="Graph">
+        <MultilineChart data={chartData}/>
+      </div>
       <Legend
         legendData={legendData}
         selectedItems={selectedItems}
+        currDateRange={selectedItems[0]}
         onChange={onChangeSelection}
-        // onClick={onChangeSelection}
+        labelMap={rangeToLabel}
       />
-    </div>
+    </Fragment>
   );
 }
