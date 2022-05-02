@@ -484,7 +484,8 @@ class AccountHistoricPV(APIView):
     def fillBalance(self, balance, endDate):
         for key in balance.keys():
             balance[key] = round(balance[key], 2)
-        dates = sorted(balance, key=lambda x: balance[x], reverse=True)
+        # dates = sorted(balance, key=lambda x: balance[x], reverse=True)
+        dates = sorted(balance.keys())
         day = datetime.fromisoformat(dates[0])
         oneDay = timedelta(days=1)
         endDate = datetime.fromisoformat(endDate)

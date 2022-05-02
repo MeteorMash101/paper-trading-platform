@@ -3,6 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import StockHoldings from './StockHoldings';
+import Watchlist from './Watchlist';
 
 export default function ColorTabs() {
   const [value, setValue] = React.useState('one');
@@ -12,7 +13,7 @@ export default function ColorTabs() {
   };
 
   return (
-    <Box sx={{ width: '90%', margin: '6%', border:'1px solid grey', borderRadius:'1.6rem', height:'50vh'}}>
+    <Box sx={{ width: '90%', margin: '5%', border:'1px solid grey', borderRadius:'1.6rem', height:'60vh'}}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -24,7 +25,7 @@ export default function ColorTabs() {
       </Tabs>
 
       {value === "one" && <StockHoldings/>}
-      {/* {value === "two" && "watchlist component goes here"} */}
+      {value === "two" && <Watchlist/>}
 
     </Box>
 

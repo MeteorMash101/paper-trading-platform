@@ -1,4 +1,6 @@
 .container {
-    border: 1px solid rgb(0, 0, 0);
-    width: 50%;
+    border: 1px solid rgb(173, 173, 173);
+    border-radius: 1.6rem;
+    margin-top: 3%;
+    height: 47vh;
 }

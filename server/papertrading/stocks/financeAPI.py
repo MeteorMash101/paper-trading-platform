@@ -49,26 +49,26 @@ class Stock_info:
     @staticmethod
     def determine_parameters(ticker, range):
         today = datetime.today()
-        if range == "1D":
+        if range == "1D": # INTERVAL: 5 mins
             return Stock_info.__get_one_day(ticker)
-        elif range == "1W": # done
+        elif range == "1W": # INTERVAL: 10 mins
             start_date = today - timedelta(days=7)
-            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::15, :]
-        elif range == "1M": #hourly for open hours
+            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+        elif range == "1M": # INTERVAL: 1 hour
             return Stock_info.__get_one_month(ticker)
-        elif range == "3M": #done
+        elif range == "3M": # INTERVAL: 1 day
             start_date = (today - timedelta(days=90))
             return Stock_info.__get_data_catch_errors(ticker, start_date)
-        elif range == "6M": #done
+        elif range == "6M": # INTERVAL: 1 day
             start_date = (today - timedelta(days=180))
             return Stock_info.__get_data_catch_errors(ticker, start_date)
-        elif range == "1Y": #done
+        elif range == "1Y": # INTERVAL: 1 day
             start_date = (today - timedelta(days=365))
             return Stock_info.__get_data_catch_errors(ticker, start_date)
-        elif range == "5Y": #done
+        elif range == "5Y": # INTERVAL: 1 month
             start_date = (today - timedelta(weeks=260))
             return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
-        else: #monthly
+        else: # INTERVAL: 1 year
             return Stock_info.__get_data_catch_errors(ticker, interval = "1mo").dropna()
 
     @staticmethod
@@ -105,7 +105,8 @@ class Stock_info:
             thread.join(6) # n is the number of seconds to wait before joining
         df = q.get().iloc[::60,:]
         while not q.empty():
-            df = df.append(q.get().iloc[::60,:])
+            #df = df.append(q.get().iloc[::60,:])
+            df = pd.concat((df, q.get().iloc[::30,:]))
         df.index = df.index.map(lambda x: x - timedelta(hours=4))
         return df.sort_index()
 

@@ -69,7 +69,7 @@ const App = () => {
     <div className="App">    
       {/* <div className="scroll"></div> */}
       {/* Header appears on every page. */}
-      <Header/>
+      {/* <Header/> */}
       <Routes>
         <Route path="/" element={<MainFeed/>} exact/>
         <Route path="/stock/:symbol" element={<StockDetail/>}/>

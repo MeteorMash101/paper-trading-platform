@@ -16,13 +16,44 @@ export default function Graph({stockURL}) {
     "Six months": "6M",
     "YTD" : "YTD"
   }
-
-
+  useEffect(() => {
+    const fetchStock = async () => {
+      // Below will be YTD
+      const stockFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "1Y"
+        }
+      });
+      const stockOneMonthFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "1M"
+        }
+      });
+      const stockThreeMonthFromServer = await axios.get(stockURL, { 
+        params : {
+          "dateRange": "3M"
+        }
+      });
+      const stockSixMonthFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "6M"
+        }
+      });
+      setStock({ 
+        oneMonth: stockOneMonthFromServer.data,
+        threeMonth: stockThreeMonthFromServer.data, 
+        sixMonth: stockSixMonthFromServer.data,
+        ytd: stockFromServer.data, 
+      });
+    }
+  fetchStock()
+  }, []);
+  const entryID = 0
   const oneMonthData = {
     name: "One month",
     color: "#B6D0E2",
     items: stock != "" ? 
-      stock.oneMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      stock.oneMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -30,7 +61,7 @@ export default function Graph({stockURL}) {
     name: "Three months",
     color: "#CCCCFF",
     items: stock != "" ? 
-      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -38,7 +69,7 @@ export default function Graph({stockURL}) {
     name: "Six months",
     color: "#89CFF0",
     items: stock != "" ? 
-      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -46,7 +77,7 @@ export default function Graph({stockURL}) {
     name: "YTD",
     color: "grey",
     items: stock != "" ? 
-      stock.ytd['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })) :
+      stock.ytd['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -59,59 +90,9 @@ export default function Graph({stockURL}) {
   const onChangeSelection = (name) => {
     setSelectedItems([name]);
   };
-
-  useEffect(() => {
-    const fetchStock = async () => {
-      // Below will be YTD
-      const stockFromServer = await axios.get(stockURL);
-      // Calculating the day a month ago
-      var d = new Date();
-      var m = d.getMonth();
-      d.setMonth(d.getMonth() - 1);
-      // If still in same month, set date to last day of 
-      // previous month
-      if (d.getMonth() == m) d.setDate(0);
-      d.setHours(0, 0, 0, 0);
-      const stockOneMonthFromServer = await axios.get(stockURL, {
-        params : {
-          // "start_date":"04/01/2017",
-          "start_date": d.toLocaleDateString(),
-          // "minutes": true,
-          "version": "new"
-        }
-      });
-      // Calculating the date three months ago
-      var dThree = new Date();
-      dThree.setMonth(dThree.getMonth() - 2);
-      dThree.setHours(0, 0, 0, 0);
-      const stockThreeMonthFromServer = await axios.get(stockURL, { 
-        params : {
-          "start_date": dThree.toLocaleDateString(),
-          "version": "new"
-        }
-      });
-      // Calculating the date six months ago
-      var dSix = new Date();
-      dSix.setMonth(dSix.getMonth() - 5);
-      dSix.setHours(0, 0, 0, 0);
-      const stockSixMonthFromServer = await axios.get(stockURL, {
-        params : {
-          "start_date": dSix.toLocaleDateString(),
-          "version": "new"
-        }
-      });
-      setStock({ 
-        oneMonth: stockOneMonthFromServer.data,
-        threeMonth: stockThreeMonthFromServer.data, 
-        sixMonth: stockSixMonthFromServer.data,
-        ytd: stockFromServer.data, 
-      });
-    }
-  fetchStock()
-  }, []);
-  
   // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
   // console.log("[GRAPH.JS]: legendData: ", legendData)
+  console.log("[GRAPH.JS]: stock: ", stock);
   console.log("[GRAPH.JS]: chartData: ", chartData)
 
   return (

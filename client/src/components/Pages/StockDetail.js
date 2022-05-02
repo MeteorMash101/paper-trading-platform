@@ -3,10 +3,12 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import classes from './StockDetail.module.css';
 import axios from 'axios';
-import Graph from '../GraphVisuals/Graph/Graph';
 import OrderWidget from '../User/UserUtils/OrderWidget';
+import Header from '../Header/Header';
 // import Chart from '../Stock/StockStats/Chart';
 // import KeyStats from '..Stock/StockStats/KeyStats';
+import Graph from '../GraphVisuals/Graph/Graph';
+
 
 const StockDetail = () => {
     const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!    const [stock, setStock] = useState("");
@@ -44,27 +46,37 @@ const StockDetail = () => {
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])
     return (
+
+        <div className={classes.everything}>
+            <Header/>
+        
         <div className={classes.container}>
+            
             <div className={classes.name}>
                 <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
                 <h3 className={classes.symbol}>{stock.symbol}</h3>
             </div>
+
             <div className={classes.wrapper1}>
                 <div className={classes.leftSec}>
+
                     <div className={classes.graph}>
-                        <Graph stockURL={`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
+                        <Graph stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
                     </div>
+
                     <div className={classes.wrapper}>
                         <div className={classes.stats1}>
                             <h4 className={classes.attribute}> Vol: <span className={classes.value}>{stock.volume} </span> </h4>
                             <h4 className={classes.attribute}> High: <span className={classes.value}>{stock.high_today} </span> </h4>
                             <h4 className={classes.attribute}> Low: <span className={classes.value}>{stock.low_today} </span> </h4>
                         </div>
+
                         <div className={classes.stats2}>
                             <h4 className={classes.attribute}> Mkt Cap: <span className={classes.value}>{stock.market_cap} </span> </h4>
                             <h4 className={classes.attribute}> P/E: <span className={classes.value}>{stock.pe_ratio} </span> </h4>
                             <h4 className={classes.attribute}> Avg Vol: <span className={classes.value}>{stock.average_volume} </span> </h4>
                         </div>
+
                         <div className={classes.stats3}>
                             <h4 className={classes.attribute}> 52W H: <span className={classes.value}>{stock.ft_week_high} </span> </h4>
                             <h4 className={classes.attribute}> 52W L: <span className={classes.value}>{stock.ft_week_low} </span> </h4>
@@ -72,10 +84,14 @@ const StockDetail = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className={classes.rightSec}>
                     <OrderWidget livePrice={livePrice} stock={stock}/>
                 </div>
+                
             </div>        
+        </div>
+
         </div>
     );
 }

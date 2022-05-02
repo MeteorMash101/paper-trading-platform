@@ -2,17 +2,17 @@
     display: flex;
     align-items: center;
     width: 90%;
+    margin: 0% 4%;
     height: auto;
+    border-bottom: 1px solid rgb(173, 173, 173);
 }
 
 .stockLink {
     color: black;
     text-decoration: none;
-    /* width: 9-0px; */
-    width: 840px;
     height: 50px;
     margin: .5rem .5rem;
-    /* margin-right: -.2rem; */
+    width: 100%;
     padding: 0px 5px;
     align-items: center;
     position: relative;
@@ -22,10 +22,7 @@
 .container {
     position: relative;
     display: flex;
-    border-bottom: 1px solid rgb(173, 173, 173);
-    width: 820px;
     height: 50px;
-    margin: 1rem 1rem;
     align-items: center;
     justify-content: space-between;
     width: 100%;
@@ -35,7 +32,7 @@
 .container:hover {
     background-color: rgb(226, 244, 247);
     cursor: pointer;
-    border-radius: 1.1rem;
+    border-radius: 1.6rem;
 }
 
 .symbol {
@@ -44,7 +41,7 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: 60px; 
+    width: 10%;
     height: 25px;
     border-radius: 10px;
     font-size: medium;
@@ -58,18 +55,17 @@
 
 .price {
     position: absolute;
-    left: 60%;
+    left: 65%;
     font-size: large;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 10%;
     height: 55%;
 }
 
 .percent_change {
     position: absolute;
-    left: 74%;
+    left: 83%;
     font-size: large;
 }
 
@@ -84,24 +80,24 @@
 .upArrow {
     position: absolute;
     color: rgba(25, 139, 95, 0.884);
-    left: 85%;
+    left: 95%;
 }
 
 .downArrow {
     position: absolute;
     color: rgb(185, 52, 19);
-    left: 90%;
+    left: 95%;
 }
 
 .watchListBtn:hover {
     color:rgb(81, 88, 79);
     overflow: hidden;
     cursor: pointer;
-    left: 85%;
+    left: 99%;
 }
 
 .watchlist {
-    left:93%;
+    left:99%;
     position: absolute;
 }
 

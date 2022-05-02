@@ -40,14 +40,26 @@
   fill: rgb(255, 255, 255);
 }
 
-.legendContainer {
+/* .legendContainer {
   display: flex;
   justify-content: flex-start;
   border: 2px solid rgb(26, 38, 49);
   border-radius: 5px;
   background-color: #2b3c4e;
   padding: .3rem;
-  /* color: #8e8c8f; */
+  width: 100%;
+  max-width: 764px;
+  height: 120px;
+} */
+
+.legendContainer {
+  display: flex;
+  justify-content: flex-start;
+  /* border: 2px solid rgb(26, 38, 49); */
+  /* border-radius: 5px; */
+  /* background-color: #2b3c4e; */
+  padding: .3rem;
+  color: #8e8c8f;
   width: 100%;
   max-width: 764px;
   height: 120px;

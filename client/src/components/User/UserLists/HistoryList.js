@@ -9,24 +9,19 @@ const HistoryList = ({title}) => {
 	const userCtx = useContext(UserContext);
 	const API_SWITCH = false;
     const MINUTE_MS = 3000; // 3 seconds = 3000
-  	const [usersStocks, setUsersStocks] = useState([
-		{
-			type: "dummy",
-            stock: "dummy", 
-            quantity: "dummy",
-            date: "date",
-			stockPrice: "[0.00]"
-		}
-	  ]);
+
+	const [usersStocks, setUsersStocks] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
+		setIsLoading(true)
 		const interval = setInterval(() => {
-
 			const fetchStock = async () => {
 			console.log('FETCHING transaction history...W/ USER CONTEXT:', userCtx)
 			const dataFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/transactionHistory/`)
 			console.log("transaction history DATA:", dataFromServer.data)
-			setUsersStocks(dataFromServer.data.history);
+			setUsersStocks(dataFromServer.data);
+			setIsLoading(false)
 		}
 
 		if (!API_SWITCH) {
@@ -39,16 +34,17 @@ const HistoryList = ({title}) => {
 	return (
 		<div className={classes.container}>
 			<h2 className={classes.title}>{title}</h2>
-			{usersStocks?.map((d) => (
-				<p>{d.stock}</p>
-				// <HistoryItem
-				// key={d.id} // required for React warning...
-				// 	type = {d.type}
-                //     stock = {d.stock}
-                //     quantity={d.quantity}
-				// 	date ={d.date}
-				// 	stockPrice={d.stockPrice}
-				// />
+			{isLoading && <div className={classes.loader}></div>}
+			{!isLoading &&
+			usersStocks["transaction_history"]?.map((d) => (
+				<HistoryItem
+					key={d.id} // required for React warning...
+					type = {d.type}
+                    stock = {d.stock}
+                    quantity={d.quantity}
+					date ={d.date}
+					stockPrice={d.stockPrice}
+				/>
 			)) } 
 		</div>
 	);
