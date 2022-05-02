@@ -61,7 +61,7 @@ export default function Graph({stockURL}) {
     name: "Three months",
     color: "#CCCCFF",
     items: stock != "" ? 
-      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
+      stock.threeMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -69,7 +69,7 @@ export default function Graph({stockURL}) {
     name: "Six months",
     color: "#89CFF0",
     items: stock != "" ? 
-      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
+      stock.sixMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
@@ -77,7 +77,7 @@ export default function Graph({stockURL}) {
     name: "YTD",
     color: "grey",
     items: stock != "" ? 
-      stock.ytd['historical_data'].map((d) => ({ ...d, date: Date.parse(d.date + "T" + d.time)})) :
+      stock.ytd['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
