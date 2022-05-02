@@ -70,7 +70,7 @@ function NewSearchBar ({stockListURL}) {
 
       {filteredData.length != 0 && (
         <div className={classes.dataResult}>
-          {filteredData.slice(0, 15).map((value, key) => {
+          {filteredData.slice(0, 50).map((value, key) => {
             return (
               <a className={classes.stockLink} href={`/stock/${value.symbol}`}>
                 <div className={classes.symbol}> {value.symbol} </div> 

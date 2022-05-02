@@ -1,0 +1,57 @@
+.container{
+    display: flex;
+    align-items: center;
+    width: 90%;
+    margin: 1% 4%;
+    border: 1px solid rgb(173, 173, 173);
+    border-radius: 1.6rem;
+}
+
+.content{
+    color: black;
+    text-decoration: none;
+    width: 100%;
+    height: 30px;
+    align-items: center;
+    position: relative;
+    display: flex;
+    margin: 0.9% 1%;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.date{
+    width: 16%;
+    text-align: center;
+}
+
+.type{
+    width: 16%;
+    text-align: center;
+}
+
+.stock{
+    width: 12%;
+    text-align: center;
+    border: 1px solid white;
+    height: 30px;
+    font-weight: 600;
+    border-radius: 1.6rem;
+    background-color: rgb(229, 248, 252);
+}
+
+.quantity{
+    width: 16%;
+    text-align: center;
+}
+
+.stockPrice{
+    width: 16%;
+    text-align: center;
+}
+
+.totalValue{
+    width: 16%;
+    text-align: center;
+}
