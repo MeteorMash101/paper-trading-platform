@@ -4,6 +4,7 @@ import queue
 import pandas as pd
 import os
 from datetime import datetime, timedelta
+from pandas.errors import OutOfBoundsDatetime
 
 class Stock_info:
     
@@ -29,36 +30,101 @@ class Stock_info:
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-    '''
-    @staticmethod
-    def get_stock_historical_data(ticker):
-        data = si.get_data(ticker)
-        data.reset_index(level=0, inplace=True)
-        data.rename(columns={"index": "date"}, inplace = True)
-        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
-        data = data.drop(columns = ["ticker"])
-        jsonData = {
-            "historical_data": data.to_dict("records")
-        }
-        return jsonData
-    '''
+   
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     
     @staticmethod
-    def get_stock_historical_data_deprecated(ticker):
-        data = si.get_data(ticker, "2021-03-15")
+    def get_stock_historical_data(ticker, range):
+        data = Stock_info.determine_parameters(ticker, range)
         data.reset_index(level=0, inplace=True)
-        data.rename(columns={"index": "date"}, inplace = True)
-        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
-        data = data.drop(columns = ["ticker", "high", "low", "close", "adjclose"])
+        data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
+        data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
+        data = data.drop(columns = ["ticker", "index"])
         jsonData = {
             "historical_data": data.to_dict("records")
         }
         return jsonData
+
+    @staticmethod
+    def determine_parameters(ticker, range):
+        today = datetime.today()
+        if range == "1D":
+            return Stock_info.__get_one_day(ticker)
+        elif range == "1W": # done
+            start_date = today - timedelta(days=7)
+            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+        elif range == "1M": #hourly for open hours
+            return Stock_info.__get_one_month(ticker)
+        elif range == "3M": #done
+            start_date = (today - timedelta(days=90))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "6M": #done
+            start_date = (today - timedelta(days=180))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "1Y": #done
+            start_date = (today - timedelta(days=365))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "5Y": #done
+            start_date = (today - timedelta(weeks=260))
+            return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
+        else: #monthly
+            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo").dropna()
+
+    @staticmethod
+    def __get_one_day(ticker):
+        today = datetime.today()
+        start_date = today - timedelta(days=7)
+        df = Stock_info.__get_data_catch_errors(ticker, start_date = start_date, end_date = today, interval="1m").iloc[::5, :]
+        
+        result = df.groupby(by=lambda x: (x.month, x.day))
+        days = sorted(result.groups.keys(), key= lambda x: x[1])
+        curDay = sorted(days, key= lambda x: x[0])[-1]
+        returnDF = df.loc[result.groups[curDay]]
+        returnDF.index = returnDF.index.map(lambda x: x - timedelta(hours=4))
+        return returnDF
+
+    @staticmethod
+    def __get_one_month(ticker):
+        today = datetime.today()
+        days = [] #inputs to thread
+        days.append( (today - timedelta(days=29), today - timedelta(days=24)) )
+        days.append( (today - timedelta(days=23), today - timedelta(days=18)) )
+        days.append( (today - timedelta(days=17), today - timedelta(days=12)) )
+        days.append( (today - timedelta(days=11), today - timedelta(days=6))  )
+        days.append( (today - timedelta(days=5),  today)                      )
+        q = queue.Queue()
+        threads = []
+        for period in days:
+            t = threading.Thread( 
+                target=lambda ticker, start, end, interval: Stock_info.__hist_threading(q, ticker, start, end, interval), 
+                args= (ticker, period[0], period[1], "1m"))
+            t.start()
+            threads.append(t)
+        for thread in threads:
+            thread.join(6) # n is the number of seconds to wait before joining
+        df = q.get().iloc[::60,:]
+        while not q.empty():
+            #df = df.append(q.get().iloc[::60,:])
+            df = pd.concat((df, q.get().iloc[::30,:]))
+        df.index = df.index.map(lambda x: x - timedelta(hours=4))
+        return df.sort_index()
+
+    @staticmethod
+    def __hist_threading(q, ticker, start_date = None, end_date = None, interval = "1d"):
+        df = Stock_info.__get_data_catch_errors(ticker, start_date, end_date, interval)
+        q.put(df)
     
     @staticmethod
-    def get_stock_historical_data(ticker, start_date = None, minute = False):
+    def __get_data_catch_errors(ticker, start_date = None, end_date = None, interval = "1d"):
+        try:
+            return si.get_data(ticker, start_date = start_date, end_date = end_date, interval=interval).dropna()
+        except OutOfBoundsDatetime:
+            return si.get_data(ticker, interval=interval).dropna()
+    
+
+    @staticmethod
+    def get_stock_historical_data_deprecated(ticker, start_date = None, minute = False):
         print(
             "[financeAPI.py]: ticker, start_date, minute in get_stock_historical_data(): ", 
             ticker, start_date, minute
