@@ -53,7 +53,7 @@ class Stock_info:
             return Stock_info.__get_one_day(ticker)
         elif range == "1W": # done
             start_date = today - timedelta(days=7)
-            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::15, :]
+            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
         elif range == "1M": #hourly for open hours
             return Stock_info.__get_one_month(ticker)
         elif range == "3M": #done
@@ -105,7 +105,8 @@ class Stock_info:
             thread.join(6) # n is the number of seconds to wait before joining
         df = q.get().iloc[::60,:]
         while not q.empty():
-            df = df.append(q.get().iloc[::60,:])
+            #df = df.append(q.get().iloc[::60,:])
+            df = pd.concat((df, q.get().iloc[::30,:]))
         df.index = df.index.map(lambda x: x - timedelta(hours=4))
         return df.sort_index()
 
