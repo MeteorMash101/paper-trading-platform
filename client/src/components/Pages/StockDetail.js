@@ -52,7 +52,7 @@ const StockDetail = () => {
             <div className={classes.wrapper1}>
                 <div className={classes.leftSec}>
                     <div className={classes.graph}>
-                        <Graph stockURL={`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
+                        <Graph stockURL={`http://127.0.0.1:8000/stocks/historical/${symbol}`}/>
                     </div>
                     <div className={classes.wrapper}>
                         <div className={classes.stats1}>

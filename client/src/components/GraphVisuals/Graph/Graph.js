@@ -17,7 +17,6 @@ export default function Graph({stockURL}) {
     "YTD" : "YTD"
   }
 
-
   const oneMonthData = {
     name: "One month",
     color: "#B6D0E2",
@@ -74,10 +73,7 @@ export default function Graph({stockURL}) {
       d.setHours(0, 0, 0, 0);
       const stockOneMonthFromServer = await axios.get(stockURL, {
         params : {
-          // "start_date":"04/01/2017",
-          "start_date": d.toLocaleDateString(),
-          // "minutes": true,
-          "version": "new"
+          "dateRange": "1M"
         }
       });
       // Calculating the date three months ago
@@ -86,8 +82,7 @@ export default function Graph({stockURL}) {
       dThree.setHours(0, 0, 0, 0);
       const stockThreeMonthFromServer = await axios.get(stockURL, { 
         params : {
-          "start_date": dThree.toLocaleDateString(),
-          "version": "new"
+          "dateRange": "3M"
         }
       });
       // Calculating the date six months ago
@@ -96,8 +91,7 @@ export default function Graph({stockURL}) {
       dSix.setHours(0, 0, 0, 0);
       const stockSixMonthFromServer = await axios.get(stockURL, {
         params : {
-          "start_date": dSix.toLocaleDateString(),
-          "version": "new"
+          "dateRange": "6M"
         }
       });
       setStock({ 

@@ -135,29 +135,3 @@
   }
 
 }
-/* 
-#tooltipBG:hover ~ .stockLink {
-    width: 40px;
-} */
-
-/* .tooltip {
-    visibility: visible;
-    width: 120px;
-    background-color: rgb(231, 95, 95);
-} */
-/* 
-#tooltipBG .tooltip::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-} */
-/* 
-#tooltipBG:hover .tooltip {
-    visibility: visible;
-    opacity: 1;
-} */
