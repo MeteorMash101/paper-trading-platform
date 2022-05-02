@@ -18,10 +18,13 @@ const NewsItem = ({title, image, summary, url, postTime}) => {
                     <div className={classes.headline}>{title}</div>
                     <div className={classes.time}> {new Date(postTime).toLocaleString("en-us", options)} </div>
                 </div>
-                <div className={classes.summary}>{summary}</div>
-                {/*<a href={url}> Source </a>*/}
+                <div className={classes.titleDate}>
+                    <div className={classes.summary}>{summary}</div>
+                    <img className={classes.img} src={image}></img>
+                </div>
+                
             </div>
-            <img className={classes.img} src={image}></img>
+            
             
         </a>
     );

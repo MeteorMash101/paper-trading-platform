@@ -10,12 +10,11 @@
 
 .text {
     text-align: left;
-    width: 90%;
 }
 
 .img {
-    width: calc(6*4vmin);
-    height: calc(6*3vmin);
+    width: calc(4*4vmin);
+    height: calc(4*3vmin);
 }
 
 .titleDate {
@@ -35,7 +34,7 @@
     color: rgb(0, 0, 0);
     overflow: hidden;
     
-    max-height: calc(2*(1px + 3vmin));
+    max-height: calc(2*(3px + 3vmin)-1px);
     line-height: calc(1px + 3vmin);
 }
 .time {
@@ -47,7 +46,6 @@
     color: rgb(0, 0, 0);
     white-space: nowrap;
     overflow: hidden;
-    padding-right: 1vmin;
 }
 
 .summary {
@@ -55,5 +53,4 @@
     font-size: calc(2vmin);
     color: rgb(0, 0, 0);
     font-size: calc(2vmin);
-    padding-left: 1rem;
 }

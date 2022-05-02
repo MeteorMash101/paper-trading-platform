@@ -22,7 +22,7 @@ display them.
 */
 const NewsList = ({newsAPIUrl}) => {
     // const [orderType, setOrderType] = useState("BUY");
-    const [articles, setArticles] = useState([]);
+	const [articles, setArticles] = useState([]);
     useEffect(() => {
 		const fetchData = async () => {
 			const res = await axios.get(newsAPIUrl)
