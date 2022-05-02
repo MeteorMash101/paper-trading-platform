@@ -45,18 +45,22 @@ class StockHistData(APIView):
         else:
             start_date = request.query_params.get('start_date', None)
         minuteIntervals = True if 'minutes' in request.query_params else False
-        if "version" in request.data.keys():
-            newVersion = request.data["version"] == "new"
-        else:
-            newVersion = request.query_params.get('version', False)
 
-        if newVersion:
-            jsonData = si.get_stock_historical_data(ticker, start_date = start_date, minute = minuteIntervals)
-        else:
-            jsonData = si.get_stock_historical_data_deprecated(ticker)
+        jsonData = si.get_stock_historical_data_deprecated(ticker, start_date = start_date, minute = minuteIntervals)
         results = HistSerializer(jsonData).data
         # print("[views.py] sending res: ", results)
         return Response(results)
+
+class StockHist(APIView):
+    def get(self, request, ticker):
+        if "dateRange" in request.data.keys():
+            range = request.data["dateRange"]
+        else:
+            range = request.query_params.get('dateRange', None)
+        jsonData = si.get_stock_historical_data(ticker, range)
+        results = HistSerializer(jsonData).data
+        return Response(results)
+
 
 '''For the specific stock page general updating info'''
 class StockDetail(APIView):
