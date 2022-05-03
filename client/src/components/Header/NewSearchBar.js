@@ -7,6 +7,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 
 function NewSearchBar ({stockListURL}) {
+    
 
     const [stockList, setStockList] = useState([]);
     useEffect(() => {
@@ -17,6 +18,26 @@ function NewSearchBar ({stockListURL}) {
       }
       fetchStocks()
     }, []) 
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const ref = React.useRef()
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+        // If the menu is open and the clicked target is not within the menu,
+        // then close the menu
+        if (isMenuOpen && ref.current && !ref.current.contains(e.target)) {
+          setIsMenuOpen(false)
+          clearInput()
+        }
+      }
+    
+      document.addEventListener("mousedown", checkIfClickedOutside)
+
+      return () => {
+        // Cleanup the event listener
+        document.removeEventListener("mousedown", checkIfClickedOutside)
+      }
+    }, [isMenuOpen])
 
     const [filteredData, setFilteredData] = useState([]);
     const [wordEntered, setWordEntered] = useState("");
@@ -43,7 +64,7 @@ function NewSearchBar ({stockListURL}) {
 
     return (
 
-        <div className={classes.container}>
+        <div className={classes.container} ref={ref} onClick={() => setIsMenuOpen(oldState => !oldState)}>
 
             <input
                 className={classes.searchInput}

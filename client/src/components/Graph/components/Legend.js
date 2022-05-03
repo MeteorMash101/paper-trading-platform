@@ -5,12 +5,14 @@ const Legend = ({ data, selectedItems, onChange }) => (
     {data.map((d) => (
       <div className="checkbox" style={{ color: d.color }} key={d.name}>
         <label>
-          {d.name !== "Portfolio" && (
+          {(
             <input
               type="checkbox"
+              // type="button"
               value={d.name}
               checked={selectedItems.includes(d.name)}
               onChange={() => onChange(d.name)}
+              // onClick={() => onClick(d.name)}
             />
           )}
           {d.name}

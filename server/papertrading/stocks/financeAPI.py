@@ -42,6 +42,7 @@ class Stock_info:
         }
         return jsonData
     '''
+    
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     
