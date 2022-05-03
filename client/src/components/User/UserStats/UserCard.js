@@ -39,7 +39,6 @@ const UserCard = () => {
                     <h4 className={classes.attribute}> Portfolio Value: <span className={classes.value}>${userCtx.portfolioInfo.portfolio_value}</span> </h4>
                     <h4 className={classes.attribute}> Buying Power: <span className={classes.value}> ${userCtx.balance} </span> </h4>
                 </div>
-
                 <div className={classes.graph}>
                     <Graph1 stockURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/historicPV/`}/>
                 </div>
@@ -49,20 +48,3 @@ const UserCard = () => {
 }
 
 export default UserCard;
-
-
-{/* 
-
-            <h1>Your Portfolio:</h1>
-            {!userCtx.isLoggedIn && <p className={classes.message}>Please login to see your personal stats</p>}
-            <div className={classes.container}>
-                <h2 className={classes.label}>Portfolio Value:</h2>
-                <h2>${userCtx.portfolioInfo.portfolio_value}</h2>
-                <h2 className={classes.label}>Buying Power:</h2>
-                <h2>${userCtx.balance}</h2>
-                {userCtx.portfolioInfo.change_direction && <h5 className={classes.labelPos}>{userCtx.portfolioInfo.percent_change}%</h5>}
-                {!userCtx.portfolioInfo.change_direction && <h5 className={classes.labelNeg}>{userCtx.portfolioInfo.percent_change}%</h5>}
-                <p className={classes.label}>[Today]</p>
-                <b>**[Insert Graph Here]**</b>
-                <p className={classes.label}>More Info.</p>
-*/}

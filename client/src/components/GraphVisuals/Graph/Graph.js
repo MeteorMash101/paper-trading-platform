@@ -2,26 +2,23 @@
 import React from "react";
 import MultilineChart from "./views/MultilineChart";
 import Legend from "./components/Legend";
-import portfolio from "./portfolio.json";
+import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
 export default function Graph({stockURL}) {
   const [stock, setStock] = useState("");
-  const rangeToLabel = { // EDIT: temp, just for label naming
-    "One day" : "1D",
-    "One month" : "1M",
-    "Three months": "3M",
-    "Six months": "6M",
-    "YTD" : "YTD"
-  }
   useEffect(() => {
     const fetchStock = async () => {
-      // Below will be YTD
-      const stockFromServer = await axios.get(stockURL, {
+      const stockOneDayFromServer = await axios.get(stockURL, {
         params : {
-          "dateRange": "1Y"
+          "dateRange": "1D"
+        }
+      });
+      const stockOneWeekFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "1W"
         }
       });
       const stockOneMonthFromServer = await axios.get(stockURL, {
@@ -39,57 +36,89 @@ export default function Graph({stockURL}) {
           "dateRange": "6M"
         }
       });
+      const stockOneYearFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "1Y"
+        }
+      });
+      const stockFiveYearFromServer = await axios.get(stockURL, {
+        params : {
+          "dateRange": "5Y"
+        }
+      });
       setStock({ 
+        oneDay: stockOneDayFromServer.data,
+        oneWeek: stockOneWeekFromServer.data,
         oneMonth: stockOneMonthFromServer.data,
         threeMonth: stockThreeMonthFromServer.data, 
         sixMonth: stockSixMonthFromServer.data,
-        ytd: stockFromServer.data, 
+        ytd: stockOneYearFromServer.data, 
+        ytd5: stockFiveYearFromServer.data
       });
     }
   fetchStock()
   }, []);
-  const entryID = 0
+
+  const oneDayData = {
+    name: "1D",
+    items: stock != "" ? 
+      stock.oneDay['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const oneWeekData = {
+    name: "1W",
+    items: stock != "" ? 
+      stock.oneWeek['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
   const oneMonthData = {
-    name: "One month",
-    color: "#B6D0E2",
+    name: "1M",
     items: stock != "" ? 
       stock.oneMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
-
+  
   const threeMonthsData = {
-    name: "Three months",
-    color: "#CCCCFF",
+    name: "3M",
     items: stock != "" ? 
       stock.threeMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
   const sixMonthsData = {
-    name: "Six months",
-    color: "#89CFF0",
+    name: "6M",
     items: stock != "" ? 
       stock.sixMonth['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
-  const ytdData = {
-    name: "YTD",
-    color: "grey",
+  const oneYearData = {
+    name: "1Y",
     items: stock != "" ? 
       stock.ytd['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
-  const [selectedItems, setSelectedItems] = React.useState(["One month"]);
-  const legendData = [oneMonthData, threeMonthsData, sixMonthsData, ytdData];
+  const fiveYearData = {
+    name: "5Y",
+    items: stock != "" ? 
+      stock.ytd5['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
+  const [selectedItems, setSelectedItems] = React.useState(["5Y"]);
+  const legendData = [oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData];
   const chartData = [
-    ...[oneMonthData, threeMonthsData, sixMonthsData, ytdData].filter((d) => selectedItems.includes(d.name))
+    ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedItems.includes(d.name))
   ];
 
   const onChangeSelection = (name) => {
     setSelectedItems([name]);
   };
+
+  // **DEBUGGING**:
   // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
   // console.log("[GRAPH.JS]: legendData: ", legendData)
   console.log("[GRAPH.JS]: stock: ", stock);
@@ -105,7 +134,6 @@ export default function Graph({stockURL}) {
         selectedItems={selectedItems}
         currDateRange={selectedItems[0]}
         onChange={onChangeSelection}
-        labelMap={rangeToLabel}
       />
     </Fragment>
   );
