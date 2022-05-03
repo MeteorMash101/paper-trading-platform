@@ -3,4 +3,12 @@
     border-radius: 1.6rem;
     margin-top: 3%;
     height: 47vh;
+    overflow-y: scroll;
+
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+    
+}
+.container::-webkit-scrollbar { 
+    display: none;  /* Safari and Chrome */
 }
