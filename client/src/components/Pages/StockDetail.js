@@ -8,6 +8,7 @@ import Header from '../Header/Header';
 // import Chart from '../Stock/StockStats/Chart';
 // import KeyStats from '..Stock/StockStats/KeyStats';
 import Graph from '../GraphVisuals/Graph/Graph';
+import Chart from '../Stock/StockStats/Chart';
 
 
 const StockDetail = () => {
@@ -86,6 +87,11 @@ const StockDetail = () => {
                 </div>
 
                 <div className={classes.rightSec}>
+                    <div className={classes.qe}>
+                        <h3>Quarterly Earnings</h3>
+                        <Chart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>
+                    </div>
+                    
                     <OrderWidget livePrice={livePrice} stock={stock}/>
                 </div>
                 
