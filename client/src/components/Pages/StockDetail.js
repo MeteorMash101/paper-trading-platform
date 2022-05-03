@@ -8,7 +8,18 @@ import Header from '../Header/Header';
 // import Chart from '../Stock/StockStats/Chart';
 // import KeyStats from '..Stock/StockStats/KeyStats';
 import Graph from '../GraphVisuals/Graph/Graph';
+import OrderWidget from '../OrderWidget';
+import Graph from '../Graph/Graph';
+import Chart from '../Chart';
+import KeyStats from '../KeyStats';
+import CandleStick from '../Graph/CandlestickGraph';
+import ApexCharts from 'apexcharts';
+import ReactDOM from 'react-dom';
+import ReactApexChart from 'react-apexcharts';
+import React, { Component } from "react";
 
+// const domContainer = document.querySelector('#app');
+// ReactDOM.render(React.createElement(Candlestick), domContainer);
 
 const StockDetail = () => {
     const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!    const [stock, setStock] = useState("");
@@ -52,6 +63,11 @@ const StockDetail = () => {
         
         <div className={classes.container}>
             
+            {/* <Graph2 stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/> */}
+            <Candlestick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
+            {/* <Graph2 stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}/?start_date="01/01/2022"/?version=new}`} symbol = {symbol}/> */}
+            {/* <Graph2 stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/> */}
+            
             <div className={classes.name}>
                 <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
                 <h3 className={classes.symbol}>{stock.symbol}</h3>
@@ -63,6 +79,8 @@ const StockDetail = () => {
                     <div className={classes.graph}>
                         <Graph stockURL = {`http://127.0.0.1:8000/stocks/historical/${symbol}`}/>
                     </div>
+
+
 
                     <div className={classes.wrapper}>
                         <div className={classes.stats1}>
