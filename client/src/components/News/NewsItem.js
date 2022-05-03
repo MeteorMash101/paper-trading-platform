@@ -12,7 +12,7 @@ const NewsItem = ({title, image, summary, url, postTime}) => {
     const options = {month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'};
 
     return ( 
-        <a className={classes.container} href={url}>
+        <a className={classes.container} href={url} target="_blank">
             <div className={classes.needed}>
                 <div className={classes.time}> {new Date(postTime).toLocaleString("en-us", options)} </div>
                 <div className={classes.headline}>{title}</div>
