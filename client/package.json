@@ -5,7 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
-    "@material-ui/core": "^4.12.3",
+    "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.2",
     "@mui/icons-material": "^5.4.4",
     "@testing-library/jest-dom": "^5.16.1",
@@ -25,6 +25,7 @@
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-tooltip": "^4.2.21",
     "recharts": "^2.1.9",
     "resize-observer-polyfill": "^1.5.1",
     "victory": "^36.3.0",

@@ -102,7 +102,7 @@ class Stock_info:
             t.start()
             threads.append(t)
         for thread in threads:
-            thread.join(6) # n is the number of seconds to wait before joining
+            thread.join(10) # n is the number of seconds to wait before joining
         df = q.get().iloc[::60,:]
         while not q.empty():
             #df = df.append(q.get().iloc[::60,:])
@@ -210,10 +210,11 @@ class Stock_info:
             t.start()
             threads.append(t)
         for thread in threads:
-            thread.join(6) # n is the number of seconds to wait before joining
+            thread.join(10) # n is the number of seconds to wait before joining
         stocks = []
         while not q.empty():
             stocks.append(q.get())
+        print(stocks)
         return stocks
 
     #This is for the multithreaded functions
