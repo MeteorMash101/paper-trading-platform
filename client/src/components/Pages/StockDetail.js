@@ -5,16 +5,16 @@ import classes from './StockDetail.module.css';
 import axios from 'axios';
 import OrderWidget from '../User/UserUtils/OrderWidget';
 import Header from '../Header/Header';
-// import Chart from '../Stock/StockStats/Chart';
-// import KeyStats from '..Stock/StockStats/KeyStats';
 import Graph from '../GraphVisuals/Graph/Graph';
-import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
-import ApexCharts from 'apexcharts';
-import ReactDOM from 'react-dom';
-import ReactApexChart from 'react-apexcharts';
 import React, { Component } from "react";
 import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
+import Chart from '../Stock/StockStats/Chart';
+import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
+// import KeyStats from '..Stock/StockStats/KeyStats';
+// import ApexCharts from 'apexcharts';
+// import ReactDOM from 'react-dom';
+// import ReactApexChart from 'react-apexcharts';
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
@@ -62,7 +62,6 @@ const StockDetail = () => {
                 <div className={classes.everything}>
                 <Header/>
                 <div className={classes.container}>
-                    {/* <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/> */}
                     <div className={classes.name}>
                         <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
                         <h3 className={classes.symbol}>{stock.symbol}</h3>
@@ -88,6 +87,11 @@ const StockDetail = () => {
                                     <h4 className={classes.attribute}> 52W L: <span className={classes.value}>{stock.ft_week_low} </span> </h4>
                                     <h4 className={classes.attribute}> Yeild: <span className={classes.value}>{stock.dividend_yield} </span> </h4>
                                 </div>
+                            </div>
+                            <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
+                            <div className={classes.qe}>
+                                <h3>Quarterly Earnings</h3>
+                                <Chart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>
                             </div>
                         </div>
                         <div className={classes.rightSec}>
