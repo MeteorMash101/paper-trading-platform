@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("stocks/", include("stocks.urls")),
     path("accounts/", include("accounts.urls")),
+    path("news/", include("news.urls")),
     
     path('auth/', include('drf_social_oauth2.urls', namespace='drf'))
 ]

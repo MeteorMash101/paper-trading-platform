@@ -102,18 +102,6 @@ class SearchBar(APIView):
         serializer = searchSerializer(jsonData, many=True).data
         return Response(serializer)
 
-class GeneralNews(APIView):
-    #This will return general news, not even necessarily relating to a specific company
-    def get(self, request):
-        useful = set(["datetime", "headline", "image", "summary", "url"])
-        fin = finnhub.Client(api_key="c7np72iad3ifj5l0i6eg").general_news("general")
-        df = pd.DataFrame.from_dict(fin)
-        unnecessary = set(df.columns) - useful
-        df = df.drop(columns = unnecessary)
-        df['datetime'] = df['datetime'].apply(lambda x: datetime.fromtimestamp(x))
-        serializer = NewsSerializer(df.to_dict("records"), many=True)
-        return Response(serializer.data)
-
 '''
 Ok we need to error check everything::
 The get_quote_data isn't guaranteed to have all the keys

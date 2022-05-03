@@ -12,7 +12,6 @@ import { Navigate } from 'react-router-dom';
 const MainFeed = ({stockList}) => {
   const userCtx = useContext(UserContext);
   return (
-
     <Fragment>
       {!userCtx.isLoggedIn && 
         // Redirect to /login - User must be logged in to view ALL pages...
@@ -39,10 +38,10 @@ const MainFeed = ({stockList}) => {
                 <h2>Watchlist</h2>
               <WatchlistList title={"Watchlist"} usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`} paramsInfo={"detailed_stocks"}/> 
               </div>
-              <NewsList/>
+              <NewsList newsAPIUrl={'http://127.0.0.1:8000/news/'}/>
             </div>
           </div>
-        </div>          
+        </div>
       }
     </Fragment>
 

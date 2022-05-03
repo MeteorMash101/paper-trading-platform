@@ -1,3 +1,52 @@
 .container {
-    border: 1px solid rgb(0, 0, 0);
+    position: relative;
+    padding: 1vmin;
+    margin-bottom: 1vmin;
+    display: flex;
+    justify-content: space-between;
+    text-decoration: none;
+    background-color: rgb(229, 248, 252);
+
+    box-sizing: border-box;
+    border-radius: 1.6rem;
+}
+
+.title {
+    text-align: left;
+    padding: 10px;
+    margin-left: 30px;
+}
+
+.needed {
+    text-align: left;
+}
+
+.img {
+    width: calc(4*4vmin);
+    height: calc(4*3vmin);
+    margin-left: auto;
+}
+
+.sidebyside {
+    display: flex;
+    align-items:flex-start;
+}
+
+.headline {
+    font-weight:700;
+    font-size: large;
+    font-size: calc(3vmin);
+    color: rgb(0, 0, 0);
+    padding-bottom: 3px;
+}
+.time {
+    font-size: calc(2vmin);
+    color: rgb(0, 0, 0);
+}
+
+.summary {
+    font-size: calc(2vmin);
+    color: rgb(0, 0, 0);
+    font-size: calc(2vmin);
+    padding-right: 1em;
 }
