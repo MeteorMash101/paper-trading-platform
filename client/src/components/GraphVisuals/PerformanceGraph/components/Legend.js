@@ -7,11 +7,15 @@ const Legend = ({ data, selectedItems, onChange }) => (
         {/* <h4>Performance Graph</h4> */}
         {/* <label>
           {d.name !== "Performance Graph" && (
+        <label>
+          {(
             <input
               type="checkbox"
+              // type="button"
               value={d.name}
               checked={selectedItems.includes(d.name)}
               onChange={() => onChange(d.name)}
+              // onClick={() => onClick(d.name)}
             />
           )}
           {d.name}

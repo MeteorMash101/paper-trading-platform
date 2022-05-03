@@ -30,7 +30,20 @@ class Stock_info:
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-   
+    '''
+    @staticmethod
+    def get_stock_historical_data(ticker):
+        data = si.get_data(ticker)
+        data.reset_index(level=0, inplace=True)
+        data.rename(columns={"index": "date"}, inplace = True)
+        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
+        data = data.drop(columns = ["ticker"])
+        jsonData = {
+            "historical_data": data.to_dict("records")
+        }
+        return jsonData
+    '''
+    
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     

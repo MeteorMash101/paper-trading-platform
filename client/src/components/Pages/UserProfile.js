@@ -5,7 +5,8 @@ import classes from './UserProfile.module.css';
 import CardTop from '../User/UserStats/CardTop.js';
 import Graph1 from '../GraphVisuals/PerformanceGraph/Graph1.js';
 import Header from '../Header/Header';
-import { useEffect } from 'react';
+import { useEffect, Fragment } from 'react';
+import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -35,7 +36,13 @@ const UserProfile = () => {
     }, [])
 
     return(
-        <div className={classes.container}>
+        <Fragment>
+        {!userCtx.isLoggedIn && 
+            // Redirect to /login - User must be logged in to view ALL pages...
+            <Navigate to="/login"/>
+        }
+        {userCtx.isLoggedIn && 
+            <div className={classes.container}>
             <Header/>
                 <div className={classes.wrapper}>
 
@@ -52,7 +59,9 @@ const UserProfile = () => {
                             <Graph1 stockURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/historicPV/`}/>
                     </div>
                 </div>
-        </div>
+            </div>
+        }
+        </Fragment>
     );
 }
 
