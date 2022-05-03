@@ -1,56 +1,52 @@
 .container {
-    border: 1px solid rgb(0, 0, 0);
     position: relative;
     padding: 1vmin;
+    margin-bottom: 1vmin;
     display: flex;
     justify-content: space-between;
     text-decoration: none;
+    background-color: rgb(229, 248, 252);
 
+    box-sizing: border-box;
+    border-radius: 1.6rem;
 }
 
-.text {
+.title {
+    text-align: left;
+    padding: 10px;
+    margin-left: 30px;
+}
+
+.needed {
     text-align: left;
 }
 
 .img {
     width: calc(4*4vmin);
     height: calc(4*3vmin);
+    margin-left: auto;
 }
 
-.titleDate {
+.sidebyside {
     display: flex;
     align-items:flex-start;
 }
 
 .headline {
-    position: relative;
     font-weight:700;
     font-size: large;
-    display: flex;
-    justify-content: left;
-    align-items: left;
-    flex: 9;
-    font-size: calc(1px + 3vmin);
+    font-size: calc(3vmin);
     color: rgb(0, 0, 0);
-    overflow: hidden;
-    
-    max-height: calc(2*(3px + 3vmin)-1px);
-    line-height: calc(1px + 3vmin);
+    padding-bottom: 3px;
 }
 .time {
-    position: relative;
-    display: flex;
-    justify-content: left;
-    align-items: left;
     font-size: calc(2vmin);
     color: rgb(0, 0, 0);
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 .summary {
-    align-items: left;
     font-size: calc(2vmin);
     color: rgb(0, 0, 0);
     font-size: calc(2vmin);
+    padding-right: 1em;
 }

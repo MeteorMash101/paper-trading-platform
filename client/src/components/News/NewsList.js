@@ -34,7 +34,7 @@ const NewsList = ({newsAPIUrl}) => {
   	}, []) 
     return ( 
         <div className={classes.container}>
-            HI IM NEWS LIST
+            <h2 className={classes.title}>NEWS</h2>
             {articles.map((article) => ( // making sure array exists first.
 					<NewsItem
 						title={article.headline}

@@ -13,12 +13,10 @@ const NewsItem = ({title, image, summary, url, postTime}) => {
 
     return ( 
         <a className={classes.container} href={url}>
-            <div className={classes.text}>
-                <div className={classes.titleDate}>
-                    <div className={classes.headline}>{title}</div>
-                    <div className={classes.time}> {new Date(postTime).toLocaleString("en-us", options)} </div>
-                </div>
-                <div className={classes.titleDate}>
+            <div className={classes.needed}>
+                <div className={classes.time}> {new Date(postTime).toLocaleString("en-us", options)} </div>
+                <div className={classes.headline}>{title}</div>
+                <div className={classes.sidebyside}>
                     <div className={classes.summary}>{summary}</div>
                     <img className={classes.img} src={image}></img>
                 </div>
