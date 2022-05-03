@@ -193,7 +193,7 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        stocks = Stock_info.__data_for_list(symbols[:5])
+        stocks = Stock_info.__data_for_list(symbols[:10])
         return sorted(stocks, key = lambda x: x["volume"], reverse=True)
     
     @staticmethod
