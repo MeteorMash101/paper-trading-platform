@@ -55,9 +55,3 @@ class searchSerializer(serializers.Serializer):
     company_name = serializers.CharField(max_length=50)
     symbol = serializers.CharField(max_length=6)
 
-class NewsSerializer(serializers.Serializer):
-    headline = serializers.CharField(max_length=250)
-    image = serializers.CharField(max_length=250)
-    summary = serializers.CharField(max_length=500)
-    url = serializers.CharField(max_length=250)
-    datetime = serializers.DateTimeField()

@@ -34,7 +34,7 @@ const MainFeed = ({stockList}) => {
             <h2>Watchlist</h2>
           <WatchlistList title={"Watchlist"} usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`} paramsInfo={"detailed_stocks"}/> 
           </div>
-          <NewsList newsAPIUrl={'http://127.0.0.1:8000/stocks/generalNews/'}/>
+          <NewsList newsAPIUrl={'http://127.0.0.1:8000/news/'}/>
         </div>
 
       </div>
