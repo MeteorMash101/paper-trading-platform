@@ -30,9 +30,6 @@ class Stock_info:
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-<<<<<<< HEAD
-   
-=======
     '''
     @staticmethod
     def get_stock_historical_data(ticker):
@@ -47,7 +44,6 @@ class Stock_info:
         return jsonData
     '''
     
->>>>>>> 13583d02a01853d72174f63df22bbe89bdf052fc
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     

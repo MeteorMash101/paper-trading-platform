@@ -1,3 +1,4 @@
+import ApexCharts from 'apexcharts'
 import ReactDOM from 'react-dom';
 import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState } from 'react';

@@ -1,6 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header/Header.js'
 import MainFeed from './components/Pages/MainFeed';
 import StockDetail from './components/Pages/StockDetail';
 import UserProfile from './components/Pages/UserProfile';
@@ -15,6 +14,7 @@ import axios from 'axios';
 const App = () => {
   const userCtx = useContext(UserContext);
   const watchlistCtx = useContext(WatchlistContext);
+
   // EDIT: temp. workaround for persistent User // (change this!)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...")
@@ -50,7 +50,6 @@ const App = () => {
     // console.log("Setting context...")
     userCtx.setUserOnLogin(userInfo)
     // NOTE: after this run ends, then context is updated (so it is not immediate).
-    
     // Below is fetching WL data.
     const fetchData = async() => {
       const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`, {
@@ -63,19 +62,15 @@ const App = () => {
       watchlistCtx.setWatchlistOnLogin(listOfTickers);
     }
     fetchData()
-    
   }, [userCtx.isLoggedIn])
+
   return (
-    <div className="App">    
-      {/* <div className="scroll"></div> */}
-      {/* Header appears on every page. */}
-      {/* <Header/> */}
+    <div className="App">
       <Routes>
         <Route path="/" element={<MainFeed/>} exact/>
         <Route path="/stock/:symbol" element={<StockDetail/>}/>
-        {/* /user/:user_id */}
         <Route path="/user/" element={<UserProfile/>}/>
-        <Route path = "/stocks/" element = {<MyStocks/>}/>
+        <Route path = "/mystocks/" element = {<MyStocks/>}/>
         <Route path = "/history/" element={<History/>}/>
         <Route path = "/login/" element={<Login/>}/>
       </Routes>
