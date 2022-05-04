@@ -37,11 +37,11 @@ const UserProfile = () => {
 
     return(
         <Fragment>
-        {!userCtx.isLoggedIn && 
+        {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
             // Redirect to /login - User must be logged in to view ALL pages...
             <Navigate to="/login"/>
         }
-        {userCtx.isLoggedIn && 
+        {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
             <div className={classes.container}>
             <Header/>
                 <div className={classes.wrapper}>

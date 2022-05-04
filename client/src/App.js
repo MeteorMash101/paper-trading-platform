@@ -15,7 +15,7 @@ const App = () => {
   const userCtx = useContext(UserContext);
   const watchlistCtx = useContext(WatchlistContext);
 
-  // EDIT: temp. workaround for persistent User // (change this!)
+  // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...")
     if (localStorage.getItem("user_id") == null) {

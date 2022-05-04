@@ -54,11 +54,11 @@ const StockDetail = () => {
     }, [])
     return (
         <Fragment>
-            {!userCtx.isLoggedIn && 
+            {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
                 // Redirect to /login - User must be logged in to view ALL pages...
                 <Navigate to="/login"/>
             }
-            {userCtx.isLoggedIn && 
+            {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
                 <div className={classes.everything}>
                 <Header/>
                 <div className={classes.container}>
