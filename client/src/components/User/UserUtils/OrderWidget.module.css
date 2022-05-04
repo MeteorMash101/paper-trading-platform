@@ -1,3 +1,10 @@
+.wrapper {
+    display: flex;
+    width: 400px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .container {
     border: 1px solid rgb(153, 152, 152);
     border-radius: 1.4rem;
@@ -65,12 +72,24 @@
 }
 
 .orderBtn {
-    background-color: rgb(238, 238, 237);
+    background-image: linear-gradient(to right, rgb(240, 227, 53),rgb(232, 165, 51));
     border-radius: 1.6rem;
     font-size: large;
+    padding: .4rem .4rem;
     width: 50%;
     height: 10%;
     cursor: pointer;
+    box-shadow: 0 4px #999;
+}
+
+.orderBtn:hover {
+    background-image: linear-gradient(to right, rgb(217, 206, 50),rgb(217, 154, 46));
+}
+
+.orderBtn:active {
+    background-image: linear-gradient(to right, rgb(217, 206, 50),rgb(217, 154, 46));
+    box-shadow: 0 2px #666;
+    transform: translateY(2px);
 }
 
 .sharesInput {
@@ -81,10 +100,12 @@
 
 .errorMsg {
     color: red;
+    font-weight: bold;
 }
 
 .sharesAvailMsg {
-    color: rgb(98, 38, 98);
+    color: rgb(123, 120, 66);
+    font-weight: bold;
 }
 
 .loader {
