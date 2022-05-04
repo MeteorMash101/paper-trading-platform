@@ -1,9 +1,9 @@
 import classes from './OrderWidget.module.css';
 import UserContext from '../../../store/user-context';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Alert from '../../Alerts/AlertMessage.js';
-import { Fragment } from 'react';
+import Confetti from '../../Alerts/ConfettiShower';
 
 const OrderWidget = ({livePrice, stock}) => {
     const userCtx = useContext(UserContext);
@@ -13,7 +13,8 @@ const OrderWidget = ({livePrice, stock}) => {
     const errorMsgs = ["Invalid! Balance too low.", "Invalid! Not enough shares."]
     const [isLoading, setIsLoading] = useState(false);
     const [displayMessage, setDisplayMessage] = useState("");
-    const MS = 3000 // milliseconds
+    const MS = 5000 // milliseconds
+    const containerRef = useRef(null); // for confetti
 
     useEffect(() => {
 		const fetchData = async() => {
@@ -93,7 +94,7 @@ const OrderWidget = ({livePrice, stock}) => {
     }
     return ( 
         <div className={classes.wrapper}>
-            <form className={classes.container} id={orderTypeStyle} onSubmit={stockOrderHandler}>
+            <form className={classes.container} id={orderTypeStyle} onSubmit={stockOrderHandler} ref={containerRef}>
                 <div className={classes.orderType}>
                     <h3 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder}>Buy {stock.symbol}</h3>
                     <h3 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder}>Sell {stock.symbol}</h3>
@@ -117,6 +118,10 @@ const OrderWidget = ({livePrice, stock}) => {
                 {displayMessage == "SUCCESS" &&
                     <Alert severity="success" message="Successfully placed order!" size={22}/>
                 }
+                {displayMessage == "SUCCESS" &&
+                    // pass in container's current width & height
+                    <Confetti width={containerRef.current.clientWidth} height={containerRef.current.clientHeight}/>
+                }
                 {errorMsgs.includes(displayMessage) &&
                     <Alert severity="error" message={displayMessage} size={22}/>
                 }
@@ -130,7 +135,7 @@ const OrderWidget = ({livePrice, stock}) => {
 
 export default OrderWidget;
 
-// EDIT: change to 'Review Order' before submitting
+// EDIT: change to 'Review Order' btn before submitting
 // You are placing a good for day market order to sell 2 shares of AAPL.
 // Order Summary: You’re placing an order to buy 2 shares of AMD that will be converted to a limit order with a 5% collar. If your order cannot be executed within the collar, it won’t be filled.
-// [Submit Order] [Edit]
+// [Submit Order]
