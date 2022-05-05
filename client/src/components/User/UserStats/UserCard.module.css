@@ -56,7 +56,6 @@
 .attribute{
     font-weight: bolder;
     color: rgb(159, 161, 161);
-    display: inline-block;
 }
 
 .value{

@@ -247,7 +247,6 @@ class Stock_info:
         stocks = []
         while not q.empty():
             stocks.append(q.get())
-        print(stocks)
         return stocks
 
     #This is for the multithreaded functions
@@ -293,7 +292,6 @@ class Stock_info:
         while not q.empty():
             stock = q.get()
             stocks[stock.loc["symbol"][0]] = stock.loc["industry"][0]
-        print(stocks)
         return stocks
 
     @staticmethod
