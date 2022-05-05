@@ -2,7 +2,7 @@
 # Create your views here.
 from this import d
 from accounts.models import Account
-from accounts.serializers import AccountSerializer, StockListSerializer, StockNumSerializer, PortfolioValueSerializer, TransactionHistorySerializer, BoolSerializer, HistoricPortfolioValueSerializer
+from accounts.serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -441,7 +441,41 @@ class AccountWatchList(APIView):
             })
         return stocks
 
+class AccountStockIndustries(APIView):
+
+    # EDIT duplicate function
+    # Returns the account object
+    def get_object(self, request, *args, **kwargs):
+        pk = self.kwargs.get('goog_id')
+        try:
+            return Account.objects.get(pk=pk)
+        except Account.DoesNotExist:
+            return None
+
+    def get(self, request, goog_id):
+        account = self.get_object(goog_id)
+        if account != None:
+            symbols = list(account.ownedStocks.keys())
+            symbols.append("william")
+            industries = si.get_industries(symbols)
+            print(industries)
+            diversity = self.__accumulate(industries)
+            serializer = IndustryDiversitySerializer({"industry_makeup":diversity})
+            return Response(serializer.data)
+        else:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+    
+    def __accumulate(self, industries):
+        counts = {}
+        for industry in industries.values():
+            if industry in counts.keys():
+                counts[industry] += 1
+            else:
+                counts[industry] = 1
+        return counts
+
 class AccountHistoricPV(APIView):
+    
     def get(self, request, goog_id):
         account = self.get_object(goog_id)
         

@@ -29,6 +29,8 @@ class StockSerializer(serializers.Serializer):
     ft_week_high = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     ft_week_low = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
     revenue = serializers.DecimalField(max_digits=MAX_DIGITS, decimal_places=2)
+    industry = serializers.CharField(max_length=50)
+    summary = serializers.CharField(max_length=2500)
 
 #All available fields
 #https://www.geeksforgeeks.org/serializers-django-rest-framework/
