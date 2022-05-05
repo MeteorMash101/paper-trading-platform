@@ -41,6 +41,13 @@ const Tooltip = ({
       });
       tooltipContent
         .select(".contentTitle")
+        // EDIT OPT.: this is the date display format for 1D;
+        // .text(d3.timeFormat("%H:%M %p")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 1W, 1M;
+        // .text(d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 3M, 6M, 1Y;
+        // .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 5Y;
         .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
     },
     [xScale, margin, width]
@@ -69,7 +76,8 @@ const Tooltip = ({
   const onChangePosition = React.useCallback((d, i, isVisible) => {
     d3.selectAll(".performanceItemValue")
       .filter((td, tIndex) => tIndex === i)
-      .text(isVisible ? (d.volume) : "");
+      // EDIT: original below
+      .text(isVisible ? d.volume : "");
       // .text(isVisible ? formatPercent(d.volume) : "");
 
     d3.selectAll(".performanceItemMarketValue")
@@ -169,26 +177,27 @@ const Tooltip = ({
   if (!data.length) return null;
 
   return (
-// onMouseEnter={()=>{console.log("entered")}} onMouseLeave={() => console.log("exit")}
-
-// onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}
     <g ref={ref} opacity={0} {...props}>
       <line className="tooltipLine" />
       <g className="tooltipContent">
         <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
+        {/* EDIT: below date as a title */}
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
-          {data.map(({ name, color }, i) => (
+          {data.map(({ name, color, date, time }, i) => (
             <g key={name} transform={`translate(6,${22 * i})`}>
+              {/* EDIT: below was circle + date range */}
               <circle r={6} fill={color} />
               <text className="performanceItemName" transform="translate(10,4)">
                 {name}
               </text>
+              {/* EDIT: below was showing the stock volume */}
               <text
                 className="performanceItemValue"
                 opacity={0.5}
                 fontSize={10}
               />
+              {/* EDIT: below was just the stock price */}
               <text className="performanceItemMarketValue" />
             </g>
           ))}

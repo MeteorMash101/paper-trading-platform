@@ -126,7 +126,7 @@ export default function Graph({stockURL, onHover}) {
   // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
   // console.log("[GRAPH.JS]: legendData: ", legendData)
   console.log("[GRAPH.JS]: stock: ", stock);
-  console.log("[GRAPH.JS]: chartData: ", chartData)
+  console.log("[GRAPH.JS]: chartData ('data'): ", chartData)
 
   return (
     <Fragment>
