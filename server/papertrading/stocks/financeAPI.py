@@ -57,6 +57,7 @@ class Stock_info:
         jsonData = {
             "historical_data": data.to_dict("records")
         }
+        # print("[financeAPI.py]: curr data:", data, type(data))
         return jsonData
 
     @staticmethod

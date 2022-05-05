@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import * as d3 from "d3";
 import { MultiLineDataPropTypes } from "../utils/propTypes";
 import { formatPercent, formatPriceUSD } from "../utils/commonUtils";
+import { useContext } from 'react';
+import HoverInfoContext from "../../../../store/hover-info-context";
 
 const Tooltip = ({
   xScale,
@@ -16,6 +18,7 @@ const Tooltip = ({
   ...props
 }) => {
   const ref = React.useRef(null);
+  const hoverInfoContext = useContext(HoverInfoContext);
   const drawLine = React.useCallback(
     (x) => {
       d3.select(ref.current)
@@ -38,6 +41,13 @@ const Tooltip = ({
       });
       tooltipContent
         .select(".contentTitle")
+        // EDIT OPT.: this is the date display format for 1D;
+        // .text(d3.timeFormat("%H:%M %p")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 1W, 1M;
+        // .text(d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 3M, 6M, 1Y;
+        // .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
+        // EDIT OPT.: this is the date display format for 5Y;
         .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
     },
     [xScale, margin, width]
@@ -66,7 +76,8 @@ const Tooltip = ({
   const onChangePosition = React.useCallback((d, i, isVisible) => {
     d3.selectAll(".performanceItemValue")
       .filter((td, tIndex) => tIndex === i)
-      .text(isVisible ? (d.volume) : "");
+      // EDIT: original below
+      .text(isVisible ? d.volume : "");
       // .text(isVisible ? formatPercent(d.volume) : "");
 
     d3.selectAll(".performanceItemMarketValue")
@@ -74,6 +85,10 @@ const Tooltip = ({
       .text(
         d.open && !isVisible ? "No data" : formatPriceUSD(d.open)
       );
+
+    // Update price using context API here...(to show change w/ price.)
+    // console.log("[Tooltip.js]: PRICE RN: ", formatPriceUSD(d.open));
+    hoverInfoContext.setPrice(formatPriceUSD(d.open))
 
     const maxNameWidth = d3.max(
       d3.selectAll(".performanceItemName").nodes(),
@@ -166,19 +181,23 @@ const Tooltip = ({
       <line className="tooltipLine" />
       <g className="tooltipContent">
         <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
+        {/* EDIT: below date as a title */}
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
-          {data.map(({ name, color }, i) => (
+          {data.map(({ name, color, date, time }, i) => (
             <g key={name} transform={`translate(6,${22 * i})`}>
+              {/* EDIT: below was circle + date range */}
               <circle r={6} fill={color} />
               <text className="performanceItemName" transform="translate(10,4)">
                 {name}
               </text>
+              {/* EDIT: below was showing the stock volume */}
               <text
                 className="performanceItemValue"
                 opacity={0.5}
                 fontSize={10}
               />
+              {/* EDIT: below was just the stock price */}
               <text className="performanceItemMarketValue" />
             </g>
           ))}

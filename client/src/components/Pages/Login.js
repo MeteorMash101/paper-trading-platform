@@ -38,18 +38,17 @@ const Login = () => {
     };
     return (
         <Fragment>
-            {!userCtx.isLoggedIn && 
+            {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
                 <div className={classes.border}>
                     <div className={classes.left}>
                         <div className={classes.name}>
                             <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>       
-                            <h2> SWAT PAPER TRADING </h2>   
+                            <h2>SWAT PAPER TRADING</h2>   
                         </div>
                         <div className={classes.signin}>
                                 <div className={classes.heading}>
-                                    <h2> Log in </h2>
+                                    <h2>Log in</h2>
                                 </div>
-                                
                                 <div className={classes.logo}>
                                     <GoogleSocialAuth onLogin={onLoginHandler}/>
                                 </div>
@@ -60,7 +59,7 @@ const Login = () => {
                     </div>
                 </div>
             }
-            {userCtx.isLoggedIn && 
+            {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
                 // Redirect to Main Feed page...(if user is now logged in)
                 <Navigate to="/"/>
             }

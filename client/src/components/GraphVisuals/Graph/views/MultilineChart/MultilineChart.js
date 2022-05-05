@@ -6,7 +6,7 @@ import { Line, Axis, GridLine, Overlay, Tooltip, Area } from "../../components";
 import useController from "./MultilineChart.controller";
 import useDimensions from "../../utils/useDimensions";
 
-const MultilineChart = ({ data = [], margin = {} }) => {
+const MultilineChart = ({ data = [], onHover, margin = {}}) => {
   const overlayRef = React.useRef(null);
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
@@ -64,7 +64,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
             ticks={5}
             tickFormat={yTickFormat}
           /> */}
-          <Overlay ref={overlayRef} width={width} height={height}>
+          <Overlay onHover={onHover} ref={overlayRef} width={width} height={height}>
             {/* NOTE: x-axis labels below */}
             {/* <Axis
               type="bottom"

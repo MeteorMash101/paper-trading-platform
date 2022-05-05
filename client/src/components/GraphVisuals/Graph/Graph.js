@@ -7,9 +7,12 @@ import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
-export default function Graph({stockURL}) {
+export default function Graph({stockURL, onHover}) {
   const [stock, setStock] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
+    setIsLoading(true)
     const fetchStock = async () => {
       const stockOneDayFromServer = await axios.get(stockURL, {
         params : {
@@ -55,6 +58,7 @@ export default function Graph({stockURL}) {
         ytd: stockOneYearFromServer.data, 
         ytd5: stockFiveYearFromServer.data
       });
+      setIsLoading(false)
     }
   fetchStock()
   }, []);
@@ -108,7 +112,7 @@ export default function Graph({stockURL}) {
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
-  const [selectedItems, setSelectedItems] = React.useState(["5Y"]);
+  const [selectedItems, setSelectedItems] = React.useState(["1D"]);
   const legendData = [oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData];
   const chartData = [
     ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedItems.includes(d.name))
@@ -122,19 +126,24 @@ export default function Graph({stockURL}) {
   // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
   // console.log("[GRAPH.JS]: legendData: ", legendData)
   console.log("[GRAPH.JS]: stock: ", stock);
-  console.log("[GRAPH.JS]: chartData: ", chartData)
+  console.log("[GRAPH.JS]: chartData ('data'): ", chartData)
 
   return (
     <Fragment>
-      <div className="Graph">
-        <MultilineChart data={chartData}/>
-      </div>
-      <Legend
-        legendData={legendData}
-        selectedItems={selectedItems}
-        currDateRange={selectedItems[0]}
-        onChange={onChangeSelection}
-      />
+      {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
+      {!isLoading &&
+        <Fragment>
+          <div className="Graph">
+            <MultilineChart data={chartData} onHover={onHover}/>
+          </div>
+          <Legend
+            legendData={legendData}
+            selectedItems={selectedItems}
+            currDateRange={selectedItems[0]}
+            onChange={onChangeSelection}
+          />
+        </Fragment>
+      }
     </Fragment>
   );
 }

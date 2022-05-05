@@ -4,7 +4,7 @@ import UserCard from '../User/UserStats/UserCard.js';
 import { useContext } from 'react';
 import UserContext from '../../store/user-context';
 import Header from '../Header/Header';
-import NewsList from '../News/NewsList';
+import NewsList from '../Stock/StockNews/NewsList';
 import WatchlistList from '../User/UserLists/WatchlistList';
 import { Fragment } from 'react';
 import { Navigate } from 'react-router-dom';
@@ -13,11 +13,11 @@ const MainFeed = ({stockList}) => {
   const userCtx = useContext(UserContext);
   return (
     <Fragment>
-      {!userCtx.isLoggedIn && 
+      {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
         // Redirect to /login - User must be logged in to view ALL pages...
         <Navigate to="/login"/>
       }
-      {userCtx.isLoggedIn && 
+      {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
         <div className={classes.container}>
           <Header/>
           <div className={classes.margin}>
