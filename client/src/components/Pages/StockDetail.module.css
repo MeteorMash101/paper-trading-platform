@@ -7,17 +7,17 @@
 }
 
 .animate {
-    animation: fadeIn linear 3s;
+    animation: fadeIn linear 1.4s;
     color: rgb(134, 133, 133);
     text-align: right;
     justify-content: right;
     align-items: right;
     padding-left: 1%;
     font-weight: bolder;
-    -webkit-animation: fadeIn linear 3s;
-    -moz-animation: fadeIn linear 3s;
-    -o-animation: fadeIn linear 3s;
-    -ms-animation: fadeIn linear 3s;
+    -webkit-animation: fadeIn linear 1.4s;
+    -moz-animation: fadeIn linear 1.4s;
+    -o-animation: fadeIn linear 1.4s;
+    -ms-animation: fadeIn linear 1.4s;
 }
   
 @keyframes fadeIn {

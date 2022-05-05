@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import * as d3 from "d3";
 import { MultiLineDataPropTypes } from "../utils/propTypes";
 import { formatPercent, formatPriceUSD } from "../utils/commonUtils";
+import { useContext } from 'react';
+import HoverInfoContext from "../../../../store/hover-info-context";
 
 const Tooltip = ({
   xScale,
@@ -16,6 +18,7 @@ const Tooltip = ({
   ...props
 }) => {
   const ref = React.useRef(null);
+  const hoverInfoContext = useContext(HoverInfoContext);
   const drawLine = React.useCallback(
     (x) => {
       d3.select(ref.current)
@@ -74,6 +77,10 @@ const Tooltip = ({
       .text(
         d.open && !isVisible ? "No data" : formatPriceUSD(d.open)
       );
+
+    // Update price using context API here...(to show change w/ price.)
+    // console.log("[Tooltip.js]: PRICE RN: ", formatPriceUSD(d.open));
+    hoverInfoContext.setPrice(formatPriceUSD(d.open))
 
     const maxNameWidth = d3.max(
       d3.selectAll(".performanceItemName").nodes(),
@@ -162,6 +169,9 @@ const Tooltip = ({
   if (!data.length) return null;
 
   return (
+// onMouseEnter={()=>{console.log("entered")}} onMouseLeave={() => console.log("exit")}
+
+// onMouseEnter={mouseEnterHandler} onMouseLeave={mouseLeaveHandler}
     <g ref={ref} opacity={0} {...props}>
       <line className="tooltipLine" />
       <g className="tooltipContent">

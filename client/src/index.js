@@ -6,14 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import UserProvider from './store/UserProvider';
 import WatchlistProvider from './store/WatchlistProvider';
+import HoverInfoProvider from './store/HoverInfoProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <UserProvider>
       <WatchlistProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <HoverInfoProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </HoverInfoProvider>
       </WatchlistProvider>
     </UserProvider>
   </React.StrictMode>,

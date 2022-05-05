@@ -11,17 +11,19 @@ import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
 import Chart from '../Stock/StockStats/Chart';
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
-// import KeyStats from '..Stock/StockStats/KeyStats';
-// import ApexCharts from 'apexcharts';
-// import ReactDOM from 'react-dom';
-// import ReactApexChart from 'react-apexcharts';
+import HoverPrice from '../Stock/StockStats/HoverPrice'
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
     const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!    const [stock, setStock] = useState("");
     const [stock, setStock] = useState("");
     const [livePrice, setLivePrice] = useState("");
+    const [isMouseHovering, setIsMouseHovering] = useState(false);
     const { symbol } = useParams();
+    const MINUTE_MS = 5000; // 5 seconds
+    const onMouseHoverHandler = (bool) => {
+        setIsMouseHovering(bool)
+    }
     // Pull the relevant stock info. from DB. using ticker symbol
     useEffect(() => {
         const fetchStock = async () => {
@@ -32,10 +34,7 @@ const StockDetail = () => {
         }
         fetchStock()
     }, []) // this DB retreival should only execute the first time this App is loaded.
-    // useEffect (set timer) to fetch and display real-time stock info here...
-    // EDIT: add css transition animation.
-    // EDIT: add this whole thing in a sep. file for export/import?
-    const MINUTE_MS = 5000; // 5 seconds
+    // live price fetching w/ timer.
     useEffect(() => {
         const interval = setInterval(() => {
             const fetchStock = async () => {
@@ -63,13 +62,16 @@ const StockDetail = () => {
                 <Header/>
                 <div className={classes.container}>
                     <div className={classes.name}>
-                        <h1>{stock.company_name} <span className={classes.animate}>${livePrice}</span> </h1>
+                        <h1>{stock.company_name} 
+                            {!isMouseHovering && <span className={classes.animate}>${livePrice}</span>}
+                            {isMouseHovering && <HoverPrice/>}
+                        </h1>
                         <h3 className={classes.symbol}>{stock.symbol}</h3>
                     </div>
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
                             <div className={classes.graph}>
-                                <Graph stockURL = {`http://127.0.0.1:8000/stocks/historical/${symbol}`}/>
+                                <Graph stockURL={`http://127.0.0.1:8000/stocks/historical/${symbol}`} onHover={onMouseHoverHandler}/>
                             </div>
                             <div className={classes.wrapper}>
                                 <div className={classes.stats1}>

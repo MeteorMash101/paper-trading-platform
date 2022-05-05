@@ -7,9 +7,10 @@ import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
-export default function Graph({stockURL}) {
+export default function Graph({stockURL, onHover}) {
   const [stock, setStock] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     setIsLoading(true)
     const fetchStock = async () => {
@@ -133,7 +134,7 @@ export default function Graph({stockURL}) {
       {!isLoading &&
         <Fragment>
           <div className="Graph">
-            <MultilineChart data={chartData}/>
+            <MultilineChart data={chartData} onHover={onHover}/>
           </div>
           <Legend
             legendData={legendData}
