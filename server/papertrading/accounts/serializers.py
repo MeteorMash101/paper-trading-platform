@@ -29,3 +29,6 @@ class BoolSerializer(serializers.Serializer):
 
 class HistoricPortfolioValueSerializer(serializers.Serializer):
     pv = serializers.JSONField()
+
+class IndustryDiversitySerializer(serializers.Serializer):
+    industry_makeup = serializers.JSONField()

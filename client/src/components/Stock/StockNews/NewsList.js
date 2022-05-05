@@ -23,19 +23,21 @@ display them.
 const NewsList = ({newsAPIUrl}) => {
     // const [orderType, setOrderType] = useState("BUY");
 	const [articles, setArticles] = useState([]);
+	const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
 		const fetchData = async () => {
+			setIsLoading(true);
 			const res = await axios.get(newsAPIUrl)
-            console.log(res.data.slice(0,10));
             setArticles(res.data.slice(0,10));
-            console.log(res.data[0]["headline"]);
+			console.log(res.data.slice(0,10)[0])
+			setIsLoading(false);
 		}
 		fetchData()
   	}, []) 
     return ( 
         <div className={classes.container}>
             <h2 className={classes.title}>NEWS</h2>
-            {articles.map((article) => ( // making sure array exists first.
+            {!isLoading && articles.map((article) => ( // making sure array exists first.
 					<NewsItem
 						title={article.headline}
 						image={article.image} // required for React warning...

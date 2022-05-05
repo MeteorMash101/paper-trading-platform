@@ -30,6 +30,7 @@ const UserCard = () => {
         }
         fetchData()
     }, [userCtx.isLoggedIn]);
+      
     return ( 
         // EDIT: THERE IS A BUG THE CONTEXT ONLY GETS UPDATED AFTER GOING TO DIF PAGE N COMING BACK
         <div className={classes.main}>
