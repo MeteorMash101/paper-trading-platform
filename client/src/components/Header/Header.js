@@ -26,7 +26,7 @@ const Header = () => {
     return (
         <Fragment>
             <div className={classes.container}>
-                <div className={classes.title}>
+                <div className={classes.titleSection}>
                     <Link to={`/`} className={classes.logoandtitle}>
                         <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>
                         <h2 className={classes.heading}>SWAT PAPER TRADING</h2>

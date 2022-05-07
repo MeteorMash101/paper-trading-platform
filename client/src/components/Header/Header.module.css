@@ -1,8 +1,9 @@
 .container {
+    border: 2px solid black;
     position: sticky;
     top: 0;
     background-color: rgb(229, 248, 252);
-    height: 55px;
+    height: 155px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -52,6 +53,7 @@
     width: max-content;
 }
 
-.title{
-    width: 20%;
+.titleSection{
+  border: 2px solid black;
+  width: 20%;
 }
