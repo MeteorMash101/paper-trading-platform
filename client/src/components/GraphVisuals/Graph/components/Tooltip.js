@@ -31,24 +31,53 @@ const Tooltip = ({
     [ref, height, margin]
   );
 
+  // Assign proper date time format:
+  const dateTimeFormat1D = (x) => { return d3.timeFormat("%H:%M %p")(xScale.invert(x))}
+  const dateTimeFormat1W = (x) => { return d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)) }
+  const dateTimeFormat1M = (x) => { return d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)) }
+  const dateTimeFormat3M = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
+  const dateTimeFormat6M = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
+  const dateTimeFormat1Y = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
+  const dateTimeFormat5Y = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
+
+  let dateTimeFormat = ""
+  switch(data[0].name) {
+    case "1D":
+      dateTimeFormat = dateTimeFormat1D
+      break;
+    case "1W":
+      dateTimeFormat = dateTimeFormat1W
+      break;
+    case "1M":
+      dateTimeFormat = dateTimeFormat1M
+      break;
+    case "3M":
+      dateTimeFormat = dateTimeFormat3M
+      break;
+    case "6M":
+      dateTimeFormat = dateTimeFormat6M
+      break;
+    case "1Y":
+      dateTimeFormat = dateTimeFormat1Y
+      break;
+    case "5Y":
+      dateTimeFormat = dateTimeFormat5Y
+      break;
+    default: // safety
+      dateTimeFormat = dateTimeFormat5Y
+  }
+
   const drawContent = React.useCallback(
     (x) => {
       const tooltipContent = d3.select(ref.current).select(".tooltipContent");
       tooltipContent.attr("transform", (cur, i, nodes) => {
         const nodeWidth = nodes[i]?.getBoundingClientRect()?.width || 0;
         const translateX = nodeWidth + x > width ? x - nodeWidth - 5 : x + 10;
-        return `translate(${translateX}, ${-margin.top})`;
+        return `translate(${translateX}, ${-margin.top + 15})`;
       });
       tooltipContent
         .select(".contentTitle")
-        // EDIT OPT.: this is the date display format for 1D;
-        // .text(d3.timeFormat("%H:%M %p")(xScale.invert(x)));
-        // EDIT OPT.: this is the date display format for 1W, 1M;
-        // .text(d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)));
-        // EDIT OPT.: this is the date display format for 3M, 6M, 1Y;
-        // .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
-        // EDIT OPT.: this is the date display format for 5Y;
-        .text(d3.timeFormat("%b %d, %Y")(xScale.invert(x)));
+        .text(dateTimeFormat(x));
     },
     [xScale, margin, width]
   );
@@ -184,23 +213,6 @@ const Tooltip = ({
         {/* EDIT: below date as a title */}
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
-          {data.map(({ name, color, date, time }, i) => (
-            <g key={name} transform={`translate(6,${22 * i})`}>
-              {/* EDIT: below was circle + date range */}
-              <circle r={6} fill={color} />
-              <text className="performanceItemName" transform="translate(10,4)">
-                {name}
-              </text>
-              {/* EDIT: below was showing the stock volume */}
-              <text
-                className="performanceItemValue"
-                opacity={0.5}
-                fontSize={10}
-              />
-              {/* EDIT: below was just the stock price */}
-              <text className="performanceItemMarketValue" />
-            </g>
-          ))}
         </g>
       </g>
       {data.map(({ name }) => (
@@ -239,3 +251,41 @@ Tooltip.defaultProps = {
 };
 
 export default Tooltip;
+
+
+
+// [DEPRECIATED]
+
+// return (
+//   <g ref={ref} opacity={0} {...props}>
+//     <line className="tooltipLine" />
+//     <g className="tooltipContent">
+//       <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
+//       {/* EDIT: below date as a title */}
+//       <text className="contentTitle" transform="translate(4,14)" />
+//       <g className="content" transform="translate(4,32)">
+//         {data.map(({ name, color, date, time }, i) => (
+//           <g key={name} transform={`translate(6,${22 * i})`}>
+//             {/* EDIT: below was circle + date range */}
+//             {/* <circle r={6} fill={color} />
+//             <text className="performanceItemName" transform="translate(10,4)">
+//               {name}
+//             </text> */}
+//             {/* EDIT: below was showing the stock volume */}
+//             {/* <text
+//               className="performanceItemValue"
+//               opacity={0.5}
+//               fontSize={10}
+//             /> */}
+//             {/* EDIT: below was just the stock price */}
+//             {/* <text className="performanceItemMarketValue" /> */}
+//           </g>
+//         ))}
+//       </g>
+//     </g>
+//     {data.map(({ name }) => (
+//       <circle className="tooltipLinePoint" r={6} key={name} opacity={0} />
+//     ))}
+//   </g>
+// );
+// };

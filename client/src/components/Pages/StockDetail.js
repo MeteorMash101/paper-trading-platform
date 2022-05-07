@@ -24,6 +24,14 @@ const StockDetail = () => {
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
+    const [graphMode, setGraphMode] = useState("GRAPH");
+    const onGraphModeHandler = (e) => {
+        if (e.target.name == "GRAPH") {
+            setGraphMode("CANDLESTICK")
+        } else { // we were just in candlestick mode
+            setGraphMode("GRAPH")
+        }
+    }
     // Pull the relevant stock info. from DB. using ticker symbol
     useEffect(() => {
         const fetchStock = async () => {
@@ -71,7 +79,12 @@ const StockDetail = () => {
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
                             <div className={classes.graph}>
-                                <Graph stockURL={`http://127.0.0.1:8000/stocks/historical/${symbol}`} onHover={onMouseHoverHandler}/>
+                                {graphMode == "GRAPH" &&
+                                    <Graph stockURL={`http://127.0.0.1:8000/stocks/historical/${symbol}`} onHover={onMouseHoverHandler} onGraphMode={onGraphModeHandler}/>
+                                }
+                                {graphMode == "CANDLESTICK" &&
+                                    <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`} onGraphMode={onGraphModeHandler}/>
+                                }
                             </div>
                             <div className={classes.wrapper}>
                                 <div className={classes.stats1}>
@@ -90,7 +103,6 @@ const StockDetail = () => {
                                     <h4 className={classes.attribute}> Yeild: <span className={classes.value}>{stock.dividend_yield} </span> </h4>
                                 </div>
                             </div>
-                            <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`}/>
                             <div className={classes.qe}>
                                 <h3>Quarterly Earnings</h3>
                                 <Chart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>

@@ -7,7 +7,7 @@ import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
-export default function Graph({stockURL, onHover}) {
+export default function Graph({stockURL, onHover, onGraphMode}) {
   const [stock, setStock] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -118,9 +118,37 @@ export default function Graph({stockURL, onHover}) {
     ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedItems.includes(d.name))
   ];
 
-  const onChangeSelection = (name) => {
+  const onChangeDateRangeHandler = (name) => {
     setSelectedItems([name]);
   };
+
+  const [showGridlines, setShowGridlines] = useState(false);
+  const [showAxis, setShowAxis] = useState(false);
+  const [showShade, setShowShade] = useState(true);
+
+  const onChangeShowGridlinesHandler = (e) => {
+    if (e.target.checked) {
+      setShowGridlines(true)
+    } else {
+      setShowGridlines(false)
+    }
+  }
+
+  const onChangeShowAxisHandler = (e) => {
+    if (e.target.checked) {
+      setShowAxis(true)
+    } else {
+      setShowAxis(false)
+    }
+  }
+
+  const onChangeShowShadeHandler = (e) => {
+    if (e.target.checked) {
+      setShowShade(true)
+    } else {
+      setShowShade(false)
+    }
+  }
 
   // **DEBUGGING**:
   // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
@@ -134,13 +162,22 @@ export default function Graph({stockURL, onHover}) {
       {!isLoading &&
         <Fragment>
           <div className="Graph">
-            <MultilineChart data={chartData} onHover={onHover}/>
+            <MultilineChart 
+              data={chartData} 
+              onHover={onHover} 
+              showGridlines={showGridlines} 
+              showAxis={showAxis}
+              showShade={showShade}
+            />
           </div>
           <Legend
             legendData={legendData}
-            selectedItems={selectedItems}
             currDateRange={selectedItems[0]}
-            onChange={onChangeSelection}
+            onChangeDateRange={onChangeDateRangeHandler}
+            onChangeShowGridlines={onChangeShowGridlinesHandler}
+            onChangeShowAxis={onChangeShowAxisHandler}
+            onChangeShowShade={onChangeShowShadeHandler}
+            onGraphMode={onGraphMode}
           />
         </Fragment>
       }

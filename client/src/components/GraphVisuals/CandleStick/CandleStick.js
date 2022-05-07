@@ -1,9 +1,9 @@
 import ReactDOM from 'react-dom';
 import ReactApexChart from 'react-apexcharts';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import axios from 'axios';
 
-export default function ApexChart({stockURL}){
+export default function ApexChart({stockURL, onGraphMode}){
 
   const [array, setArray] = useState([]);
   const [series, setSeries] = useState([{data: []}]);
@@ -53,10 +53,12 @@ export default function ApexChart({stockURL}){
       });
 
       return (
-        
-        <div id="chart">
-        <ReactApexChart options={options} series={series} type="candlestick" height={350} />
-        </div>
+        <Fragment>
+          <div id="chart">
+            <ReactApexChart options={options} series={series} type="candlestick" height={350} />
+          </div>
+          <button class="graphSwitch" name="CANDLESTICK" onClick={onGraphMode}>Graph Mode</button>
+        </Fragment>
 
       );
     

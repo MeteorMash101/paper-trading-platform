@@ -6,8 +6,6 @@ const HoverPrice = () => {
     const hoverInfoContext = useContext(HoverInfoContext);
     return (
         <span className={classes.hoverPrice}>{hoverInfoContext.price}</span>
-        // EDIT: temp, if performance issue use this instead.
-        // <span className={classes.hoverPrice}>0.00</span> 
     )
 }
 
