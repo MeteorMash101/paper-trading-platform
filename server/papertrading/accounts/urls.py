@@ -15,4 +15,5 @@ urlpatterns = [
     path('<str:goog_id>/transactionHistory/', AccountTransactionHistory.as_view(), name = "transactionHistory"),
     path('<str:goog_id>/historicPV/', AccountHistoricPV.as_view(), name = "pvHistory"),
     path('<str:goog_id>/reset/', AccountReset.as_view(), name = "reset"),
+    path('<str:goog_id>/diversity/', AccountStockIndustries.as_view(), name = "portfolioDiversity"),
 ]

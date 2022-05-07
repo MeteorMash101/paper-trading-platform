@@ -25,6 +25,7 @@
     width: calc(4*4vmin);
     height: calc(4*3vmin);
     margin-left: auto;
+    margin-right: 10px;
 }
 
 .sidebyside {

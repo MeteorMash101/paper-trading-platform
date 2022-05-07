@@ -13,8 +13,8 @@ class GeneralNews(APIView):
     #This will return general news, not even necessarily relating to a specific company
     def get(self, request):
         useful = set(["datetime", "headline", "image", "summary", "url"])
-        #fin = finnhub.Client(api_key="c7np72iad3ifj5l0i6eg").general_news("general")
-        fin = finnhub.Client(api_key="c9o7gs2ad3i930olbhm0").general_news("general")
+        fin = finnhub.Client(api_key="c7np72iad3ifj5l0i6eg").general_news("general")
+        #fin = finnhub.Client(api_key="c9o7gs2ad3i930olbhm0").general_news("general")
         df = pd.DataFrame.from_dict(fin)
         unnecessary = set(df.columns) - useful
         df = df.drop(columns = unnecessary)

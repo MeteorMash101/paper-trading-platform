@@ -116,7 +116,7 @@ class Stock_info:
             t.start()
             threads.append(t)
         for thread in threads:
-            thread.join(6) # n is the number of seconds to wait before joining
+            thread.join(10) # n is the number of seconds to wait before joining
         df = q.get().iloc[::60,:]
         while not q.empty():
             #df = df.append(q.get().iloc[::60,:])
@@ -163,9 +163,24 @@ class Stock_info:
         return jsonData
 
     @staticmethod
+    def __get_company_info(ticker, q):
+        try:
+            info = si.get_company_info(ticker)
+        except:
+           info = pd.DataFrame(data={"Value": ["Other", None], }, index = ["industry", "longBusinessSummary"])
+        info.loc["symbol"] = ticker
+        q.put(info)
+        return info
+
+    @staticmethod
     def get_full_stock_stats(ticker):
         try:
+            q = queue.Queue()
+            t = threading.Thread(target=lambda ticker: Stock_info.__get_company_info(ticker, q), args= (ticker, ))
+            t.start()
             data = si.get_quote_data(ticker) #To catch assertion errors
+            t.join(10) # n is the number of seconds to wait before joining
+            info = q.get()
         except:
             return {
                 "symbol": ticker,
@@ -182,7 +197,9 @@ class Stock_info:
                 "pe_ratio": None,
                 "market_cap": None,
                 "revenue": None,
-                "dividend_yield": None
+                "dividend_yield": None,
+                "industry": info.loc["industry"][0],
+                "summary": info.loc["longBusinessSummary"][0],
             }
         jsonData = {
             "symbol": ticker,
@@ -199,7 +216,9 @@ class Stock_info:
             "pe_ratio": Stock_info.__getPE(data),
             "market_cap": Stock_info.__getMarketCap(data),
             "revenue": 0.00000,
-            "dividend_yield": 0.00000
+            "dividend_yield": 0.00000,
+            "industry": info.loc["industry"][0],
+            "summary": info.loc["longBusinessSummary"][0],
         }
         return jsonData
     
@@ -207,7 +226,7 @@ class Stock_info:
     @staticmethod
     def get_top_stocks():
         symbols = si.get_day_most_active()["Symbol"].to_list()
-        stocks = Stock_info.__data_for_list(symbols[:5])
+        stocks = Stock_info.__data_for_list(symbols[:10])
         return sorted(stocks, key = lambda x: x["volume"], reverse=True)
     
     @staticmethod
@@ -224,7 +243,7 @@ class Stock_info:
             t.start()
             threads.append(t)
         for thread in threads:
-            thread.join(6) # n is the number of seconds to wait before joining
+            thread.join(10) # n is the number of seconds to wait before joining
         stocks = []
         while not q.empty():
             stocks.append(q.get())
@@ -259,6 +278,21 @@ class Stock_info:
         names = pd.read_csv("ticker_names.csv")
         os.chdir("..")
         return names.to_dict("records")
+
+    def get_industries(symbols):
+        q = queue.Queue()
+        threads = []
+        for symbol in symbols:
+            t = threading.Thread(target=lambda ticker: Stock_info.__get_company_info(ticker, q), args= (symbol,))
+            t.start()
+            threads.append(t)
+        for thread in threads:
+            thread.join(10) # n is the number of seconds to wait before joining
+        stocks = {}
+        while not q.empty():
+            stock = q.get()
+            stocks[stock.loc["symbol"][0]] = stock.loc["industry"][0]
+        return stocks
 
     @staticmethod
     def __getName(data, ticker):
