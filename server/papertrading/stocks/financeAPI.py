@@ -30,33 +30,34 @@ class Stock_info:
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-    '''
-    @staticmethod
-    def get_stock_historical_data(ticker):
-        data = si.get_data(ticker)
-        data.reset_index(level=0, inplace=True)
-        data.rename(columns={"index": "date"}, inplace = True)
-        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
-        data = data.drop(columns = ["ticker"])
-        jsonData = {
-            "historical_data": data.to_dict("records")
-        }
-        return jsonData
-    '''
     
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     
     @staticmethod
-    def get_stock_historical_data(ticker, range):
-        data = Stock_info.determine_parameters(ticker, range)
+    def get_stock_historical_data(ticker, dayrange):
+        #get the data appropriate for the range
+        data = Stock_info.determine_parameters(ticker, dayrange)
+        #separate date and time
         data.reset_index(level=0, inplace=True)
         data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
         data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
         data = data.drop(columns = ["ticker", "index"])
+        #Add the price change/percent change from the previous entry
+        data["dollar_change"] = data.open - data.open.shift(1)
+        data["percent_change"] = 100*data["dollar_change"]/data.open.shift(1)
+        data.at[0, "dollar_change"] = 0
+        data.at[0, "percent_change"] = 0
+
+        #Convert military time to non-military time
+        data["time"] = data["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
+
+        #convert to output
         jsonData = {
             "historical_data": data.to_dict("records")
         }
+        if dayrange == "1D":
+            print(jsonData)
         # print("[financeAPI.py]: curr data:", data, type(data))
         return jsonData
 
@@ -79,10 +80,10 @@ class Stock_info:
         elif range == "1Y": # INTERVAL: 1 day
             start_date = (today - timedelta(days=365))
             return Stock_info.__get_data_catch_errors(ticker, start_date)
-        elif range == "5Y": # INTERVAL: 1 month
+        elif range == "5Y": # INTERVAL: 1 week
             start_date = (today - timedelta(weeks=260))
             return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
-        else: # INTERVAL: 1 year
+        else: # INTERVAL: 1 month
             return Stock_info.__get_data_catch_errors(ticker, interval = "1mo").dropna()
 
     @staticmethod
