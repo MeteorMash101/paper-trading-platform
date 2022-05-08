@@ -24,7 +24,9 @@ class Stock_info:
     def getEarningsReport(ticker):
         fullReport = si.get_earnings(ticker)
         earningsDF = fullReport["quarterly_revenue_earnings"].drop(columns="revenue")
-        earnings = {"quarterly_earnings": earningsDF.to_dict("records")}
+        expectedVsActual = fullReport["quarterly_results"]
+        earnings = {"quarterly_earnings": earningsDF.merge(expectedVsActual).to_dict("records")}
+        print(earnings)
         return earnings
     
     @staticmethod
