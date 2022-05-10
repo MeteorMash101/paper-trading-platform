@@ -92,7 +92,7 @@ class LivePrice(APIView):
 
 class CompanyEarnings(APIView):
     def get(self, request, ticker):
-        jsonData = si.getEarningsReport(ticker)
+        jsonData = si.get_earnings_report(ticker)
         serializer = EarningsSerializer(jsonData).data
         return Response(serializer)
 

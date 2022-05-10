@@ -21,12 +21,11 @@ class Stock_info:
         return si.get_day_most_active()
     
     @staticmethod
-    def getEarningsReport(ticker):
+    def get_earnings_report(ticker):
         fullReport = si.get_earnings(ticker)
         earningsDF = fullReport["quarterly_revenue_earnings"].drop(columns="revenue")
         expectedVsActual = fullReport["quarterly_results"]
         earnings = {"quarterly_earnings": earningsDF.merge(expectedVsActual).to_dict("records")}
-        print(earnings)
         return earnings
     
     @staticmethod
@@ -58,8 +57,6 @@ class Stock_info:
         jsonData = {
             "historical_data": data.to_dict("records")
         }
-        if dayrange == "1D":
-            print(jsonData)
         # print("[financeAPI.py]: curr data:", data, type(data))
         return jsonData
 
@@ -142,10 +139,11 @@ class Stock_info:
 
     @staticmethod
     def get_stock_historical_data_deprecated(ticker, start_date = None, minute = False):
+        '''
         print(
             "[financeAPI.py]: ticker, start_date, minute in get_stock_historical_data(): ", 
             ticker, start_date, minute
-        )
+        )'''
         if minute:
             today = datetime.today()
             try:

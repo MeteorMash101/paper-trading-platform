@@ -22,7 +22,7 @@ class AccountList(APIView):
     def get(self, request):
         accounts = Account.objects.all()
         serializer = AccountSerializer(accounts, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AccountReset(APIView):
 
@@ -73,29 +73,28 @@ class AccountDetail(APIView):
 
     def get(self, request, goog_id):
         
-        AccountObj = self.get_object(goog_id)
+        accountObj = self.get_object(goog_id)
         # EDIT: don't understand
-        if AccountObj != None: # account exists
-            serializer = AccountSerializer(AccountObj)
-
-            t = threading.Thread(target=PortfolioValue.load, args= (AccountObj,), daemon = True)
+        if accountObj != None: # account exists
+            serializer = AccountSerializer(accountObj)
+            t = threading.Thread(target=PortfolioValue.load, args= (accountObj,), daemon = True)
             t.start()
             #PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else: # account doesn't exist, create new
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, goog_id):
-        Account = self.get_object(goog_id)
-        serializer = AccountSerializer(Account, data=request.data)
+        account = self.get_object(goog_id)
+        serializer = AccountSerializer(account, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, goog_id):
-        Account = self.get_object(goog_id)
-        Account.delete()
+        account = self.get_object(goog_id)
+        account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
@@ -125,7 +124,7 @@ class AccountTransactionHistory(APIView):
         account = self.get_object(goog_id)
         history = account.transaction_history["history"]
         serializer = TransactionHistorySerializer({"transaction_history":history})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AccountStocksOwned(APIView):
     '''
@@ -168,14 +167,10 @@ class AccountStocksOwned(APIView):
                 history = self.buildBuyingPowerHistory(account)
                 serializer = TransactionHistorySerializer({"transaction_history":history})
                 return Response(serializer.data)
-            elif data == "transaction_history":
-                history = account.transaction_history["history"]
-                serializer = TransactionHistorySerializer({"transaction_history":history})
-                return Response(serializer.data)
             else:
-                return Response(None)
+                return Response(None, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
     '''
     Buys and sells stock and updates user list accordingly
@@ -191,7 +186,7 @@ class AccountStocksOwned(APIView):
     def put(self, request, goog_id):
         account = self.get_object(goog_id)
         if account == None:
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         data = request.data
         
@@ -204,7 +199,7 @@ class AccountStocksOwned(APIView):
              return Response(None, status=status.HTTP_400_BAD_REQUEST)            #idk which error to put
         account.save()
         serializer = StockListSerializer({"stock_list":owned})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     # EDIT: duplicate
     #Returns the account object
@@ -383,19 +378,19 @@ class AccountWatchList(APIView):
         account = self.get_object(goog_id)
         if account != None:
             if data == "stocks": # Returns a list of just the symbols for watch list stocks
-                serializer = StockListSerializer({"stock_list":account.watchList.keys()})
-                return Response(serializer.data)
+                serializer = StockListSerializer({"stock_list":account.watchList["stocks"]})
+                return Response(serializer.data, status=status.HTTP_200_OK)
             elif data == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
                 detailedList = self.getWatchListStockInfo(account.watchList)
                 serializer = StockListSerializer({"stock_list":detailedList})
-                return Response(serializer.data)
+                return Response(serializer.data, status=status.HTTP_200_OK)
             elif data == "check_stock":
-                serializer = BoolSerializer({"isPresent": data.get('symbol', None) in account.watchList["stocks"]})
-                return Response(serializer.data)
+                serializer = BoolSerializer({"isPresent": request.query_params.get('symbol', None) in account.watchList["stocks"]})
+                return Response(serializer.data, status=status.HTTP_200_OK)
             else:
-                return Response(None)
+                return Response(None, status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
     #Acts as a switch. Simply make a put request with the "symbol" of the data being the 
     #Ticker you wish to toggle. If the ticker is in the list it is removed, if it is 
     #not in the list it is added. So if there is say a start symbol next to stocks,
@@ -403,17 +398,17 @@ class AccountWatchList(APIView):
     def put(self, request, goog_id):
         account = self.get_object(goog_id)
         if account == None:
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
         data = request.data
         if account.watchList == {} or account.watchList is None:
             account.watchList["stocks"] = []
         watched = account.watchList["stocks"]
         try:
-            watched.pop(watched.index(data["symbol"]))
+            watched.pop(watched.index(data["symbol"].upper()))
         except ValueError: #If the stock is not being watched, add it to the watch list
-            watched.append(data["symbol"])
+            watched.append(data["symbol"].upper())
         account.save()
-        return Response(None)
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
 
     #Returns the account object
     def get_object(self, request, *args, **kwargs):
@@ -428,8 +423,9 @@ class AccountWatchList(APIView):
         if "stocks" not in watchList.keys():
             return []
         watchList = watchList["stocks"]
-        stocks = []
+        
         price_and_percent = si.get_price_and_change_for_list(watchList)
+        stocks = []
         for symbol in watchList:
             price = price_and_percent[symbol]["price"]
             percent_change = price_and_percent[symbol]["percent_change"]
@@ -456,12 +452,10 @@ class AccountStockIndustries(APIView):
         account = self.get_object(goog_id)
         if account != None:
             symbols = list(account.ownedStocks.keys())
-            symbols.append("william")
             industries = si.get_industries(symbols)
-            print(industries)
             diversity = self.__accumulate(industries)
             serializer = IndustryDiversitySerializer({"industry_makeup":diversity})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
     
@@ -485,7 +479,7 @@ class AccountHistoricPV(APIView):
             data = self.convertToListOfDicts(account.portfolio_value_history["data"])
             
             serializer = HistoricPortfolioValueSerializer({"pv":data})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
