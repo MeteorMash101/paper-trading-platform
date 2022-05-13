@@ -226,9 +226,18 @@ class Stock_info:
     #This is for stocks to get the daily most active
     @staticmethod
     def get_top_stocks():
-        symbols = si.get_day_most_active()["Symbol"].to_list()
-        stocks = Stock_info.__data_for_list(symbols[:10])
-        return sorted(stocks, key = lambda x: x["volume"], reverse=True)
+        #symbols = si.get_day_most_active()["Symbol"].to_list()
+        
+        result = si.get_day_most_active()
+        result = result.drop(columns=["Change", "Avg Vol (3 month)", "Market Cap", "PE Ratio (TTM)"])
+        result.columns = ["symbol", "company_name", "price", "percent_change", "volume"]
+        result.sort_values("volume", ascending=False, inplace=True)
+        result["change_direction"] = result["percent_change"] > 0
+        result["volume"] = result["volume"].astype('int32')
+        return result.to_dict("records")
+        
+        #stocks = Stock_info.__data_for_list(symbols[:10])
+        #return sorted(stocks, key = lambda x: x["volume"], reverse=True)
     
     @staticmethod
     def get_popular_stocks():

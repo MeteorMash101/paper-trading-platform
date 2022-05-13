@@ -6,7 +6,7 @@ from unittest.mock import patch, MagicMock
 from unittest import mock
 
 #Essentially we can't mock library methods so we give them a child and mock their child 
-# cuz children can't stand up for themselves
+#cuz children can't stand up for themselves
 #https://williambert.online/2011/07/how-to-unit-testing-in-django-with-mocking-and-patching/
 class FakeDate(datetime):
     def __new__(cls, *args, **kwargs):

@@ -2,14 +2,38 @@ from django.test import TestCase, Client
 from django.urls import reverse
 import re
 from unittest.mock import patch
+from unittest import mock
 import pandas as pd
+
+#https://williambert.online/2011/07/how-to-unit-testing-in-django-with-mocking-and-patching/
+#class FakeDate(datetime):
+#    def __new__(cls, *args, **kwargs):
+#        return datetime.__new__(datetime, *args, **kwargs)
+
+#@mock.patch('accounts.views.datetime', FakeDate)
+class FakeAPI:
+    def get_quote_data(ticker):
+        stocks = {"AAPL": {
+                    "displayName": "Apple", "shortName": "Apple", "longName": "Apple Inc.",
+                    "regularMarketPrice": 150.15, "regularMarketChangePercent": 14.50234,
+                    "regularMarketVolume": 123456789},
+                "GOOG": {
+                    "displayName": "Alphabet", "shortName": "Google", "longName": "Alphabet Inc.",
+                    "regularMarketPrice": 2400.24, "regularMarketChangePercent": -12.3456789,
+                    "regularMarketVolume": 124681012},
+                "AMZN": {
+                    "displayName": "Amazon.com", "shortName": "Amazon", "longName": "Amazon.com, Inc.",
+                    "regularMarketPrice": 2000.19, "regularMarketChangePercent": -1.369248,
+                    "regularMarketVolume": 101010101},
+                }
+        return stocks[ticker]
 
 # Create your tests here.
 class SingleStockTestCases(TestCase):
     #Use multiple tickers in case WW3 and some companies don't stay in business.
 
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    def test_buy_share_not_owned_raw_data(self, livePriceAPI):
+    def test_get_live_price(self, livePriceAPI):
         #Setting API call results
         ticker = "VEEV"
         stockPrice = 123.5124
@@ -21,7 +45,6 @@ class SingleStockTestCases(TestCase):
         expectedResult = {"live_price": f"{stockPrice:0.2f}"}
         self.assertEqual(expectedResult, data)
 
-    #Breaks when API breaks or if structure changes.
     @patch('yahoo_fin.stock_info.get_earnings')
     def test_quarterly_earnings(self, earnings):
         """Checks that we are given 4 quarters worth of data with the appropriate types held in the fields"""
@@ -122,6 +145,7 @@ class SingleStockTestCases(TestCase):
 class MultipleStockTestCases(TestCase):
 
     #I'm not even sure what to test but it at least returns one company
+    @mock.patch('yahoo_fin.stock_info', FakeAPI)
     def test_popular_stocks(self):
         """Make sure that the popular stocks (people recognize them) returns some stocks"""
         url = reverse("stocks:popularStocks")
