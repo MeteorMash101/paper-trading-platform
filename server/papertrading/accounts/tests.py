@@ -30,7 +30,7 @@ class StockListTestCases(TestCase):
     #Returns the test user
     def getTestUser(self):
         return Account.objects.filter(google_user_id = "test")[0]
-
+    
     ###########################################################################
     #Testing the buy functionality
     ###########################################################################
@@ -93,30 +93,6 @@ class StockListTestCases(TestCase):
                                   {"quantity": 2, "datePurchased": "2022-02-15", "purchasePrice": price2}]}
         self.assertEqual(expectedResult, user.ownedStocks)
 
-    '''
-    #CURRENTLY WE PROBABLY TEST IN FRONT END FOR THIS SO IT SHOULDN'T MATTER WHAT HAPPENS SINCE IT CAN'T HAPPEN
-    def test_buy_shares_without_enough_money(self):
-        #self.createTestUser()
-        #result = self.buyOrSellStock("buy", "DIS", 5000)
-        #print(result)
-        #user = self.getTestUser()
-        #data = user.ownedStocks
-        #Check balance (it might not be exact so we just want it within a cent)
-        #self.assertAlmostEqual(float(user.balance) + data["dis"][0]["purchasePrice"]*data["dis"][0]["quantity"], 5000.00, delta = 0.01)
-        self.assertTrue(True)
-    
-    #Also is tested for and probably doesn't matter
-    def test_sell_share_not_owned(self):
-        self.assertTrue(True)
-
-    #Same as above?
-    def test_sell_many_shares_one_owned(self):
-        self.assertTrue(True)
-
-    #Same as above?
-    def test_sell_share_none_owned(self):
-        self.assertTrue(True)
-    '''
     ###########################################################################
     #Testing the sell functionality
     ###########################################################################
@@ -236,7 +212,7 @@ class StockListTestCases(TestCase):
         data = Client().get(url, data = {"info": "stock_list_display"}, content_type="application/json").json()
         expectedValue = [{"symbol": "dis", "shares": 6, "price": stockPrice, "percent_change": percentChange, "change_direction": percentChange > 0}]
         self.assertTrue(expectedValue, data["stock_list"])
-      
+    
     @patch('stocks.financeAPI.Stock_info.get_price_and_change_for_list')
     def test_stock_list_when_many_owned(self, priceAndChangeAPI):
         #Set up the fake API call
@@ -262,6 +238,7 @@ class StockListTestCases(TestCase):
         expected = [{"symbol": "dis" , "shares": 9, "price": 100.00,  "percent_change": 4.3471178, "change_direction": True},
                     {"symbol": "f"   , "shares": 7, "price": 13.89,   "percent_change": -1.8472619, "change_direction": False},
                     {"symbol": "goog", "shares": 1, "price": 2657.91, "percent_change": -0.8277492, "change_direction": False}]
+        
         self.assertEqual(expected, data["stock_list"])
     
     ###########################################################################
@@ -347,7 +324,7 @@ class StockListTestCases(TestCase):
                                    "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
                                    "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}}
         self.assertEqual(ownedStock, expected)
-    
+
 
 
 ###############################################################################
@@ -702,7 +679,6 @@ class GeneralAccountTestCases(TestCase):
         data = Client().get(url).json()
         self.assertEqual(data, userToFind)
 
-    #THIS IS NOT A VALID TEST YET DON'T LET IT STAY THIS WAY
     def test_see_nonexistent_account_details(self):
         userData = [{"user": None, "name": "Will", "email": "test1@gmail.com", "google_user_id": "test1",
                     "balance": "5000.00", "portfolio_value": "0.00", "start_date": None},

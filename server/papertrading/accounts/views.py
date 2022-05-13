@@ -213,7 +213,7 @@ class AccountStocksOwned(APIView):
     #This gets the portfolio value for the user
     def __calculateValue(self, owned):
         value = 0
-        for ticker in owned.keys():
+        for ticker in sorted(owned): #Sorted makes it ok for testing...
             value += si.get_live_price(ticker) * self.__countStock(owned, ticker)
         return value
 
@@ -308,7 +308,7 @@ class AccountStocksOwned(APIView):
     def __ownedStocksForDisplay(self, owned):
         stocks = []
         price_and_percent = si.get_price_and_change_for_list(owned.keys())
-        for symbol in owned.keys():
+        for symbol in sorted(owned):
             totOwned = 0
             for purchase in owned[symbol]:
                 totOwned += int(purchase["quantity"])

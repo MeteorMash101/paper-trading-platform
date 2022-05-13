@@ -18,6 +18,7 @@ class PortfolioValue:
             startDate, 
             account.transaction_history["history"])
         account.save()
+        
 
     #Determines the starting date to load portfolio value from
     #Start date is either start of the account or the last day saved in the database
