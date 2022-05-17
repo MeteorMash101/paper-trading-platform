@@ -120,13 +120,15 @@ class PortfolioValue:
     def __valueOf(q, stocks, curDay):
         stockKeys = list(stocks.keys())
         if len(stockKeys) == 0:
-            return 0
+            q.put((curDay, 0))
+            return 
         if curDay == date.today():
-            return PortfolioValue.__curValueOf(stocks)
+            q.put((curDay, PortfolioValue.__curValueOf(stocks)))
+            return 
         (totPrice, lastOpenMarket) = PortfolioValue.__getLastOpenMarket(stocks, stockKeys[0], curDay)  
         if len(stockKeys) == 1:
             q.put((curDay, totPrice))
-            return totPrice
+            return 
 
         for symbol, quantity in list(stocks.items())[1:]:
             totPrice += int(quantity) * PortfolioValue.__priceForStockOn(symbol, lastOpenMarket)

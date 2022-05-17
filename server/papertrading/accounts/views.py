@@ -77,12 +77,15 @@ class AccountDetail(APIView):
         # EDIT: don't understand
         if accountObj != None: # account exists
             serializer = AccountSerializer(accountObj)
-            t = threading.Thread(target=PortfolioValue.load, args= (accountObj,), daemon = True)
-            t.start()
-            #PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
+            self.loadPortfolioHistory(accountObj)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: # account doesn't exist, create new
             return Response(None, status=status.HTTP_404_NOT_FOUND)
+
+    #In its own function so that it can be mocked for testing
+    def loadPortfolioHistory(self, accountObj):
+        t = threading.Thread(target=PortfolioValue.load, args= (accountObj,), daemon = True)
+        t.start()
 
     def put(self, request, goog_id):
         account = self.get_object(goog_id)

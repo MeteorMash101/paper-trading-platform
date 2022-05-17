@@ -10,21 +10,48 @@ import pandas as pd
 #    def __new__(cls, *args, **kwargs):
 #        return datetime.__new__(datetime, *args, **kwargs)
 
-#@mock.patch('accounts.views.datetime', FakeDate)
 class FakeAPI:
     def get_quote_data(ticker):
-        stocks = {"AAPL": {
+        stocks = {"FB": {
+                    "displayName": "Meta", "shortName": "Meta", "longName": "Meta Inc.",
+                    "regularMarketPrice": 100.99, "regularMarketChangePercent": -1.09876,
+                    "regularMarketVolume": 1111111},
+                "AAPL": {
                     "displayName": "Apple", "shortName": "Apple", "longName": "Apple Inc.",
                     "regularMarketPrice": 150.15, "regularMarketChangePercent": 14.50234,
-                    "regularMarketVolume": 123456789},
-                "GOOG": {
-                    "displayName": "Alphabet", "shortName": "Google", "longName": "Alphabet Inc.",
-                    "regularMarketPrice": 2400.24, "regularMarketChangePercent": -12.3456789,
-                    "regularMarketVolume": 124681012},
+                    "regularMarketVolume": 1234567},
                 "AMZN": {
                     "displayName": "Amazon.com", "shortName": "Amazon", "longName": "Amazon.com, Inc.",
                     "regularMarketPrice": 2000.19, "regularMarketChangePercent": -1.369248,
-                    "regularMarketVolume": 101010101},
+                    "regularMarketVolume": 1010101},
+                "NFLX": {
+                    "displayName": "Netflix", "shortName": "Netflix", "longName": "Netflix Inc.",
+                    "regularMarketPrice": 190.01, "regularMarketChangePercent": -39.24608,
+                    "regularMarketVolume": 33333333},
+                "GOOG": {
+                    "displayName": "Alphabet", "shortName": "Google", "longName": "Alphabet Inc.",
+                    "regularMarketPrice": 2400.24, "regularMarketChangePercent": -12.3456789,
+                    "regularMarketVolume": 1246811},
+                "MSFT": {
+                    "displayName": "Microsoft", "shortName": "Microsoft", "longName": "Microsoft, Inc.",
+                    "regularMarketPrice": 265.14, "regularMarketChangePercent": 4.32101,
+                    "regularMarketVolume": 2020202},
+                "TSLA": {
+                    "displayName": "Tesla", "shortName": "Tesla", "longName": "Tesla Inc.",
+                    "regularMarketPrice": 888.88, "regularMarketChangePercent": 11.42069,
+                    "regularMarketVolume": 12312312},
+                "ABNB": {
+                    "displayName": "AirBnB", "shortName": "Airbnb", "longName": "Airbnb, Inc.",
+                    "regularMarketPrice": 116.11, "regularMarketChangePercent": -1.22222,
+                    "regularMarketVolume": 8564732},
+                "ZM": {
+                    "displayName": "Zoom Communications", "shortName": "Zoom", "longName": "Zoom Communications Inc.",
+                    "regularMarketPrice": 100.01, "regularMarketChangePercent": -3.17891,
+                    "regularMarketVolume": 1212121},
+                "EBAY": {
+                    "displayName": "Ebay", "shortName": "E-Bay", "longName": "Ebay Inc.",
+                    "regularMarketPrice": 50.24, "regularMarketChangePercent": -1.3456789,
+                    "regularMarketVolume": 824681},
                 }
         return stocks[ticker]
 
@@ -115,6 +142,13 @@ class SingleStockTestCases(TestCase):
                     "summary": info.loc["longBusinessSummary"][0]
         }
         self.assertEqual(data, expected)
+
+class historicalTestCases(TestCase): 
+    def test_historical_1d(self):
+        
+        url = reverse("stocks:historicalData", args = ("FB",))
+        data = Client().get(url, {"dateRange": "1D"}, content_type="application/json").json()["historical_data"]
+        #OH BOY D:
 '''
     #Only breaks when the API breaks. Or inherent structure changes (e.g. missing field)
     def test_historical_data(self):
@@ -126,42 +160,56 @@ class SingleStockTestCases(TestCase):
             data = Client().get(url).json()["historical_data"]
             count += (type(data) == list) * (type(data[0]) == dict) * (fields.intersection(set(data[0].keys())) == fields)
         self.assertTrue(count > 0)
-    
-    #Breaks with the API, or when we can no longer get all the details we expect (probably not even necessary though)
-    def test_full_stock_details(self):
-        """Checks the function which provides the details displayed when users click on a stock"""
-
-        fields = set(['company_name', 'symbol', 'price', 'percent_change', 'change_direction', 
-                      'market_cap', 'pe_ratio', 'dividend_yield', 'average_volume', 'volume', 
-                      'high_today', 'low_today', 'ft_week_high', 'ft_week_low', 'revenue'])
-        count = 0
-        for ticker in self.tickers:
-            url = reverse("stocks:stockDetails", args = (ticker,))
-            data = Client().get(url).json()
-            count += (type(data) == dict) * (fields.intersection(set(data.keys())) == fields)
-        self.assertTrue(count > 0)
 '''
 #These could test the speed with which it gets them, since we'll need it to be fast
 class MultipleStockTestCases(TestCase):
 
-    #I'm not even sure what to test but it at least returns one company
-    @mock.patch('yahoo_fin.stock_info', FakeAPI)
-    def test_popular_stocks(self):
+    @patch('yahoo_fin.stock_info.get_day_most_active')
+    def test_top_stocks(self, mostActive):
         """Make sure that the popular stocks (people recognize them) returns some stocks"""
-        url = reverse("stocks:popularStocks")
-        data = Client().get(url).json()
-        count = 0
-        for stockDictionary in data:
-            count += (type(stockDictionary)==dict)
-        self.assertTrue(count > 0)
-    
-    #Not sure what to test either lol
-    def test_top_stocks(self):
-        """Make sure that the top stocks (most traded) returns some stocks"""
+        mostActive.return_value = pd.DataFrame({
+            "Symbol": ["AMD", "AAPL", "TWTR", "AFRM", "F", "SOFI", "PLTR", "NVDA", "NIO", "AMC"], 
+            "Name": ["Advanced Micro Devices", "Apple", "Twitter", "Affirm", "Ford", "SoFi Tech", "Palantir", "NVIDIA", "NIO Inc.", "AMC Entertainment"],
+            "Price (Intraday)": [95.12, 147.11, 40.72, 23.71, 13.50, 6.75, 8.34, 177.06, 14.31, 11.81],
+            "Change": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "% Change": [9.26, 3.19, -9.67, 31.43, 8.52, 19.26, 13.62, 9.47, 9.24, 5.45],
+            "Volume": [10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0],
+            "Avg Vol (3 month)": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "Market Cap": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            "PE Ratio (TTM)": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        })
         url = reverse("stocks:topStocks")
         data = Client().get(url).json()
-        count = 0
-        for stockDictionary in data:
-            count += (type(stockDictionary)==dict)
-        self.assertTrue(count > 0)
+
+        expected = pd.DataFrame({
+            "symbol": ["AMD", "AAPL", "TWTR", "AFRM", "F", "SOFI", "PLTR", "NVDA", "NIO", "AMC"], 
+            "company_name": ["Advanced Micro Devices", "Apple", "Twitter", "Affirm", "Ford", "SoFi Tech", "Palantir", "NVIDIA", "NIO Inc.", "AMC Entertainment"],
+            "price": [95.12, 147.11, 40.72, 23.71, 13.50, 6.75, 8.34, 177.06, 14.31, 11.81],
+            "percent_Change": [9.26, 3.19, -9.67, 31.43, -8.52, -19.26, 13.62, 9.47, 9.24, 5.45],
+            "change_direction": [True, True, False, True, False, False, True, True, True, True],
+            "volume": [10.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0, 1.0],
+        })
+        self.assertTrue(data, expected.to_dict("records"))
+    
+    #@mock.patch('stocks.views.si', FakeAPI)
+    @mock.patch('stocks.financeAPI.si', FakeAPI)
+    def test_popular_stocks(self):
+        """Make sure that the top stocks (most traded) returns some stocks"""
+        popular = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM", "EBAY"]
+        url = reverse("stocks:popularStocks")
+        data = Client().get(url).json()
+        expected = []
+        
+        for stock in popular:
+            d = FakeAPI.get_quote_data(stock)
+            newD = {}
+            newD["company_name"] = d["displayName"]
+            newD["symbol"] = stock
+            newD["price"] = f'{d["regularMarketPrice"]}'
+            newD["percent_change"] = f"{d['regularMarketChangePercent']:.2f}"
+            newD["change_direction"] = d["regularMarketChangePercent"] > 0
+            expected.append(newD)
+        self.assertEqual(sorted(expected, key = lambda x: x["company_name"]), sorted(data, key = lambda x: x["company_name"]))
+           
+        
 
