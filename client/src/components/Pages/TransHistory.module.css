@@ -14,7 +14,7 @@
     margin: 0% 4%;
     border: 1px solid grey;
     border-radius: 1.6rem;
-    background-color: rgb(229, 248, 252);
+    background-color: rgb(193, 240, 248);
 }
 
 .headings{
@@ -28,6 +28,17 @@
     width: 16%;
 }
 
+.price{
+    width: 16%;
+}
+
 .stock{
     width: 12%;
+}
+
+@media (max-width:600px) {
+    .price{
+        width: 0%;
+        font-size: 0px;
+    }
 }

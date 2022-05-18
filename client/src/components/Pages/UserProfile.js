@@ -8,6 +8,7 @@ import Header from '../Header/Header';
 import { useEffect, Fragment } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 
 
 const UserProfile = () => {
@@ -36,6 +37,11 @@ const UserProfile = () => {
     }, [])
 
     return(
+        <motion.div 
+        initial= {{opacity:0, x:100}} 
+        animate = {{opacity: 1, x:0}}
+        exit = {{opacity: 0, x:-100}}
+        transition={{ duration: 0.7}}>
         <Fragment>
         {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
             // Redirect to /login - User must be logged in to view ALL pages...
@@ -51,6 +57,7 @@ const UserProfile = () => {
                     </div>
 
                     <div className={classes.pieChart}>
+                        <h2> PORTFOLIO DIVERSITY</h2>
                         <PieGraph/>
                     </div>
 
@@ -62,6 +69,7 @@ const UserProfile = () => {
             </div>
         }
         </Fragment>
+        </motion.div>
     );
 }
 

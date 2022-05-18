@@ -1,9 +1,14 @@
 .container{
-    display: flex;
     align-items: center;
     width: 90%;
     margin: 1% 4%;
     border: 1px solid rgb(173, 173, 173);
+    border-radius: 1.6rem;
+}
+
+.container:hover {
+    background-color: rgb(232, 232, 232);
+    cursor: pointer;
     border-radius: 1.6rem;
 }
 
@@ -34,11 +39,12 @@
 .stock{
     width: 12%;
     text-align: center;
-    border: 1px solid white;
+    justify-content: center;
     height: 30px;
     font-weight: 600;
-    border-radius: 1.6rem;
-    background-color: rgb(229, 248, 252);
+    border-radius: 10px;
+    padding-top: 2px;
+    background-color: rgb(193, 240, 248);
 }
 
 .quantity{
@@ -54,4 +60,15 @@
 .totalValue{
     width: 16%;
     text-align: center;
+}
+
+@media (max-width:600px) {
+    .stockPrice{
+        width: 0%;
+        font-size: 0px;
+    }
+
+    .totalValue{
+        width: 25%;
+    }
 }

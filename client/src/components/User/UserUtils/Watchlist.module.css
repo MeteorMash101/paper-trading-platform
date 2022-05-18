@@ -8,6 +8,7 @@
 
 .list{
     width: 100%;
+    /* border: 1px solid black; */
 }
 
 .symbol{
@@ -24,8 +25,6 @@
 }
 
 .watchlist{
-    margin-top: 3%;
-    overflow: scroll;
+    margin-top: 5%;
     height: 48vh;
-
 }

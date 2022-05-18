@@ -1,18 +1,3 @@
-.container {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgb(173, 175, 173);
-    border-radius: 10px;
-    /* background-color: rgb(176, 230, 176); */
-    margin: .5rem .5 rem;
-    margin-bottom: 20px;
-    /* height: 40vh; */
-    width: 40vh;
-    padding: 1.4rem 1.4rem;
-    text-align: left;
-}
-
-
 .label {
     color: rgb(62, 189, 211);
     font-weight: bold;
@@ -65,5 +50,6 @@
 .graph{
     width: 100%;
     border-radius: 1.6rem;
-    margin-bottom: 5%;
+    margin-top: -3%;
+    margin-bottom: 3%;
 }

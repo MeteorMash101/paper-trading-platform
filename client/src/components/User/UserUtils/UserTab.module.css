@@ -21,3 +21,10 @@
 .logo {
     background-color: transparent;
 }
+
+@media (max-width:900px) {
+
+  .userprofile{
+    width: 100%;
+  }
+}

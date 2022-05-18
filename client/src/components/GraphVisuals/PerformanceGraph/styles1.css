@@ -36,11 +36,12 @@
   fill: #57caca;
 }
 
-.legendContainer {
+/* .legendContainer {
   display: flex;
   justify-content: center;
-  color: #8e8c8f;
-}
+  color: #5e1b80;
+  background-color: white;
+} */
 
 .checkbox {
   margin: 10px;

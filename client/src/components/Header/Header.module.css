@@ -1,9 +1,9 @@
 .container {
-    border: 2px solid black;
+    /* border: 2px solid black; */
     position: sticky;
     top: 0;
     background-color: rgb(229, 248, 252);
-    height: 155px;
+    height: 55px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -11,7 +11,7 @@
     z-index: 2;
 }
 
-@media (max-width:950px) {
+@media (max-width:900px) {
     .heading {
     font-size: 0px !important;
   }
@@ -44,7 +44,8 @@
 }
 
 .searchbar{
-    width: 30%;
+    width: 40%;
+    /* border: 1px solid black; */
 }
 
 .signin{
@@ -54,6 +55,6 @@
 }
 
 .titleSection{
-  border: 2px solid black;
+  /* border: 2px solid black; */
   width: 20%;
 }

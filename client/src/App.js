@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import './App.css';
 import MainFeed from './components/Pages/MainFeed';
 import StockDetail from './components/Pages/StockDetail';
@@ -10,6 +10,7 @@ import History from './components/Pages/TransHistory';
 import Login from './components/Pages/Login';
 import { useContext, useEffect } from 'react';
 import axios from 'axios';
+import {AnimatePresence} from 'framer-motion';
 
 const App = () => {
   const userCtx = useContext(UserContext);
@@ -64,16 +65,20 @@ const App = () => {
     fetchData()
   }, [userCtx.isLoggedIn])
 
+  const location = useLocation();
+
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<MainFeed/>} exact/>
-        <Route path="/stock/:symbol" element={<StockDetail/>}/>
-        <Route path="/user/" element={<UserProfile/>}/>
-        <Route path = "/mystocks/" element = {<MyStocks/>}/>
-        <Route path = "/history/" element={<History/>}/>
-        <Route path = "/login/" element={<Login/>}/>
-      </Routes>
+      <AnimatePresence exitBeforeEnter initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<MainFeed/>} exact/>
+          <Route path="/stock/:symbol" element={<StockDetail/>}/>
+          <Route path="/user/" element={<UserProfile/>}/>
+          <Route path = "/mystocks/" element = {<MyStocks/>}/>
+          <Route path = "/history/" element={<History/>}/>
+          <Route path = "/login/" element={<Login/>}/>
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 }
