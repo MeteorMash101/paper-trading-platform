@@ -68,7 +68,7 @@ class Stock_info:
         elif range == "1W": # INTERVAL: 10 mins
             start_date = today - timedelta(days=7)
             return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
-        elif range == "1M": # INTERVAL: 1 hour
+        elif range == "1M": # INTERVAL: 30 minutes
             return Stock_info.__get_one_month(ticker)
         elif range == "3M": # INTERVAL: 1 day
             start_date = (today - timedelta(days=90))
@@ -83,7 +83,7 @@ class Stock_info:
             start_date = (today - timedelta(weeks=260))
             return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
         else: # INTERVAL: 1 month
-            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo").dropna()
+            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo")
 
     @staticmethod
     def __get_one_day(ticker):
@@ -117,7 +117,7 @@ class Stock_info:
             threads.append(t)
         for thread in threads:
             thread.join(10) # n is the number of seconds to wait before joining
-        df = q.get().iloc[::60,:]
+        df = q.get().iloc[::30,:]
         while not q.empty():
             #df = df.append(q.get().iloc[::60,:])
             df = pd.concat((df, q.get().iloc[::30,:]))

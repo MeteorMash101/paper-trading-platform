@@ -4,11 +4,14 @@ import re
 from unittest.mock import patch
 from unittest import mock
 import pandas as pd
+import random
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 #https://williambert.online/2011/07/how-to-unit-testing-in-django-with-mocking-and-patching/
-#class FakeDate(datetime):
-#    def __new__(cls, *args, **kwargs):
-#        return datetime.__new__(datetime, *args, **kwargs)
+class FakeDate(datetime):
+    def __new__(cls, *args, **kwargs):
+        return datetime.__new__(datetime, *args, **kwargs)
 
 class FakeAPI:
     def get_quote_data(ticker):
@@ -55,10 +58,97 @@ class FakeAPI:
                 }
         return stocks[ticker]
 
+    def get_data(ticker, start_date = None, end_date = None, interval="1d"):
+        if start_date:
+            start_date = datetime.fromisoformat(start_date.strftime("%Y-%m-%d"))
+        #Need: 1m, 1d, 1wk, 1mo
+        #day will take every 5 minutes
+        #week takes every 10 minutes
+        #month is every 30 minutes
+        #the rest just do every entry
+        #1D, 1W, 1Mo
+        if interval == "1mo": #all time
+            return FakeAPI.allTime(ticker)
+        elif interval == "1wk": #5Y
+            return FakeAPI.weeklyInterval(ticker, start_date)
+        elif interval == "1d": #3m, 6m, 1yr
+            return FakeAPI.dailyInterval(ticker, start_date)
+        elif interval == "1m": #1D, 1W, 1Mo
+            return FakeAPI.minuteInterval(ticker, start_date, end_date)
+
+    def minuteInterval(ticker, start_date, end_date):
+        df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
+        random.seed(8)
+
+        day = start_date
+        i = 1
+        while day <= end_date:
+            openPrice = 150 + 0.16*i
+            FakeAPI.addRow(df, openPrice, day, 1)
+            if i % 390 == 0:
+                day += relativedelta(days=1)
+                day -= relativedelta(minutes=390)
+            else:
+                day += relativedelta(minutes=1)
+            i += 1
+        return df
+
+    def dailyInterval(ticker, start_date):
+        df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
+        random.seed(8)
+
+        day = start_date
+        end_date = datetime.fromisoformat("2022-05-17")
+        i = 0
+        while day <= end_date:
+            openPrice = 150 + 0.16*i
+            FakeAPI.addRow(df, openPrice, day, 1)
+            day += relativedelta(days=1)
+            i += 1
+        return df
+
+    def weeklyInterval(ticker, start_date):
+        df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
+        random.seed(8)
+        day = start_date
+        end_date = datetime.fromisoformat("2022-05-17")
+        i = 0
+        while day <= end_date:
+            openPrice = 150 + 4*i
+            FakeAPI.addRow(df, openPrice, day, 25)
+            day += relativedelta(weeks=1)
+            i += 1
+        return df
+    
+    def allTime(ticker):
+        df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
+        random.seed(8)
+        day = datetime.fromisoformat("2015-02-01")
+        end_date = datetime.fromisoformat("2022-05-17")
+        i = 0
+        while day <= end_date:
+            openPrice = 150 + 16*i
+            FakeAPI.addRow(df, openPrice, day, 100)
+            day += relativedelta(months=1)
+            i += 1
+        return df
+
+    def addRow(df, openPrice, day, modifier):
+        openPrice = openPrice + random.uniform(-modifier*openPrice/6000, modifier*openPrice/6000)
+        changeNoise = random.uniform(-modifier*openPrice/2500, modifier*openPrice/2500)
+        closePrice = openPrice + changeNoise
+        floorVal = min(openPrice, closePrice)
+        ceilVal = max(openPrice, closePrice)
+        rangeNoise = (ceilVal - floorVal)/2
+        high = max(ceilVal, ceilVal + rangeNoise)
+        low = max(floorVal, floorVal + rangeNoise)
+        volumeNoise = random.randint(-500000, 1000000)
+        df.loc[day] = [openPrice, high, low, closePrice, closePrice, 1000000+volumeNoise, "TSLA"]
+'''
 # Create your tests here.
 class SingleStockTestCases(TestCase):
     #Use multiple tickers in case WW3 and some companies don't stay in business.
-
+    
     @patch('stocks.financeAPI.Stock_info.get_live_price')
     def test_get_live_price(self, livePriceAPI):
         #Setting API call results
@@ -142,24 +232,20 @@ class SingleStockTestCases(TestCase):
                     "summary": info.loc["longBusinessSummary"][0]
         }
         self.assertEqual(data, expected)
-
+'''
+@mock.patch('stocks.financeAPI.datetime', FakeDate)
+@mock.patch("stocks.financeAPI.si", FakeAPI)
 class historicalTestCases(TestCase): 
     def test_historical_1d(self):
-        
-        url = reverse("stocks:historicalData", args = ("FB",))
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
         data = Client().get(url, {"dateRange": "1D"}, content_type="application/json").json()["historical_data"]
+        print(data[:5])
+        expected = FakeAPI.get_data("TSLA", today - relativedelta(days=1), end_date = today, interval="1m")
+        print(expected.head())
         #OH BOY D:
-'''
-    #Only breaks when the API breaks. Or inherent structure changes (e.g. missing field)
-    def test_historical_data(self):
-        """Tests full historical data with daily resolution"""
-        fields = set(['date', 'open', 'high', 'low', 'close', 'adjclose', 'volume'])
-        count = 0
-        for ticker in self.tickers:
-            url = reverse("stocks:historicalData", args = (ticker,))
-            data = Client().get(url).json()["historical_data"]
-            count += (type(data) == list) * (type(data[0]) == dict) * (fields.intersection(set(data[0].keys())) == fields)
-        self.assertTrue(count > 0)
+
 '''
 #These could test the speed with which it gets them, since we'll need it to be fast
 class MultipleStockTestCases(TestCase):
@@ -191,10 +277,9 @@ class MultipleStockTestCases(TestCase):
         })
         self.assertTrue(data, expected.to_dict("records"))
     
-    #@mock.patch('stocks.views.si', FakeAPI)
     @mock.patch('stocks.financeAPI.si', FakeAPI)
     def test_popular_stocks(self):
-        """Make sure that the top stocks (most traded) returns some stocks"""
+        """Make sure it handles the data from the API correctly"""
         popular = ["FB", "AAPL", "AMZN", "NFLX", "GOOG", "MSFT", "TSLA", "ABNB", "ZM", "EBAY"]
         url = reverse("stocks:popularStocks")
         data = Client().get(url).json()
@@ -210,6 +295,4 @@ class MultipleStockTestCases(TestCase):
             newD["change_direction"] = d["regularMarketChangePercent"] > 0
             expected.append(newD)
         self.assertEqual(sorted(expected, key = lambda x: x["company_name"]), sorted(data, key = lambda x: x["company_name"]))
-           
-        
-
+'''

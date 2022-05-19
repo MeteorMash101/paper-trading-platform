@@ -110,7 +110,7 @@ class StockListTestCases(TestCase):
     #Returns the test user
     def getTestUser(self):
         return Account.objects.filter(google_user_id = "test")[0]
-    '''
+    
     ###########################################################################
     #Testing the buy functionality
     ###########################################################################
@@ -371,7 +371,7 @@ class StockListTestCases(TestCase):
         pvChange = round(100*(expectedPrice - buyPrice)/buyPrice, 2)
         expected = {"portfolio_value": str(expectedPrice), "percent_change": str(pvChange), 'change_direction': pvChange > 0}
         self.assertEqual(pv, expected)
-    '''
+    
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.si', FakeAPI)
     @mock.patch('accounts.views.datetime', FakeDate)
     @mock.patch('accounts.views.AccountDetail.loadPortfolioHistory', FakeAPI.portfolioHistory)
@@ -465,7 +465,7 @@ class StockListTestCases(TestCase):
 
 
 
-'''
+
     ###########################################################################
     #Testing the Raw Stock list return
     ###########################################################################
@@ -498,11 +498,11 @@ class StockListTestCases(TestCase):
                                    "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
                                    "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}}
         self.assertEqual(ownedStock, expected)
-'''
+
 
 
 ###############################################################################
-'''
+
 class WatchListTestCases(TestCase):
 
     #Creates the test user with id "test"
@@ -872,7 +872,7 @@ class GeneralAccountTestCases(TestCase):
         url = reverse("accounts:details", args=("notPresent", )) #sending a nonexists user id: "notPresent"
         data = Client().get(url)
         self.assertEqual(data.status_code, 404)
-'''
+
 
 '''
 print("Name:", user.name)
