@@ -38,7 +38,7 @@ class Stock_info:
     @staticmethod
     def get_stock_historical_data(ticker, dayrange):
         #get the data appropriate for the range
-        data = Stock_info.determine_parameters(ticker, dayrange)
+        data = Stock_info.__get_data_for_interval(ticker, dayrange)
         #separate date and time
         data.reset_index(level=0, inplace=True)
         data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
@@ -61,13 +61,15 @@ class Stock_info:
         return jsonData
 
     @staticmethod
-    def determine_parameters(ticker, range):
+    def __get_data_for_interval(ticker, range):
         today = datetime.today()
         if range == "1D": # INTERVAL: 5 mins
             return Stock_info.__get_one_day(ticker)
         elif range == "1W": # INTERVAL: 10 mins
             start_date = today - timedelta(days=7)
-            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+            df = Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+            df.index = df.index.map(lambda x: x - timedelta(hours=4))
+            return df
         elif range == "1M": # INTERVAL: 30 minutes
             return Stock_info.__get_one_month(ticker)
         elif range == "3M": # INTERVAL: 1 day
@@ -90,12 +92,11 @@ class Stock_info:
         today = datetime.today()
         start_date = today - timedelta(days=7)
         df = Stock_info.__get_data_catch_errors(ticker, start_date = start_date, end_date = today, interval="1m").iloc[::5, :]
-        
+        df.index = df.index.map(lambda x: x - timedelta(hours=4))
         result = df.groupby(by=lambda x: (x.month, x.day))
         days = sorted(result.groups.keys(), key= lambda x: x[1])
         curDay = sorted(days, key= lambda x: x[0])[-1]
         returnDF = df.loc[result.groups[curDay]]
-        returnDF.index = returnDF.index.map(lambda x: x - timedelta(hours=4))
         return returnDF
 
     @staticmethod

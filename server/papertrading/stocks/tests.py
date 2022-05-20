@@ -4,8 +4,9 @@ import re
 from unittest.mock import patch
 from unittest import mock
 import pandas as pd
+import numpy as np
 import random
-from datetime import datetime
+from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 #https://williambert.online/2011/07/how-to-unit-testing-in-django-with-mocking-and-patching/
@@ -78,72 +79,74 @@ class FakeAPI:
 
     def minuteInterval(ticker, start_date, end_date):
         df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
-        random.seed(8)
+        rng = random.Random(8)
 
         day = start_date
-        i = 1
-        while day <= end_date:
-            openPrice = 150 + 0.16*i
-            FakeAPI.addRow(df, openPrice, day, 1)
-            if i % 390 == 0:
-                day += relativedelta(days=1)
-                day -= relativedelta(minutes=390)
-            else:
-                day += relativedelta(minutes=1)
+        day = day + relativedelta(minutes=810)
+        i = 0
+        while day < end_date:
             i += 1
+            openPrice = 150 + 0.16*i
+            FakeAPI.addRow(df, openPrice, day, 1, rng)
+            if i % 13 == 0:
+                day += relativedelta(days=1)
+                day -= relativedelta(minutes=380)
+            else:
+                day += relativedelta(minutes=30)
         return df
 
     def dailyInterval(ticker, start_date):
         df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
-        random.seed(8)
+        rng = random.Random(8)
 
         day = start_date
         end_date = datetime.fromisoformat("2022-05-17")
         i = 0
         while day <= end_date:
             openPrice = 150 + 0.16*i
-            FakeAPI.addRow(df, openPrice, day, 1)
+            FakeAPI.addRow(df, openPrice, day, 1, rng)
             day += relativedelta(days=1)
             i += 1
         return df
 
     def weeklyInterval(ticker, start_date):
         df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
-        random.seed(8)
+        rng = random.Random(8)
         day = start_date
         end_date = datetime.fromisoformat("2022-05-17")
         i = 0
         while day <= end_date:
             openPrice = 150 + 4*i
-            FakeAPI.addRow(df, openPrice, day, 25)
+            FakeAPI.addRow(df, openPrice, day, 25, rng)
             day += relativedelta(weeks=1)
             i += 1
         return df
     
     def allTime(ticker):
         df = pd.DataFrame(columns=["open", "high", "low", "close", "adjclose", "volume", "ticker"])
-        random.seed(8)
+        rng = random.Random(8)
         day = datetime.fromisoformat("2015-02-01")
         end_date = datetime.fromisoformat("2022-05-17")
         i = 0
         while day <= end_date:
             openPrice = 150 + 16*i
-            FakeAPI.addRow(df, openPrice, day, 100)
+            FakeAPI.addRow(df, openPrice, day, 100, rng)
             day += relativedelta(months=1)
             i += 1
         return df
 
-    def addRow(df, openPrice, day, modifier):
-        openPrice = openPrice + random.uniform(-modifier*openPrice/6000, modifier*openPrice/6000)
-        changeNoise = random.uniform(-modifier*openPrice/2500, modifier*openPrice/2500)
+    def addRow(df, openPrice, day, modifier, rng):
+        openPrice = openPrice + rng.uniform(-modifier*openPrice/6000, modifier*openPrice/6000)
+        changeNoise = rng.uniform(-modifier*openPrice/2500, modifier*openPrice/2500)
         closePrice = openPrice + changeNoise
         floorVal = min(openPrice, closePrice)
         ceilVal = max(openPrice, closePrice)
         rangeNoise = (ceilVal - floorVal)/2
         high = max(ceilVal, ceilVal + rangeNoise)
         low = max(floorVal, floorVal + rangeNoise)
-        volumeNoise = random.randint(-500000, 1000000)
+        volumeNoise = rng.randint(-500000, 1000000)
         df.loc[day] = [openPrice, high, low, closePrice, closePrice, 1000000+volumeNoise, "TSLA"]
+
 '''
 # Create your tests here.
 class SingleStockTestCases(TestCase):
@@ -233,18 +236,140 @@ class SingleStockTestCases(TestCase):
         }
         self.assertEqual(data, expected)
 '''
-@mock.patch('stocks.financeAPI.datetime', FakeDate)
-@mock.patch("stocks.financeAPI.si", FakeAPI)
-class historicalTestCases(TestCase): 
-    def test_historical_1d(self):
+
+class historicalTestCases(TestCase):
+    '''
+    elif interval == "1m": #1W, 1Mo
+        return FakeAPI.minuteInterval(ticker, start_date, end_date)
+    '''
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_1D(self):
+        
         today = datetime(2022, 5, 17)
         FakeDate.today = classmethod(lambda cls: today)
         url = reverse("stocks:testing", args = ("TSLA",))
+
         data = Client().get(url, {"dateRange": "1D"}, content_type="application/json").json()["historical_data"]
-        print(data[:5])
-        expected = FakeAPI.get_data("TSLA", today - relativedelta(days=1), end_date = today, interval="1m")
-        print(expected.head())
-        #OH BOY D:
+        apiData = FakeAPI.get_data("TSLA", start_date=(today - relativedelta(days=7)), end_date=today, interval="1m")[::5]
+        apiData = apiData[apiData.index.date == date(2022, 5, 16)]
+        apiData.index = apiData.index.map(lambda x: x - relativedelta(hours=4))
+        expected = self.__changeFormat(apiData)
+        self.assertEqual(expected, data)
+    
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_1W(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "1W"}, content_type="application/json").json()["historical_data"]
+        apiData = FakeAPI.get_data("TSLA", start_date=(today - relativedelta(days=7)), end_date=today, interval="1m")[::10]
+        apiData.index = apiData.index.map(lambda x: x - relativedelta(hours=4))
+        expected = self.__changeFormat(apiData)
+        self.assertEqual(expected, data)
+
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_1M(self):
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "1M"}, content_type="application/json").json()["historical_data"]
+
+        days = [] #inputs to thread
+        days.append( (today - relativedelta(days=29), today - relativedelta(days=24)) )
+        days.append( (today - relativedelta(days=23), today - relativedelta(days=18)) )
+        days.append( (today - relativedelta(days=17), today - relativedelta(days=12)) )
+        days.append( (today - relativedelta(days=11), today - relativedelta(days=6))  )
+        days.append( (today - relativedelta(days=5),  today)                      )
+        df = FakeAPI.get_data("TSLA", start_date=days[0][0], end_date=days[0][1], interval="1m").iloc[::30,:]
+        for start, end in days[1:]:
+            apiData = FakeAPI.get_data("TSLA", start_date=start, end_date=end, interval="1m").iloc[::30,:]
+            df = pd.concat((df, apiData))
+        df.index = df.index.map(lambda x: x - relativedelta(hours=4))
+        df = df.sort_index()
+        expected = self.__changeFormat(df)
+        self.assertEqual(expected, data)
+    
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_3M(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "3M"}, content_type="application/json").json()["historical_data"]
+        expected = self.__changeFormat(FakeAPI.get_data("TSLA", start_date=(today - relativedelta(days=90))))
+        self.assertEqual(expected, data)
+
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_6M(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "6M"}, content_type="application/json").json()["historical_data"]
+        expected = self.__changeFormat(FakeAPI.get_data("TSLA", start_date=(today - relativedelta(days=180))))
+        self.assertEqual(expected, data)
+
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_1Y(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "1Y"}, content_type="application/json").json()["historical_data"]
+        expected = self.__changeFormat(FakeAPI.get_data("TSLA", start_date=(today - relativedelta(days=365))))
+        self.assertEqual(expected, data)
+
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_5Y(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "5Y"}, content_type="application/json").json()["historical_data"]
+        expected = self.__changeFormat(FakeAPI.get_data("TSLA", start_date=(today - relativedelta(weeks=260)), interval="1wk"))
+        self.assertEqual(expected, data)
+
+    @mock.patch('stocks.financeAPI.datetime', FakeDate)
+    @mock.patch("stocks.financeAPI.si", FakeAPI)
+    def test_historical_all_time(self):
+        
+        today = datetime(2022, 5, 17)
+        FakeDate.today = classmethod(lambda cls: today)
+        url = reverse("stocks:testing", args = ("TSLA",))
+
+        data = Client().get(url, {"dateRange": "ALL TIME"}, content_type="application/json").json()["historical_data"]
+        expected = self.__changeFormat(FakeAPI.get_data("TSLA", interval="1mo"))
+        self.assertEqual(expected, data)
+    
+    def __changeFormat(self, df):
+        df.reset_index(level=0, inplace=True)
+        df["date"] = df["index"].map(lambda a: str(a).split(" ")[0])
+        df["time"] = df["index"].map(lambda a: str(a).split(" ")[1])
+        df = df.drop(columns = ["ticker", "index"])
+        #Add the price change/percent change from the previous entry
+        df["dollar_change"] = df.open - df.open.shift(1)
+        df["percent_change"] = 100*df["dollar_change"]/df.open.shift(1)
+        df.at[0, "dollar_change"] = 0
+        df.at[0, "percent_change"] = 0
+
+        #Convert military time to non-military time
+        df["time"] = df["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
+        #convert to output
+        return df.to_dict("records")
 
 '''
 #These could test the speed with which it gets them, since we'll need it to be fast

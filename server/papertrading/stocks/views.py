@@ -11,7 +11,6 @@ from rest_framework import status
 from stocks.financeAPI import Stock_info as si
 from datetime import datetime
 import pandas as pd
-import finnhub
 
 class StockList(APIView):
     """
