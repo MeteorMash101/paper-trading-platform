@@ -373,7 +373,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(pv, expected)
     
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.si', FakeAPI)
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.historicalPortfolioValueLoader.date', FakeDate)
     @mock.patch('accounts.views.AccountDetail.loadPortfolioHistory', FakeAPI.portfolioHistory)
     def test_portfolio_value_history_generation_from_start_date(self):
         """When a user first generates their portfolio value history"""
@@ -399,7 +399,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(expected, user.portfolio_value_history["data"])
 
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.si', FakeAPI)
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.historicalPortfolioValueLoader.date', FakeDate)
     @mock.patch('accounts.views.AccountDetail.loadPortfolioHistory', FakeAPI.portfolioHistory)
     def test_portfolio_value_history_update(self):
         """When a user already has some portfolio value history and it should start from where the data ends"""

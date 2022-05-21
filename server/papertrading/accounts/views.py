@@ -125,7 +125,7 @@ class AccountTransactionHistory(APIView):
 
     def get(self, request, goog_id):
         account = self.get_object(goog_id)
-        history = account.transaction_history["history"]
+        history = account.transaction_history["history"][::-1]
         serializer = TransactionHistorySerializer({"transaction_history":history})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -214,6 +214,7 @@ class AccountStocksOwned(APIView):
             return None
 
     #This gets the portfolio value for the user
+    #THIS should be converted to financeAPI call (or perhaps somewhere else, we'll see)
     def __calculateValue(self, owned):
         value = 0
         for ticker in sorted(owned): #Sorted makes it ok for testing...
