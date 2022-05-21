@@ -217,8 +217,9 @@ class AccountStocksOwned(APIView):
     #THIS should be converted to financeAPI call (or perhaps somewhere else, we'll see)
     def __calculateValue(self, owned):
         value = 0
-        for ticker in sorted(owned): #Sorted makes it ok for testing...
-            value += si.get_live_price(ticker) * self.__countStock(owned, ticker)
+        d = si.get_price_and_change_for_list(owned)
+        for ticker in sorted(d.keys()): #Sorted makes it ok for testing...
+            value += d[ticker]["price"] * self.__countStock(owned, ticker)
         return value
 
     #Goes through stock purchases to find how many of a stock the user has
