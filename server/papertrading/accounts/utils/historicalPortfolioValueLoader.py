@@ -32,7 +32,7 @@ class PortfolioValue:
             startDate =  date.fromisoformat(sorted(list(account.portfolio_value_history["data"].keys()))[-1])
         return startDate
 
-    #Actually fill the account portfolio value history
+    #Fill the portfolio value history with {date: value} pairs
     @staticmethod
     def __fillDatabase(d,starting: date, history):
         valueQueue = PortfolioValue.__generatePortfolioValues(starting, history)
@@ -43,6 +43,7 @@ class PortfolioValue:
             d[elem[0].strftime("%Y-%m-%d")] = PortfolioValue.__toPennies(elem[1])
         return {key:d[key] for key in sorted(d)}
     
+    #By making it an int it saves space 
     @staticmethod
     def __toPennies(value):
         return int(value*100)
