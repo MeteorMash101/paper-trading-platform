@@ -127,7 +127,7 @@ class StockListTestCases(TestCase):
 
         self.buyOrSellStock("buy", "dis", 1, stockPrice)
         user = self.getTestUser()
-        expectedResult = {"dis": [{"quantity": 1, "datePurchased": "2022-02-15", "purchasePrice": stockPrice}]}
+        expectedResult = {"dis": [{"quantity": 1, "date": "2022-02-15", "price": stockPrice}]}
         self.assertEqual(expectedResult, user.ownedStocks)
 
     @patch('stocks.financeAPI.Stock_info.get_live_price')
@@ -169,8 +169,8 @@ class StockListTestCases(TestCase):
         self.buyOrSellStock("buy", "dis", 3, price1)
         self.buyOrSellStock("buy", "dis", 2, price2)
         user = self.getTestUser()
-        expectedResult = {"dis": [{"quantity": 3, "datePurchased": "2022-02-15", "purchasePrice": price1},
-                                  {"quantity": 2, "datePurchased": "2022-02-15", "purchasePrice": price2}]}
+        expectedResult = {"dis": [{"quantity": 3, "date": "2022-02-15", "price": price1},
+                                  {"quantity": 2, "date": "2022-02-15", "price": price2}]}
         self.assertEqual(expectedResult, user.ownedStocks)
 
     ###########################################################################
@@ -199,7 +199,7 @@ class StockListTestCases(TestCase):
         self.buyOrSellStock("buy", "dis", 3, buyPrice)
         self.buyOrSellStock("sell", "dis", 2, sellPrice)
         user = self.getTestUser()
-        expected = {"dis": [{"quantity": 1, "datePurchased": "2022-02-15", "purchasePrice": buyPrice}]}
+        expected = {"dis": [{"quantity": 1, "date": "2022-02-15", "price": buyPrice}]}
         self.assertEqual(expected, user.ownedStocks)
     
     @patch('stocks.financeAPI.Stock_info.get_live_price')
@@ -215,8 +215,8 @@ class StockListTestCases(TestCase):
         self.buyOrSellStock("sell", "dis", 4, sell)
 
         user = self.getTestUser()
-        expected = {"dis": [{"quantity": 4, "datePurchased": "2022-02-15", "purchasePrice": buy2},
-                            {"quantity": 2, "datePurchased": "2022-02-15", "purchasePrice": buy3}]}
+        expected = {"dis": [{"quantity": 4, "date": "2022-02-15", "price": buy2},
+                            {"quantity": 2, "date": "2022-02-15", "price": buy3}]}
         self.assertEqual(expected, user.ownedStocks)
 
     ###########################################################################
@@ -234,7 +234,7 @@ class StockListTestCases(TestCase):
         #Create Fake User Data
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis": [{"quantity": 9, "datePurchased": "2022-02-25", "purchasePrice": 103.41}]}
+        user.ownedStocks = {"dis": [{"quantity": 9, "date": "2022-02-25", "price": 103.41}]}
         user.save()
 
         #Test
@@ -247,9 +247,9 @@ class StockListTestCases(TestCase):
         #Create Fake User Data
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis": [{"quantity": 9, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
-                                    {"quantity": 4, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
-                            "f": [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 14.41}]}
+        user.ownedStocks = {"dis": [{"quantity": 9, "date": "2022-02-25", "price": 103.41},
+                                    {"quantity": 4, "date": "2022-02-27", "price": 105.29}],
+                            "f": [{"quantity": 7, "date": "2022-02-26", "price": 14.41}]}
         user.save()
 
         #Test
@@ -284,7 +284,7 @@ class StockListTestCases(TestCase):
         #Create fake user data
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis": [{"quantity": 6, "datePurchased": "2022-02-27", "purchasePrice": 123.41}]}
+        user.ownedStocks = {"dis": [{"quantity": 6, "date": "2022-02-27", "price": 123.41}]}
         user.save()
 
         #Test
@@ -306,10 +306,10 @@ class StockListTestCases(TestCase):
         #Create Fake User Data
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis" : [{"quantity": 6, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
-                                     {"quantity": 3, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
-                            "f"   : [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 14.41}],
-                            "goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": 2684.99}]}
+        user.ownedStocks = {"dis" : [{"quantity": 6, "date": "2022-02-25", "price": 103.41},
+                                     {"quantity": 3, "date": "2022-02-27", "price": 105.29}],
+                            "f"   : [{"quantity": 7, "date": "2022-02-26", "price": 14.41}],
+                            "goog": [{"quantity": 1, "date": "2022-02-28", "price": 2684.99}]}
         user.save()
         
         #Test
@@ -342,7 +342,7 @@ class StockListTestCases(TestCase):
         self.createTestUser()
         user = self.getTestUser()
         buyPrice = 2500.70
-        user.ownedStocks = {"goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": buyPrice}]}
+        user.ownedStocks = {"goog": [{"quantity": 1, "date": "2022-02-28", "price": buyPrice}]}
         user.save()
 
         #Test
@@ -364,10 +364,10 @@ class StockListTestCases(TestCase):
         #Create fake User Data
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis" : [{"quantity": 6, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
-                                     {"quantity": 3, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
-                            "f"   : [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 14.41}],
-                            "goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": 2684.99}]}
+        user.ownedStocks = {"dis" : [{"quantity": 6, "date": "2022-02-25", "price": 103.41},
+                                     {"quantity": 3, "date": "2022-02-27", "price": 105.29}],
+                            "f"   : [{"quantity": 7, "date": "2022-02-26", "price": 14.41}],
+                            "goog": [{"quantity": 1, "date": "2022-02-28", "price": 2684.99}]}
         user.save()
 
         url = reverse("accounts:ownedStockList", args=("test", ))
@@ -486,23 +486,23 @@ class StockListTestCases(TestCase):
         self.createTestUser()
         (price1, price2, price3, price4, price5, price6) = (123.50, 14.81, 2589.99, 14.90, 67.82, 15.00)
         user = self.getTestUser()
-        user.ownedStocks = {"dis" : [{"quantity": 2, "datePurchased": "2022-02-01", "purchasePrice": price1}],
-                            "f"   : [{"quantity": 4, "datePurchased": "2022-02-02", "purchasePrice": price2},
-                                     {"quantity": 5, "datePurchased": "2022-02-04", "purchasePrice": price4},
-                                     {"quantity": 6, "datePurchased": "2022-02-06", "purchasePrice": price6}],
-                            "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
-                            "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}
+        user.ownedStocks = {"dis" : [{"quantity": 2, "date": "2022-02-01", "price": price1}],
+                            "f"   : [{"quantity": 4, "date": "2022-02-02", "price": price2},
+                                     {"quantity": 5, "date": "2022-02-04", "price": price4},
+                                     {"quantity": 6, "date": "2022-02-06", "price": price6}],
+                            "goog": [{"quantity": 1, "date": "2022-02-03", "price": price3}],
+                            "amd" : [{"quantity": 7, "date": "2022-02-05", "price": price5}]}
         user.save()        
 
         #Test
         url = reverse("accounts:ownedStockList", args=("test", ))
         ownedStock = Client().get(url, data = {"info": "stock_list_detailed"}, content_type="application/json").json()
-        expected = {"stock_list": {"dis" : [{"quantity": 2, "datePurchased": "2022-02-01", "purchasePrice": price1}],
-                                   "f"   : [{"quantity": 4, "datePurchased": "2022-02-02", "purchasePrice": price2},
-                                            {"quantity": 5, "datePurchased": "2022-02-04", "purchasePrice": price4},
-                                            {"quantity": 6, "datePurchased": "2022-02-06", "purchasePrice": price6}],
-                                   "goog": [{"quantity": 1, "datePurchased": "2022-02-03", "purchasePrice": price3}],
-                                   "amd" : [{"quantity": 7, "datePurchased": "2022-02-05", "purchasePrice": price5}]}}
+        expected = {"stock_list": {"dis" : [{"quantity": 2, "date": "2022-02-01", "price": price1}],
+                                   "f"   : [{"quantity": 4, "date": "2022-02-02", "price": price2},
+                                            {"quantity": 5, "date": "2022-02-04", "price": price4},
+                                            {"quantity": 6, "date": "2022-02-06", "price": price6}],
+                                   "goog": [{"quantity": 1, "date": "2022-02-03", "price": price3}],
+                                   "amd" : [{"quantity": 7, "date": "2022-02-05", "price": price5}]}}
         self.assertEqual(ownedStock, expected)
 
 
@@ -715,10 +715,10 @@ class SimpleStockTestCases(TestCase):
         self.createTestUser()
         user = self.getTestUser()
         user.balance = 22.13
-        user.ownedStocks = {"dis" : [{"quantity": 6, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
-                                     {"quantity": 3, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
-                            "f"   : [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 14.41}],
-                            "goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": 2684.99}]}
+        user.ownedStocks = {"dis" : [{"quantity": 6, "date": "2022-02-25", "price": 103.41},
+                                     {"quantity": 3, "date": "2022-02-27", "price": 105.29}],
+                            "f"   : [{"quantity": 7, "date": "2022-02-26", "price": 14.41}],
+                            "goog": [{"quantity": 1, "date": "2022-02-28", "price": 2684.99}]}
         wlData = {"stocks": ["NVDA", "F", "PLTR"]}
         user.watchList = wlData
         user.transaction_history = {"history": [
@@ -747,10 +747,10 @@ class SimpleStockTestCases(TestCase):
         industryAPI.return_value = {'fb': 'Internet Content & Information', 'goog': 'Internet Content & Information', 'dis': 'Entertainment'}
         self.createTestUser()
         user = self.getTestUser()
-        user.ownedStocks = {"dis" : [{"quantity": 6, "datePurchased": "2022-02-25", "purchasePrice": 103.41},
-                                     {"quantity": 3, "datePurchased": "2022-02-27", "purchasePrice": 105.29}],
-                            "fb"   : [{"quantity": 7, "datePurchased": "2022-02-26", "purchasePrice": 240.41}],
-                            "goog": [{"quantity": 1, "datePurchased": "2022-02-28", "purchasePrice": 2684.99}]}
+        user.ownedStocks = {"dis" : [{"quantity": 6, "date": "2022-02-25", "price": 103.41},
+                                     {"quantity": 3, "date": "2022-02-27", "price": 105.29}],
+                            "fb"   : [{"quantity": 7, "date": "2022-02-26", "price": 240.41}],
+                            "goog": [{"quantity": 1, "date": "2022-02-28", "price": 2684.99}]}
         user.save()
         
         url = reverse("accounts:portfolioDiversity", args=("test", ))

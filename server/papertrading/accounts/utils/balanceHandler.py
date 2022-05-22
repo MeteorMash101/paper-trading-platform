@@ -17,8 +17,7 @@ class Balance:
     def fillBalance(balance, endDate):
         for key in balance.keys():
             balance[key] = round(balance[key], 2)
-        dates = sorted(balance.keys())
-        day = datetime.fromisoformat(dates[0])
+        day = datetime.fromisoformat(sorted(balance.keys())[0])
         endDate = datetime.fromisoformat(endDate)
         while day <= endDate:
             dayStr = day.strftime("%Y-%m-%d")
@@ -29,30 +28,28 @@ class Balance:
             day += timedelta(days=1)
         return balance
 
-    # EDIT: need to understand this.
+    #Starting with the most recent transaction, save the end of day balance
+    #for any day in which sales were made.
     @staticmethod
     def buildBuyingPowerHistory(account):
         history = account.transaction_history["history"]
-        if len(history) == 0:
-            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
-
         startDate = account.start_date
         balance = account.balance
         balanceHistory = {datetime.today().strftime("%Y-%m-%d"): account.balance}
         curDate = datetime.today().strftime("%Y-%m-%d")
+
         for transaction in history[::-1]:
-            if transaction["date"] == curDate:
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-            else:
+            #When we get to a new date add it to the balance history
+            if transaction["date"] != curDate:
                 curDate = transaction["date"]
                 balanceHistory[curDate] = balance
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-        if startDate not in balanceHistory.keys():
+            balance += Balance.__totalTransactionValue(transaction)
+
+        if startDate not in balanceHistory.keys(): #We need the balance history for the first date
             balanceHistory[startDate] = balance
         return {"data": balanceHistory}
+
+    @staticmethod
+    def __totalTransactionValue(transaction):
+        buyOrSell = (-1)**(transaction["type"] != "buy")
+        return buyOrSell * Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])

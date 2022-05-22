@@ -28,7 +28,7 @@ class UserStocks:
         totalSpent = 0
         for purchases in owned.values():
             for purchase in purchases:
-                totalSpent += int(purchase["quantity"]) * float(purchase["purchasePrice"])
+                totalSpent += int(purchase["quantity"]) * float(purchase["price"])
         if totalSpent == 0:
             return 0
         percent_change = 100*(curVal - totalSpent) / totalSpent
