@@ -7,6 +7,11 @@ class PortfolioValue:
     
     @staticmethod
     def load(account):
+        t = threading.Thread(target=PortfolioValue.build, args= (account,), daemon = True)
+        t.start()
+
+    @staticmethod
+    def build(account):
         if account.portfolio_value_history == {}:
             account.portfolio_value_history["data"] = {}
         if account.transaction_history == {}:

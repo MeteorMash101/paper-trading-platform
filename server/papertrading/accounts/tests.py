@@ -87,8 +87,8 @@ class FakeAPI:
         except:
             raise KeyError
 
-    def portfolioHistory(self, accountObj):
-        PortfolioValue.load(accountObj)
+    def portfolioHistory(account):
+        PortfolioValue.build(account)
 
 class StockListTestCases(TestCase):
     
@@ -116,7 +116,7 @@ class StockListTestCases(TestCase):
     ###########################################################################
     #A single purchase to make sure it is initializing the structure correctly
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.transactionHandler.datetime', FakeDate)
     def test_buy_share_not_owned_raw_data(self, livePriceAPI):
         """Test buying a user's first stock"""
         self.createTestUser()
@@ -131,7 +131,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(expectedResult, user.ownedStocks)
 
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.transactionHandler.datetime', FakeDate)
     def test_buy_share_transaction_history(self, livePriceAPI):
         self.createTestUser()
         stockPrice = 123.50
@@ -158,7 +158,7 @@ class StockListTestCases(TestCase):
 
     #Buy the same stock back to back
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.transactionHandler.datetime', FakeDate)
     def test_buy_share_some_owned_raw_data(self, livePriceAPI):
         """Checking that multiple separate purchases of the same stock are put in the list correctly"""
         self.createTestUser()
@@ -189,7 +189,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(5000+3*(123.77-123.50), float(user.balance))
 
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.transactionHandler.datetime', FakeDate)
     def test_sell_shares_single_purchase(self, livePriceAPI):
         self.createTestUser()
         (buyPrice, sellPrice) = (123.50, 123.77)
@@ -203,7 +203,7 @@ class StockListTestCases(TestCase):
         self.assertEqual(expected, user.ownedStocks)
     
     @patch('stocks.financeAPI.Stock_info.get_live_price')
-    @mock.patch('accounts.views.datetime', FakeDate)
+    @mock.patch('accounts.utils.transactionHandler.datetime', FakeDate)
     def test_sell_shares_multiple_purchase(self, livePriceAPI):
         self.createTestUser()
         (buy1, buy2, buy3, sell) = (1, 2, 3, 4)
@@ -331,11 +331,12 @@ class StockListTestCases(TestCase):
         expected = {"portfolio_value": "0.00", "percent_change": '0.00', "change_direction": False}
         self.assertEqual(data, expected)
     
-    @patch('stocks.financeAPI.Stock_info.get_live_price')
+    @patch('stocks.financeAPI.Stock_info.get_price_and_change_for_list')
     def test_portfolio_value_one_share(self, livePriceAPI):
         #Set up the fake API
         stockPrice = 2684.99
-        livePriceAPI.return_value = stockPrice
+        returnVal = {'goog': {'symbol': 'goog', 'company_name': 'Alphabet, Inc.', 'price': stockPrice, 'percent_change': -3.354842, 'change_direction': False, 'volume': 56792887}}
+        livePriceAPI.return_value = returnVal
 
         #Create Fake User Data
         self.createTestUser()
@@ -350,10 +351,15 @@ class StockListTestCases(TestCase):
         expected = {"portfolio_value": str(stockPrice), "percent_change": str(round(100*(stockPrice - buyPrice)/buyPrice, 2)), 'change_direction': (stockPrice - buyPrice)/stockPrice > 0}
         self.assertEqual(pv, expected)
     
-    @patch('stocks.financeAPI.Stock_info.get_live_price')
+    #@patch('stocks.financeAPI.Stock_info.get_live_price')
+    @patch('stocks.financeAPI.Stock_info.get_price_and_change_for_list')
     def test_portfolio_value_many_stocks(self, livePriceAPI):
         #Set up the fake API call
-        livePriceAPI.side_effect = [107.99, 14.29, 2574.29]
+        livePriceAPI.return_value = {
+            'dis': {'symbol': 'dis', 'company_name': 'Disney', 'price': 107.99, 'percent_change': -3.354842, 'change_direction': False, 'volume': 56792887},
+            'goog': {'symbol': 'goog', 'company_name': 'Google', 'price': 2574.29, 'percent_change': -1.32052, 'change_direction': False, 'volume': 86108911},
+            'f': {'symbol': 'f', 'company_name': 'Ford', 'price': 14.29, 'percent_change': 2.68168, 'change_direction': True, 'volume': 23637863}
+        }
 
         #Create fake User Data
         self.createTestUser()
@@ -374,7 +380,7 @@ class StockListTestCases(TestCase):
     
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.si', FakeAPI)
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.date', FakeDate)
-    @mock.patch('accounts.views.AccountDetail.loadPortfolioHistory', FakeAPI.portfolioHistory)
+    @mock.patch('accounts.utils.historicalPortfolioValueLoader.PortfolioValue.load', FakeAPI.portfolioHistory)
     def test_portfolio_value_history_generation_from_start_date(self):
         """When a user first generates their portfolio value history"""
         self.createTestUser()
@@ -400,7 +406,7 @@ class StockListTestCases(TestCase):
 
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.si', FakeAPI)
     @mock.patch('accounts.utils.historicalPortfolioValueLoader.date', FakeDate)
-    @mock.patch('accounts.views.AccountDetail.loadPortfolioHistory', FakeAPI.portfolioHistory)
+    @mock.patch('accounts.utils.historicalPortfolioValueLoader.PortfolioValue.load', FakeAPI.portfolioHistory)
     def test_portfolio_value_history_update(self):
         """When a user already has some portfolio value history and it should start from where the data ends"""
         self.createTestUser()
@@ -695,7 +701,7 @@ class SimpleStockTestCases(TestCase):
     def test_transaction_history(self):
         self.createTestUser()
         user = self.getTestUser()
-        expected = [{"type": "buy", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.710000038146973}, {"type": "sell", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.713199615478516}]
+        expected = [{"type": "buy", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.710000038146973}, {"type": "sell", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.713199615478516}][::-1]
         user.transaction_history = {"history": [{"type": "buy", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.710000038146973}, {"type": "sell", "stock": "SOFI", "quantity": 1, "date": "2022-03-02", "stockPrice": 11.713199615478516}]}  
         user.save()
         #Test
@@ -756,7 +762,7 @@ class SimpleStockTestCases(TestCase):
 ###############################################################################
 class GeneralAccountTestCases(TestCase):
     def createTestUser(self):
-        user = Account.objects.create(name = "Will", email = "test@gmail.com", google_user_id = "test", transaction_history = {"history": []})
+        user = Account.objects.create(name = "Will", email = "test@gmail.com", google_user_id = "test")
         user.save()
 
     #Returns the test user
@@ -775,7 +781,13 @@ class GeneralAccountTestCases(TestCase):
         self.assertEqual(user.name, data["name"])
         self.assertEqual(user.email, data["email"])
         self.assertEqual(user.google_user_id, data["google_user_id"])
+        self.assertEqual(user.balance, 5000)
+        self.assertEqual(user.ownedStocks, {})
+        self.assertEqual(user.watchList, {"stocks": []})
+        self.assertEqual(user.transaction_history, {"history": []})
+        self.assertEqual(user.portfolio_value_history, {"data": {}})
         self.assertEqual(user.start_date, "2022-05-28")
+       
 
     def test_create_already_existing_account(self):
         url = reverse("accounts:create")
