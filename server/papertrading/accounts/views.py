@@ -59,25 +59,23 @@ class AccountDetail(APIView):
         # tried: User.objects.get(email=request.data['email']), request.data['email'].split('@')[0]
         # request.data['user'] = ?
         # print("UPDATED REQ. DATA", request.data)
-        request.data["start_date"] = datetime.today().strftime("%Y-%m-%d")
-        google_id = request.data["google_user_id"]
-        request.data["watchList"] = {"stocks": []}
-        #user.watchList, {"stocks": []}
         serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save() # saves to DB
-            user = get_object(google_id)
-            user.watchList = {"stocks": []}
-            user.transaction_history = {"history": []}
-            user.portfolio_value_history = {"data": {}}
-            user.save()
+            self.__initializeUser(request.data["google_user_id"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def __initializeUser(self, google_id):
+        user = get_object(google_id)
+        user.watchList = {"stocks": []}
+        user.transaction_history = {"history": []}
+        user.portfolio_value_history = {"data": {}}
+        user.start_date = datetime.today().strftime("%Y-%m-%d")
+        user.save()
 
     def get(self, request, goog_id):
-        
         accountObj = get_object(goog_id)
-        # EDIT: don't understand
         if accountObj != None: # account exists
             serializer = AccountSerializer(accountObj)
             PortfolioValue.load(accountObj)

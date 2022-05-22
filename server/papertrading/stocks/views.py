@@ -35,6 +35,7 @@ class StockList(APIView):
 
    curl -d '{"start_date":"04/30/2022", "minutes":"False"}' -H "Content-type: application/json" -X get http://127.0.0.1:8000/stocks/hist/aapl/
    '''
+#DEPRECATED
 class StockHistData(APIView):
     def get(self, request, ticker):
         #Remove if-else once we stick with request.query_params.get()
@@ -47,7 +48,6 @@ class StockHistData(APIView):
 
         jsonData = si.get_stock_historical_data_deprecated(ticker, start_date = start_date, minute = minuteIntervals)
         results = HistSerializer(jsonData).data
-        # print("[views.py] sending res: ", results)
         return Response(results)
 
 class StockHist(APIView):

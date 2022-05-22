@@ -12,16 +12,13 @@ class PortfolioValue:
 
     @staticmethod
     def build(account):
-        if account.portfolio_value_history == {}:
-            account.portfolio_value_history["data"] = {}
-        if account.transaction_history == {}:
-            account.transaction_history["history"] = []
         startDate = PortfolioValue.__getStartDateToLoadFrom(account) #FINE 
         
         account.portfolio_value_history["data"] = PortfolioValue.__fillDatabase(
             account.portfolio_value_history["data"], 
             startDate, 
-            account.transaction_history["history"])
+            account.transaction_history["history"]
+        )
         account.save()
         
 
@@ -57,7 +54,6 @@ class PortfolioValue:
         oneDay = timedelta(days=1)
         day = start_date
         (curDay, owned) = next(daysStocks)
-        prevVal = 0
         while curDay < start_date:       #If the history starts before the day we want
             (curDay, owned) = next(daysStocks)
         if curDay > start_date:          #If the history starts after the day we want
@@ -66,8 +62,6 @@ class PortfolioValue:
                 day += oneDay
         threads = []
         
-        
-        #while curDay <= date.fromisoformat("2022-03-04"):
         while curDay <= date.today():
             t = threading.Thread(target=lambda owned, currentDay: PortfolioValue.__valueOf(q, owned.copy(), currentDay), args= (owned, curDay))
             t.start()
