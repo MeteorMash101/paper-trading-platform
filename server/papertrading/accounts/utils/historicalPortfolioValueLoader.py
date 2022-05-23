@@ -7,17 +7,20 @@ class PortfolioValue:
     
     @staticmethod
     def load(account):
-        if account.portfolio_value_history == {}:
-            account.portfolio_value_history["data"] = {}
-        if account.transaction_history == {}:
-            account.transaction_history["history"] = []
+        t = threading.Thread(target=PortfolioValue.build, args= (account,), daemon = True)
+        t.start()
+
+    @staticmethod
+    def build(account):
         startDate = PortfolioValue.__getStartDateToLoadFrom(account) #FINE 
         
         account.portfolio_value_history["data"] = PortfolioValue.__fillDatabase(
             account.portfolio_value_history["data"], 
             startDate, 
-            account.transaction_history["history"])
+            account.transaction_history["history"]
+        )
         account.save()
+        
 
     #Determines the starting date to load portfolio value from
     #Start date is either start of the account or the last day saved in the database
@@ -29,7 +32,7 @@ class PortfolioValue:
             startDate =  date.fromisoformat(sorted(list(account.portfolio_value_history["data"].keys()))[-1])
         return startDate
 
-    #Actually fill the account portfolio value history
+    #Fill the portfolio value history with {date: value} pairs
     @staticmethod
     def __fillDatabase(d,starting: date, history):
         valueQueue = PortfolioValue.__generatePortfolioValues(starting, history)
@@ -40,6 +43,7 @@ class PortfolioValue:
             d[elem[0].strftime("%Y-%m-%d")] = PortfolioValue.__toPennies(elem[1])
         return {key:d[key] for key in sorted(d)}
     
+    #By making it an int it saves space 
     @staticmethod
     def __toPennies(value):
         return int(value*100)
@@ -51,7 +55,6 @@ class PortfolioValue:
         oneDay = timedelta(days=1)
         day = start_date
         (curDay, owned) = next(daysStocks)
-        prevVal = 0
         while curDay < start_date:       #If the history starts before the day we want
             (curDay, owned) = next(daysStocks)
         if curDay > start_date:          #If the history starts after the day we want
@@ -60,8 +63,6 @@ class PortfolioValue:
                 day += oneDay
         threads = []
         
-        
-        #while curDay <= date.fromisoformat("2022-03-04"):
         while curDay <= date.today():
             t = threading.Thread(target=lambda owned, currentDay: PortfolioValue.__valueOf(q, owned.copy(), currentDay), args= (owned, curDay))
             t.start()
@@ -119,13 +120,15 @@ class PortfolioValue:
     def __valueOf(q, stocks, curDay):
         stockKeys = list(stocks.keys())
         if len(stockKeys) == 0:
-            return 0
+            q.put((curDay, 0))
+            return 
         if curDay == date.today():
-            return PortfolioValue.__curValueOf(stocks)
+            q.put((curDay, PortfolioValue.__curValueOf(stocks)))
+            return 
         (totPrice, lastOpenMarket) = PortfolioValue.__getLastOpenMarket(stocks, stockKeys[0], curDay)  
         if len(stockKeys) == 1:
             q.put((curDay, totPrice))
-            return totPrice
+            return 
 
         for symbol, quantity in list(stocks.items())[1:]:
             totPrice += int(quantity) * PortfolioValue.__priceForStockOn(symbol, lastOpenMarket)

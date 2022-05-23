@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@swup/js-plugin": "^1.0.4",
-    "@swup/slide-theme": "^1.0.5",
-    "react-confetti": "^6.0.1",
-    "swup": "^2.0.14"
-  }
-}
