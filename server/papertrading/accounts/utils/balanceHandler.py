@@ -49,6 +49,7 @@ class Balance:
             balanceHistory[startDate] = balance
         return {"data": balanceHistory}
 
+    #Calculate the value of the transaction; negative is a sale, positive is a purchase
     @staticmethod
     def __totalTransactionValue(transaction):
         buyOrSell = (-1)**(transaction["type"] != "buy")

@@ -9,7 +9,6 @@ class Transaction:
     #       making it really easy to test since we just give it the price
     @staticmethod
     def buy(data, account):
-        #While we don't send marketPrice from the frontend, just allow for it to be sent
         symbol = data["stock"].lower()
         price = Transaction.__getPrice(data)
 
@@ -19,6 +18,8 @@ class Transaction:
         account.balance -= Decimal.from_float(float(data["quantity"])*price)
         return True
 
+    #Get's the price from the front end, but if it doesn't pass it
+    #it takes the live price
     @staticmethod
     def __getPrice(data):
         if "marketPrice" in data.keys():
@@ -66,6 +67,7 @@ class Transaction:
         account.balance += Decimal.from_float(float(data["quantity"]) * price)
         return True
 
+    #Sells the x shares the user requested
     @staticmethod
     def __removeSoldSharesFromOwned(data, account):
         owned = account.ownedStocks
@@ -76,6 +78,7 @@ class Transaction:
         if len(owned[symbol]) == 0:
             owned.pop(symbol)
 
+    #Sell the shares from the oldest purchase of the stock they made.
     @staticmethod
     def __sellOldestPurchasedShares(toSell, stockPurchases):
         if toSell >= int(stockPurchases[0]["quantity"]): #When we can sell the whole transaction amount of shares

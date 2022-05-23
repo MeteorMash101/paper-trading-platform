@@ -144,11 +144,11 @@ class AccountStocksOwned(APIView):
             return Response(serializer.data)
         elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
             symbol = request.query_params.get('symbol', None)
-            numOfStock = UserStocks.countStock(account.ownedStocks, symbol)
+            numOfStock = UserStocks.countNumberOfSharesOwned(account.ownedStocks, symbol)
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
-            portfolio_value = UserStocks.calculateValue(account.ownedStocks)
+            portfolio_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
             portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, portfolio_value)
             serializer = PortfolioValueSerializer({"portfolio_value":portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
             return Response(serializer.data)

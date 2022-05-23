@@ -147,7 +147,7 @@ class FakeAPI:
         volumeNoise = rng.randint(-500000, 1000000)
         df.loc[day] = [openPrice, high, low, closePrice, closePrice, 1000000+volumeNoise, "TSLA"]
 
-'''
+
 # Create your tests here.
 class SingleStockTestCases(TestCase):
     #Use multiple tickers in case WW3 and some companies don't stay in business.
@@ -235,7 +235,7 @@ class SingleStockTestCases(TestCase):
                     "summary": info.loc["longBusinessSummary"][0]
         }
         self.assertEqual(data, expected)
-'''
+
 
 class historicalTestCases(TestCase):
     '''
@@ -371,7 +371,7 @@ class historicalTestCases(TestCase):
         #convert to output
         return df.to_dict("records")
 
-'''
+
 #These could test the speed with which it gets them, since we'll need it to be fast
 class MultipleStockTestCases(TestCase):
 
@@ -420,4 +420,3 @@ class MultipleStockTestCases(TestCase):
             newD["change_direction"] = d["regularMarketChangePercent"] > 0
             expected.append(newD)
         self.assertEqual(sorted(expected, key = lambda x: x["company_name"]), sorted(data, key = lambda x: x["company_name"]))
-'''
