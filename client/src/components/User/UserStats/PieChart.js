@@ -13,7 +13,7 @@ const data = [
   
 return (
       <div className={classes.main}>
-        <h2> PORTFOLIO DIVERSITY</h2>
+        
         <ResponsiveContainer width={'99%'} height={300}>
           <PieChart width={400} height={400}>
             <Pie data={data} dataKey="students" outerRadius={100}/>

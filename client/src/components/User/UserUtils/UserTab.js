@@ -35,7 +35,7 @@ const UserTab = ({onLogout}) => {
         onClick={() => setIsMenuOpen(oldState => !oldState)}>
 
         <div className={classes.wrapper2}>
-          <CgProfile size={22}/>
+          <CgProfile className={classes.userprofile} size={22}/>
           <h5 className={classes.username}>{userCtx.name}</h5>
         </div>
 

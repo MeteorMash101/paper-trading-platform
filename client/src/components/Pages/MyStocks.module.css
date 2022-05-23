@@ -3,8 +3,11 @@
     width:85%;  
 }
 
-
 .graph{
     width: 87%;
     margin: 0% 7%
+}
+
+@media (max-width:950px) {
+
 }

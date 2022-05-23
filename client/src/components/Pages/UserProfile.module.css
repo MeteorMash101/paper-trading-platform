@@ -33,11 +33,15 @@
         width: 100%;
         float: left;
         padding: 15px;
+        font-size: small;
     }
     
     .lineChart{
         width: 100%;
         float: left;
         padding: 15px;
+        font-size: small;
     }
+
+
 }

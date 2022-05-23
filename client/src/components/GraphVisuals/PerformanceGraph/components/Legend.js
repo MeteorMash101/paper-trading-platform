@@ -1,9 +1,9 @@
 import React from "react";
 
 const Legend = ({ data, selectedItems, onChange }) => (
-  <div className="legendContainer">
-    {data.map((d) => (
-      <div className="checkbox" style={{ color: d.color }} key={d.name}>
+  <div className="legend">
+    {/* {data.map((d) => ( */}
+      {/* // <div className="checkbox" style={{ color: d.color }} key={d.name}> */}
         {/* <h4>Performance Graph</h4> */}
         {/* <label>
           {d.name !== "Performance Graph" && (
@@ -20,9 +20,9 @@ const Legend = ({ data, selectedItems, onChange }) => (
           )}
           {d.name}
         </label> */}
-      </div>
-    ))}
-  </div>
+      {/* </div> */}
+    {/* ))} */}
+   </div>
 );
 
 export default Legend;

@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
 
-const MiniStockList = ({title, usersStocksURL, paramsInfo}) => {
+const MiniStockList = ({usersStocksURL, paramsInfo}) => {
 	const dummyData = [ // temp
 		{
 			symbol: "AAPL",
@@ -44,7 +44,6 @@ const MiniStockList = ({title, usersStocksURL, paramsInfo}) => {
 	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
 	return (
 		<div className={classes.container}>
-			{/* <h1 className={classes.title}>{title}</h1> */}
 			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
 			{!isLoading &&
 				usersStocks.map((stock) => (

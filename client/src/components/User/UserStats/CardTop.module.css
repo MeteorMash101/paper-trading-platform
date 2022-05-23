@@ -36,10 +36,17 @@
 
     .cardMid{
         margin-top: 12%;
+        font-size: small;
+    }
+
+    .cardTop{
+        margin-bottom: 10%;
+        font-size: small;
     }
 
     .img{
-        left:44%
+        left:44%;
+        size: 10;
     }
 
     .heading{

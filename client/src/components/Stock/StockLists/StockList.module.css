@@ -1,5 +1,5 @@
 .container {
-    border: 1px solid rgb(173, 173, 173);
+    /* border: 1px solid rgb(173, 173, 173); */
     border-radius: 1.6rem;
     width: 100%;
 }
@@ -16,6 +16,7 @@
 
 #neutral_blue {
     background-color: rgb(176, 227, 243);
+    padding: 4px;
 }
 
 /* CSS loader */
@@ -47,24 +48,9 @@
     }
 }
 
-/* SAVING THESE BEUTIFUL KOLORS FOR OTHER PROJS xd */
-/* 
-#blue {
-    background-color: rgb(168, 168, 233);
+@media (max-width:900px) {
+#neutral_blue {
+    background-color: rgb(176, 227, 243);
+    padding: 0px;
 }
-
-#pink {
-    background-color: rgb(240, 183, 221);
-} 
-
-stock.change_direction ? classes.green : classes.red
-#red {
-    background-color: rgb(231, 143, 143);
 }
-
-#green {
-    background-color: rgb(166, 233, 166)
-}
-
-
-*/

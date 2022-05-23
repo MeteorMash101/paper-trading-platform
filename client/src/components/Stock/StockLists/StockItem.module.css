@@ -1,7 +1,7 @@
 .wrapper {
     display: flex;
     align-items: center;
-    width: 90%;
+    width: 92%;
     margin: 0% 4%;
     height: auto;
     border-bottom: 1px solid rgb(173, 173, 173);
@@ -30,13 +30,13 @@
 }
 
 .container:hover {
-    background-color: rgb(226, 244, 247);
+    background-color: rgb(232, 232, 232);
     cursor: pointer;
-    border-radius: 1.6rem;
+    border-radius: 10px;
+    padding: 2px;
 }
 
 .symbol {
-    /* border: 2px solid rgb(0, 0, 0); */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,8 +50,8 @@
 .company_name {
     position: absolute;
     left: 20%;
+    width: 30%;
 }
-
 
 .price {
     position: absolute;
@@ -61,32 +61,46 @@
     justify-content: center;
     align-items: center;
     height: 55%;
+    width: 15%;
 }
 
 .percent_change {
     position: absolute;
     left: 83%;
-    font-size: large;
+    width: 10%;
+    font-size: medium;
 }
 
 #posChange {
-    color: rgba(25, 139, 95, 0.884);
+    /* color: rgba(25, 139, 95, 0.884); */
+    background-color: rgb(226, 249, 226);
+    border-radius: 10px;
+    width: 14%;
+    text-align: left;
+    padding: 6px;
 }
 
 #negChange {
-    color: rgb(185, 52, 19);
+    /* color: rgb(185, 52, 19); */
+    background-color: rgb(246, 221, 221);
+    border-radius: 10px;
+    width: 14%;
+    text-align: left;
+    padding: 6px;
 }
 
 .upArrow {
     position: absolute;
     color: rgba(25, 139, 95, 0.884);
-    left: 95%;
+    left: 94%;
+    width: 5%;
 }
 
 .downArrow {
     position: absolute;
     color: rgb(185, 52, 19);
-    left: 95%;
+    left: 94%;
+    width: 5%;
 }
 
 .watchListBtn:hover {
@@ -101,7 +115,16 @@
     position: absolute;
 }
 
-@media (max-width:900px) {
+@media(max-width:1100px){
+    .percent_change {
+        position: absolute;
+        left: 83%;
+        font-size: small;
+    }
+}
+
+@media (max-width:700px) {
+
     .percent_change {
     font-size: 0px !important;
   }
@@ -111,23 +134,40 @@
   }
 
   .upArrow {
-    width: 0px !important;
+    width: 5% !important;
   }
 
   .downArrow {
-    width: 0px !important;
+    width: 5% !important;
   }
   
   .symbol {
-    width: 30% !important;
+    width: 20% !important;
+    font-size: small;
   }
 
     .company_name {
-    width: 100% !important;
+    width: 70% !important;
+    font-size: small;
   }
 
   .watchlist{
-      width: 0px;
+      width: 5%;
+      size: 10px;
   }
+
+  .watchListBtn{
+      size: 10px;
+  }
+
+  #posChange {
+    width: 0%;
+    padding: 0px;
+}
+
+#negChange {
+    width: 0%;
+    padding: 0px;
+}
 
 }

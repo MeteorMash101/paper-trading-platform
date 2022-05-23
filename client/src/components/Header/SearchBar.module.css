@@ -27,7 +27,7 @@
 .dataResult {
     position: absolute; 
     margin-top: 35px;
-    width: 29%;
+    width: 39%;
     height: 150px;
     margin-left: 5px;
     border-bottom-left-radius: 1.625rem;
@@ -49,5 +49,15 @@
     margin-right: 35px;
     margin-left: 20px;
     color: rgb(110, 110, 110);
+}
+
+@media (max-width:800px) {
+    .name {
+    font-size: x-small;
+  }
+
+  .symbol{
+      font-size: x-small;
+  }
 }
 
