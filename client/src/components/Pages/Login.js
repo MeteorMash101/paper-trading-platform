@@ -16,19 +16,15 @@ const Login = () => {
         let accountFromServer;
         try {
             accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`)
-            if (accountFromServer.data == "") {
-                console.log("Account not found... creating new.");
+        } catch (err) {
+            console.log("ERROR: ", err)
+            console.log("Account not found... creating new.");
                 accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, {
                     name: userInfo.name,
                     email: userInfo.email,
                     google_user_id: userInfo.user_id,
                     // default balance, pv, etc.
                 })
-            } else {
-                console.log("Account found: ", accountFromServer.data);
-            }
-        } catch (err) {
-            console.log("ERROR: ", err)
         }
         userInfo.balance = accountFromServer.data.balance
         console.log("userInfo in onLoginHandler: ", userInfo)

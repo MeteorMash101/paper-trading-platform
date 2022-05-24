@@ -51,7 +51,7 @@ class Stock_info:
         data.at[0, "percent_change"] = 0
 
         #Convert military time to non-military time
-        data["time"] = data["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
+        #data["time"] = data["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
 
         #convert to output
         jsonData = {
