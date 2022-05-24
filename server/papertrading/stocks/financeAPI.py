@@ -21,39 +21,39 @@ class Stock_info:
         return si.get_day_most_active()
     
     @staticmethod
-    def getEarningsReport(ticker):
+    def get_earnings_report(ticker):
         fullReport = si.get_earnings(ticker)
         earningsDF = fullReport["quarterly_revenue_earnings"].drop(columns="revenue")
-        earnings = {"quarterly_earnings": earningsDF.to_dict("records")}
+        expectedVsActual = fullReport["quarterly_results"]
+        earnings = {"quarterly_earnings": earningsDF.merge(expectedVsActual).to_dict("records")}
         return earnings
     
     @staticmethod
     def get_data(ticker, start_date=None, end_date=None):
         return si.get_data(ticker, start_date, end_date)
-    '''
-    @staticmethod
-    def get_stock_historical_data(ticker):
-        data = si.get_data(ticker)
-        data.reset_index(level=0, inplace=True)
-        data.rename(columns={"index": "date"}, inplace = True)
-        data["date"] = data["date"].map(lambda a: str(a).split(" ")[0])
-        data = data.drop(columns = ["ticker"])
-        jsonData = {
-            "historical_data": data.to_dict("records")
-        }
-        return jsonData
-    '''
     
     # EDIT this one provides data in the front end preferred style
     # So maybe adjust above to do this but for now we just directly switch
     
     @staticmethod
-    def get_stock_historical_data(ticker, range):
-        data = Stock_info.determine_parameters(ticker, range)
+    def get_stock_historical_data(ticker, dayrange):
+        #get the data appropriate for the range
+        data = Stock_info.__get_data_for_interval(ticker, dayrange)
+        #separate date and time
         data.reset_index(level=0, inplace=True)
         data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
         data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
         data = data.drop(columns = ["ticker", "index"])
+        #Add the price change/percent change from the previous entry
+        data["dollar_change"] = data.open - data.open.shift(1)
+        data["percent_change"] = 100*data["dollar_change"]/data.open.shift(1)
+        data.at[0, "dollar_change"] = 0
+        data.at[0, "percent_change"] = 0
+
+        #Convert military time to non-military time
+        data["time"] = data["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
+
+        #convert to output
         jsonData = {
             "historical_data": data.to_dict("records")
         }
@@ -61,14 +61,16 @@ class Stock_info:
         return jsonData
 
     @staticmethod
-    def determine_parameters(ticker, range):
+    def __get_data_for_interval(ticker, range):
         today = datetime.today()
         if range == "1D": # INTERVAL: 5 mins
             return Stock_info.__get_one_day(ticker)
         elif range == "1W": # INTERVAL: 10 mins
             start_date = today - timedelta(days=7)
-            return Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
-        elif range == "1M": # INTERVAL: 1 hour
+            df = Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+            df.index = df.index.map(lambda x: x - timedelta(hours=4))
+            return df
+        elif range == "1M": # INTERVAL: 30 minutes
             return Stock_info.__get_one_month(ticker)
         elif range == "3M": # INTERVAL: 1 day
             start_date = (today - timedelta(days=90))
@@ -79,23 +81,22 @@ class Stock_info:
         elif range == "1Y": # INTERVAL: 1 day
             start_date = (today - timedelta(days=365))
             return Stock_info.__get_data_catch_errors(ticker, start_date)
-        elif range == "5Y": # INTERVAL: 1 month
+        elif range == "5Y": # INTERVAL: 1 week
             start_date = (today - timedelta(weeks=260))
             return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
-        else: # INTERVAL: 1 year
-            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo").dropna()
+        else: # INTERVAL: 1 month
+            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo")
 
     @staticmethod
     def __get_one_day(ticker):
         today = datetime.today()
         start_date = today - timedelta(days=7)
         df = Stock_info.__get_data_catch_errors(ticker, start_date = start_date, end_date = today, interval="1m").iloc[::5, :]
-        
+        df.index = df.index.map(lambda x: x - timedelta(hours=4))
         result = df.groupby(by=lambda x: (x.month, x.day))
         days = sorted(result.groups.keys(), key= lambda x: x[1])
         curDay = sorted(days, key= lambda x: x[0])[-1]
         returnDF = df.loc[result.groups[curDay]]
-        returnDF.index = returnDF.index.map(lambda x: x - timedelta(hours=4))
         return returnDF
 
     @staticmethod
@@ -117,7 +118,7 @@ class Stock_info:
             threads.append(t)
         for thread in threads:
             thread.join(10) # n is the number of seconds to wait before joining
-        df = q.get().iloc[::60,:]
+        df = q.get().iloc[::30,:]
         while not q.empty():
             #df = df.append(q.get().iloc[::60,:])
             df = pd.concat((df, q.get().iloc[::30,:]))
@@ -139,10 +140,11 @@ class Stock_info:
 
     @staticmethod
     def get_stock_historical_data_deprecated(ticker, start_date = None, minute = False):
+        '''
         print(
             "[financeAPI.py]: ticker, start_date, minute in get_stock_historical_data(): ", 
             ticker, start_date, minute
-        )
+        )'''
         if minute:
             today = datetime.today()
             try:
@@ -225,9 +227,13 @@ class Stock_info:
     #This is for stocks to get the daily most active
     @staticmethod
     def get_top_stocks():
-        symbols = si.get_day_most_active()["Symbol"].to_list()
-        stocks = Stock_info.__data_for_list(symbols[:10])
-        return sorted(stocks, key = lambda x: x["volume"], reverse=True)
+        result = si.get_day_most_active()
+        result = result.drop(columns=["Change", "Avg Vol (3 month)", "Market Cap", "PE Ratio (TTM)"])
+        result.columns = ["symbol", "company_name", "price", "percent_change", "volume"]
+        result.sort_values("volume", ascending=False, inplace=True)
+        result["change_direction"] = result["percent_change"] > 0
+        result["volume"] = result["volume"].astype('int32')
+        return result.to_dict("records")
     
     @staticmethod
     def get_popular_stocks():

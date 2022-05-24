@@ -7,13 +7,22 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from stocks.financeAPI import Stock_info as si
-from datetime import datetime, date, timedelta
-from decimal import Decimal
+from datetime import datetime
 from accounts.utils.historicalPortfolioValueLoader import PortfolioValue
-
-import threading
+from accounts.utils.transactionHandler import Transaction
+from accounts.utils.balanceHandler import Balance
+from accounts.utils.userStockHandler import UserStocks
+from accounts.utils.stockListsHandler import StockLists
 
 from django.contrib.auth.models import User # we are extending Django's User
+
+def get_object(goog_id, *args, **kwargs):
+    #pk = kwargs.get('goog_id')
+    pk = goog_id
+    try:
+        return Account.objects.get(pk=pk)
+    except Account.DoesNotExist:
+        return None
 
 class AccountList(APIView):
     """
@@ -22,19 +31,12 @@ class AccountList(APIView):
     def get(self, request):
         accounts = Account.objects.all()
         serializer = AccountSerializer(accounts, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AccountReset(APIView):
 
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
-
     def get(self, request, goog_id):
-        account = self.get_object(goog_id)
+        account = get_object(goog_id)
         account.start_date = datetime.today().strftime("%Y-%m-%d")
         account.portfolio_value_history = {"data": {}}
         account.transaction_history = {"history": []}
@@ -57,45 +59,41 @@ class AccountDetail(APIView):
         # tried: User.objects.get(email=request.data['email']), request.data['email'].split('@')[0]
         # request.data['user'] = ?
         # print("UPDATED REQ. DATA", request.data)
-        request.data["start_date"] = datetime.today().strftime("%Y-%m-%d")
         serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save() # saves to DB
+            self.__initializeUser(request.data["google_user_id"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
+    
+    def __initializeUser(self, google_id):
+        user = get_object(google_id)
+        user.watchList = {"stocks": []}
+        user.transaction_history = {"history": []}
+        user.portfolio_value_history = {"data": {}}
+        user.start_date = datetime.today().strftime("%Y-%m-%d")
+        user.save()
 
     def get(self, request, goog_id):
-        
-        AccountObj = self.get_object(goog_id)
-        # EDIT: don't understand
-        if AccountObj != None: # account exists
-            serializer = AccountSerializer(AccountObj)
-
-            t = threading.Thread(target=PortfolioValue.load, args= (AccountObj,), daemon = True)
-            t.start()
-            #PortfolioValue.load(AccountObj)                 #Loads the historical portfolio value
-            return Response(serializer.data)
+        accountObj = get_object(goog_id)
+        if accountObj != None: # account exists
+            serializer = AccountSerializer(accountObj)
+            PortfolioValue.load(accountObj)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else: # account doesn't exist, create new
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, goog_id):
-        Account = self.get_object(goog_id)
-        serializer = AccountSerializer(Account, data=request.data)
+        account = get_object(goog_id)
+        serializer = AccountSerializer(account, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, goog_id):
-        Account = self.get_object(goog_id)
-        Account.delete()
+        account = get_object(goog_id)
+        account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     
@@ -114,18 +112,12 @@ class AccountDetail(APIView):
 #         return Response(None)
 
 class AccountTransactionHistory(APIView):
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
 
     def get(self, request, goog_id):
-        account = self.get_object(goog_id)
-        history = account.transaction_history["history"]
+        account = get_object(goog_id)
+        history = account.transaction_history["history"][::-1]
         serializer = TransactionHistorySerializer({"transaction_history":history})
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class AccountStocksOwned(APIView):
     '''
@@ -142,40 +134,34 @@ class AccountStocksOwned(APIView):
     curl -d '{"info":"num_of_ticker_stocks", "symbol": "tsla"}' -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
     '''
     def get(self, request, goog_id):
-        # data = request.data
+        account = get_object(goog_id)
+        if account == None:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+
         data = request.query_params.get('info', None)
-        account = self.get_object(goog_id)
-        
-        if account != None:
-            if data == "stock_list_detailed":            #Returns list of all their transactions with stocks they currently own.
-                serializer = StockListSerializer({"stock_list":account.ownedStocks})
-                return Response(serializer.data)
-            elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
-                symbol = request.query_params.get('symbol', None)
-                numOfStock = self.__countStock(account.ownedStocks, symbol)
-                serializer = StockNumSerializer({"quantity_owned":numOfStock})
-                return Response(serializer.data)
-            elif data == "portfolio_value":             #returns just the portfolio value
-                portfolio_value = self.__calculateValue(account.ownedStocks)
-                portfolio_change = self.__calculatePortfolioChange(account.ownedStocks, portfolio_value)
-                serializer = PortfolioValueSerializer({"portfolio_value":portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
-                return Response(serializer.data)
-            elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
-                stockList = self.__ownedStocksForDisplay(account.ownedStocks)
-                serializer = StockListSerializer({"stock_list":stockList})
-                return Response(serializer.data)
-            elif data == "buying_power_history":
-                history = self.buildBuyingPowerHistory(account)
-                serializer = TransactionHistorySerializer({"transaction_history":history})
-                return Response(serializer.data)
-            elif data == "transaction_history":
-                history = account.transaction_history["history"]
-                serializer = TransactionHistorySerializer({"transaction_history":history})
-                return Response(serializer.data)
-            else:
-                return Response(None)
+        if data == "stock_list_detailed":            #Returns list of all their transactions with stocks they currently own.
+            serializer = StockListSerializer({"stock_list":account.ownedStocks})
+            return Response(serializer.data)
+        elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
+            symbol = request.query_params.get('symbol', None)
+            numOfStock = UserStocks.countNumberOfSharesOwned(account.ownedStocks, symbol)
+            serializer = StockNumSerializer({"quantity_owned":numOfStock})
+            return Response(serializer.data)
+        elif data == "portfolio_value":             #returns just the portfolio value
+            portfolio_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
+            portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, portfolio_value)
+            serializer = PortfolioValueSerializer({"portfolio_value":portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
+            return Response(serializer.data)
+        elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
+            stockList = StockLists.ownedStocks(account.ownedStocks)
+            serializer = StockListSerializer({"stock_list":stockList})
+            return Response(serializer.data)
+        elif data == "buying_power_history":
+            history = Balance.buildBuyingPowerHistory(account)
+            serializer = TransactionHistorySerializer({"transaction_history":history})
+            return Response(serializer.data)
         else:
-            return Response(None)
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
 
     '''
     Buys and sells stock and updates user list accordingly
@@ -189,279 +175,82 @@ class AccountStocksOwned(APIView):
     ----This may need to include updating the balance
     '''
     def put(self, request, goog_id):
-        account = self.get_object(goog_id)
+        account = get_object(goog_id)
         if account == None:
-            return Response(None)
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
 
         data = request.data
-        
-        owned = account.ownedStocks
+        valid = False
         if data["action"] == "buy":
-            valid = self.__purchaseStock(data, account)
-        else: # EDIT: this might accept nulls, try dif. err checking here
-            valid = self.__sellStock(data, account)
+            valid = Transaction.buy(data, account)
+        elif data["action"] == "sell": # EDIT: this might accept nulls, try dif. err checking here
+            valid = Transaction.sell(data, account)
         if not valid:
              return Response(None, status=status.HTTP_400_BAD_REQUEST)            #idk which error to put
         account.save()
-        serializer = StockListSerializer({"stock_list":owned})
-        return Response(serializer.data)
+        serializer = StockListSerializer({"stock_list":account.ownedStocks})
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # EDIT: duplicate
-    #Returns the account object
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
-
-    #This gets the portfolio value for the user
-    def __calculateValue(self, owned):
-        value = 0
-        for ticker in owned.keys():
-            value += si.get_live_price(ticker) * self.__countStock(owned, ticker)
-        return value
-
-    #Goes through stock purchases to find how many of a stock the user has
-    def __countStock(self, owned, symbol):
-        if symbol not in owned.keys():
-            return 0
-
-        quantity = 0
-        for order in owned[symbol]:
-            quantity += int(order["quantity"])
-        return quantity
-
-    #Adds the purchase of the stock to the list
-    # EDIT: This will likely be changed to accept the price from the frontend
-    #       making it really easy to test since we just give it the price
-    def __purchaseStock(self, data, account):
-        #While we don't send marketPrice from the frontend, just allow for it to be sent
-        if "marketPrice" in data.keys():
-            price = float(data["marketPrice"])
-        else:
-            price = si.get_live_price(data["stock"])
-
-        owned = account.ownedStocks
-        newPurchase = {
-            "quantity": data["quantity"],
-            "datePurchased": datetime.today().strftime("%Y-%m-%d"),
-            "purchasePrice": price
-        }
-        if data["stock"].lower() in owned.keys():   #if the user already owns some stock
-                owned[data["stock"].lower()].append(newPurchase) #Convert to getting from server
-        else:   #create new entry in the dictionary for the stock
-            owned[data["stock"].lower()] = [newPurchase]
-        self.__recordTransaction(account, "buy", newPurchase, data["stock"])
-        account.balance -= Decimal.from_float(float(data["quantity"])*price)
-        return True
     
-    # EDIT: understnd this a bit mroe
-    # EDIT: This will accept the front end value for the stock?
-    #Sells the given amount of stock
-    #enough stock being owned is checked for in the client
-    #Format of a single stock would be:
-    '''
-    {"aapl": [{"quantity": "2", "datePurchased": "2022-03-04", "purchasePrice": 56.150001525878906},
-              {"quantity": "4", "datePurchased": "2022-03-05", "purchasePrice": 57.186511155551367}]}
-    '''
-    #So selling starts with the top (first) element in the list and removes as much as it can from there.
-    #If it removes all the list elements, it will delete the stock name from the dictionary (deleting "aapl").
-    def __sellStock(self, data, account):
-        owned = account.ownedStocks
-        self.__stockPurchasesExist(data["stock"], owned)
-        stockPurchases = owned[data["stock"].lower()]
-        toSell = int(data["quantity"])
-        while toSell > 0:
-            if toSell > int(stockPurchases[0]["quantity"]): #If
-                toSell -= int(stockPurchases[0]["quantity"])
-                stockPurchases.pop(0)
-            elif toSell < int(stockPurchases[0]["quantity"]):
-                stockPurchases[0]["quantity"] = int(stockPurchases[0]["quantity"]) - toSell
-                toSell = 0
-            else:
-                toSell = 0
-                stockPurchases.pop(0)
-                if len(stockPurchases) == 0:
-                    owned.pop(data["stock"].lower())
-
-        #While we aren't guaranteed to pass marketPrice we'll just provide the option
-        #Is this safe? Like it allows people to essentially buy the stock at whatever price they want
-        #While it makes no sense for people to want to do this they could for competitions
-        if "marketPrice" in data.keys():
-            price = float(data["marketPrice"])
-        else:
-            price = si.get_live_price(data["stock"])
-
-        newSale = {
-            "quantity": data["quantity"],
-            "datePurchased": datetime.today().strftime("%Y-%m-%d"),
-            "purchasePrice": price           
-        }
-        self.__recordTransaction(account, "sell", newSale, data["stock"])
-        account.balance += Decimal.from_float(float(data["quantity"]) * price)
-        return True
-    
-    def __stockPurchasesExist(self, stock, owned):
-        if stock.lower() not in owned.keys():
-            return False
-        if len(owned[stock.lower()]) == 0:
-            return False
-        return True
-
-    #For displaying owned stocks on the home page, this returns the JSON for it
-    def __ownedStocksForDisplay(self, owned):
-        stocks = []
-        price_and_percent = si.get_price_and_change_for_list(owned.keys())
-        for symbol in owned.keys():
-            totOwned = 0
-            for purchase in owned[symbol]:
-                totOwned += int(purchase["quantity"])
-            percent_change = price_and_percent[symbol]["percent_change"]
-            stocks.append({
-                "symbol": symbol,
-                "shares": totOwned,
-                "price": price_and_percent[symbol]["price"],
-                "percent_change": percent_change,
-                "change_direction": percent_change > 0
-            })
-        return stocks
-
-    def __calculatePortfolioChange(self, owned, curVal):
-        totalSpent = 0
-        for purchases in owned.values():
-            for purchase in purchases:
-                totalSpent += int(purchase["quantity"]) * float(purchase["purchasePrice"])
-        if totalSpent == 0:
-            return 0
-        percent_change = 100*(curVal - totalSpent) / totalSpent
-        return percent_change
-
-    def __recordTransaction(self, account, type, details, symbol):
-        if account.transaction_history == {}:
-            account.transaction_history["history"] = []
-        account.transaction_history["history"].append({
-            "type": type,
-            "stock": symbol.lower(),
-            "quantity": details["quantity"], 
-            "date": details["datePurchased"], 
-            "stockPrice": details["purchasePrice"]
-        })
-
-    # EDIT: need to understand this.
-    def buildBuyingPowerHistory(self, account):
-        startDate = account.start_date
-        if "history" not in account.transaction_history.keys():
-            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
-        history = account.transaction_history["history"]
-        if len(history) == 0:
-            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
-
-        balance = account.balance
-        balanceHistory = {datetime.today().strftime("%Y-%m-%d"): account.balance}
-        curDate = datetime.today().strftime("%Y-%m-%d")
-        for transaction in history[::-1]:
-            if transaction["date"] == curDate:
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-            else:
-                curDate = transaction["date"]
-                balanceHistory[curDate] = balance
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-        if startDate not in balanceHistory.keys():
-            balanceHistory[startDate] = balance
-        return {"data": balanceHistory}
 
 class AccountWatchList(APIView):
     def get(self, request, goog_id):
         data = request.query_params.get('info', None)
-        account = self.get_object(goog_id)
-        if account != None:
-            if data == "stocks": # Returns a list of just the symbols for watch list stocks
-                serializer = StockListSerializer({"stock_list":account.watchList.keys()})
-                return Response(serializer.data)
-            elif data == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
-                detailedList = self.getWatchListStockInfo(account.watchList)
-                serializer = StockListSerializer({"stock_list":detailedList})
-                return Response(serializer.data)
-            elif data == "check_stock":
-                serializer = BoolSerializer({"isPresent": data.get('symbol', None) in account.watchList["stocks"]})
-                return Response(serializer.data)
-            else:
-                return Response(None)
+        account = get_object(goog_id)
+        if account == None:
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+        
+        if data == "stocks": # Returns a list of just the symbols for watch list stocks
+            serializer = StockListSerializer({"stock_list":account.watchList["stocks"]})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif data == "detailed_stocks": # Returns list with each stock's price, percent change, and change direction
+            detailedList = StockLists.watchList(account.watchList)
+            serializer = StockListSerializer({"stock_list":detailedList})
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif data == "check_stock":
+            serializer = BoolSerializer({"isPresent": request.query_params.get('symbol', None) in account.watchList["stocks"]})
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response(None)
+            return Response(None, status=status.HTTP_400_BAD_REQUEST)
+
+
     #Acts as a switch. Simply make a put request with the "symbol" of the data being the 
     #Ticker you wish to toggle. If the ticker is in the list it is removed, if it is 
     #not in the list it is added. So if there is say a start symbol next to stocks,
     #clicking it will add it, but clicking it again will remove it.
     def put(self, request, goog_id):
-        account = self.get_object(goog_id)
+        account = get_object(goog_id)
         if account == None:
-            return Response(None)
-        data = request.data
+            return Response(None, status=status.HTTP_404_NOT_FOUND)
+        symbol = request.data["symbol"]
+        self.__toggleStockInWatchList(symbol, account)
+        account.save()
+        return Response(None, status=status.HTTP_204_NO_CONTENT)
+
+    #Adds a stock into the watch list if not present, otherwise removes it
+    def __toggleStockInWatchList(self, symbol, account):
+        watched = self.__getWatchList(account)
+        try:
+            watched.pop(watched.index(symbol.upper()))
+        except ValueError: #If the stock is not being watched, add it to the watch list
+            watched.append(symbol.upper())
+    
+    #If the watch list hasn't been set up, set it up and then return the set
+    def __getWatchList(self, account):
         if account.watchList == {} or account.watchList is None:
             account.watchList["stocks"] = []
-        watched = account.watchList["stocks"]
-        try:
-            watched.pop(watched.index(data["symbol"]))
-        except ValueError: #If the stock is not being watched, add it to the watch list
-            watched.append(data["symbol"])
-        account.save()
-        return Response(None)
-
-    #Returns the account object
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
-
-    #For displaying owned stocks on the home page, this returns the JSON for it
-    def getWatchListStockInfo(self, watchList):
-        if "stocks" not in watchList.keys():
-            return []
-        watchList = watchList["stocks"]
-        stocks = []
-        price_and_percent = si.get_price_and_change_for_list(watchList)
-        for symbol in watchList:
-            price = price_and_percent[symbol]["price"]
-            percent_change = price_and_percent[symbol]["percent_change"]
-            stocks.append({
-                "symbol": symbol,
-                "price": price,
-                "percent_change": percent_change,
-                "changedir": percent_change > 0
-            })
-        return stocks
+        return account.watchList["stocks"]
 
 class AccountStockIndustries(APIView):
 
-    # EDIT duplicate function
-    # Returns the account object
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
-
     def get(self, request, goog_id):
-        account = self.get_object(goog_id)
+        account = get_object(goog_id)
         if account != None:
             symbols = list(account.ownedStocks.keys())
-            symbols.append("william")
             industries = si.get_industries(symbols)
-            print(industries)
             diversity = self.__accumulate(industries)
             serializer = IndustryDiversitySerializer({"industry_makeup":diversity})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
     
@@ -477,26 +266,17 @@ class AccountStockIndustries(APIView):
 class AccountHistoricPV(APIView):
     
     def get(self, request, goog_id):
-        account = self.get_object(goog_id)
+        account = get_object(goog_id)
         
         if account != None:
-            balanceHistory = self.buildBuyingPowerHistory(account)
-            performance = self.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
+            balanceHistory = Balance.buildBuyingPowerHistory(account)
+            performance = Balance.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
             data = self.convertToListOfDicts(account.portfolio_value_history["data"])
             
             serializer = HistoricPortfolioValueSerializer({"pv":data})
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
-
-    # EDIT duplicate function
-    # Returns the account object
-    def get_object(self, request, *args, **kwargs):
-        pk = self.kwargs.get('goog_id')
-        try:
-            return Account.objects.get(pk=pk)
-        except Account.DoesNotExist:
-            return None
 
     #converts the portfolio value history into a format that frontend likes
     def convertToListOfDicts(self, data):
@@ -505,58 +285,4 @@ class AccountHistoricPV(APIView):
             returnList.append({"date": key, "value": value})
         return returnList
 
-    #Adds the balance history to the portfolio value history
-    def addBalance(self, pv, balance):
-        balance = self.fillBalance(balance, sorted(pv.keys())[-1])
-
-        for key in pv.keys():
-            pv[key] = pv[key] + balance[key]*100
-        return pv
-
-    #Balance is a sparse dictionary, only made of dates that the balance changed
-    #This adds the balance for days inbetween, up until the end date
-    def fillBalance(self, balance, endDate):
-        for key in balance.keys():
-            balance[key] = round(balance[key], 2)
-        # dates = sorted(balance, key=lambda x: balance[x], reverse=True)
-        dates = sorted(balance.keys())
-        day = datetime.fromisoformat(dates[0])
-        oneDay = timedelta(days=1)
-        endDate = datetime.fromisoformat(endDate)
-        while day <= endDate:
-            dayStr = day.strftime("%Y-%m-%d")
-            if dayStr in balance.keys():
-                curBalance = balance[dayStr]
-            else:
-                balance[dayStr] = curBalance
-            day += oneDay
-        return balance
-
-    # EDIT: need to understand this.
-    def buildBuyingPowerHistory(self, account):
-        startDate = account.start_date
-        if "history" not in account.transaction_history.keys():
-            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
-        history = account.transaction_history["history"]
-        if len(history) == 0:
-            return {"data": {datetime.today().strftime("%Y-%m-%d"): account.balance}}
-
-        balance = account.balance
-        balanceHistory = {datetime.today().strftime("%Y-%m-%d"): account.balance}
-        curDate = datetime.today().strftime("%Y-%m-%d")
-        for transaction in history[::-1]:
-            if transaction["date"] == curDate:
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-            else:
-                curDate = transaction["date"]
-                balanceHistory[curDate] = balance
-                if transaction["type"] == "buy":
-                    balance += Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-                else:
-                    balance -= Decimal.from_float(float(transaction["quantity"])*transaction["stockPrice"])
-        if startDate not in balanceHistory.keys():
-            balanceHistory[startDate] = balance
-        return {"data": balanceHistory}
+   
