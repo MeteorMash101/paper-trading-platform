@@ -31,7 +31,10 @@ const HistoryList = ({title}) => {
 	return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
 }, [])
 
+	// useState((usersStocks)=>[...usersStocks].slice().reverse())
+
 	return (
+		
 		<div className={classes.container}>
 			<h2 className={classes.title}>{title}</h2>
 			{isLoading && <div className={classes.loader}></div>}

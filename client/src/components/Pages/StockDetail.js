@@ -11,7 +11,9 @@ import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
 import Chart from '../Stock/StockStats/Chart';
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
-import HoverPrice from '../Stock/StockStats/HoverPrice'
+import HoverPrice from '../Stock/StockStats/HoverPrice';
+import { motion } from 'framer-motion';
+import QEChart from '../GraphVisuals/QEChart';
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
@@ -60,6 +62,11 @@ const StockDetail = () => {
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])
     return (
+        <motion.div 
+        initial= {{opacity:0, x:100}} 
+        animate = {{opacity: 1, x:0}}
+        exit = {{opacity: 0, x:-100}}
+        transition={{ duration: 0.7}}>
         <Fragment>
             {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
                 // Redirect to /login - User must be logged in to view ALL pages...
@@ -86,8 +93,13 @@ const StockDetail = () => {
                                     <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`} onGraphMode={onGraphModeHandler}/>
                                 }
                             </div>
+                            
                             <div className={classes.wrapper}>
+                                
                                 <div className={classes.stats1}>
+                                    <div className={classes.wrapperHeader}>
+                                        <h3> Key Statistics </h3>
+                                    </div>
                                     <h4 className={classes.attribute}> Vol: <span className={classes.value}>{stock.volume} </span> </h4>
                                     <h4 className={classes.attribute}> High: <span className={classes.value}>{stock.high_today} </span> </h4>
                                     <h4 className={classes.attribute}> Low: <span className={classes.value}>{stock.low_today} </span> </h4>
@@ -102,20 +114,23 @@ const StockDetail = () => {
                                     <h4 className={classes.attribute}> 52W L: <span className={classes.value}>{stock.ft_week_low} </span> </h4>
                                     <h4 className={classes.attribute}> Yeild: <span className={classes.value}>{stock.dividend_yield} </span> </h4>
                                 </div>
+
                             </div>
-                            <div className={classes.qe}>
-                                <h3>Quarterly Earnings</h3>
-                                <Chart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>
-                            </div>
+                            
                         </div>
                         <div className={classes.rightSec}>
                             <OrderWidget livePrice={livePrice} stock={stock}/>
+                            <div className={classes.qe}>
+                                <h3>Quarterly Earnings</h3>
+                                <QEChart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>
+                            </div>
                         </div>
                     </div>        
                 </div>
                 </div>
             }
         </Fragment>
+        </motion.div>
     );
 }
 

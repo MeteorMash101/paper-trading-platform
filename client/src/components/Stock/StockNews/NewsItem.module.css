@@ -48,6 +48,25 @@
 .summary {
     font-size: calc(2vmin);
     color: rgb(0, 0, 0);
-    font-size: calc(2vmin);
     padding-right: 1em;
+}
+
+@media (max-width:600px) {
+
+    .summary{
+        width: 0%;
+        font-size: 0px;
+    }
+
+    .headline {
+        font-weight:900;
+        font-size: calc(3.5vmin);
+        color: rgb(0, 0, 0);
+        padding-bottom: 3px;
+    }
+
+    .img{
+        width: 20%;
+        height: 15%;
+    }
 }

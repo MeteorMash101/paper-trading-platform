@@ -1,11 +1,13 @@
 .container {
     width: 90%;
     margin: 0 5%;
+    height: 50vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: scroll;
     margin-top: 1rem;
+    /* border: 1px solid black; */
 }
 
 

@@ -30,7 +30,7 @@ const Chart = ({stockURL}) => {
   >
     <VictoryAxis
       tickValues={["1Q2021", "2Q2021", "3Q2021", "4Q2021"]}
-      tickFormat={["", "", "", ""]}
+      tickFormat={["1", "2","3","4", "", ""]}
     />
 
 <VictoryAxis crossAxis
@@ -58,6 +58,8 @@ const Chart = ({stockURL}) => {
         style={{ data: { fill: "#B3ECE8" }}}
         x="quarter"
         y="earnings"
+        // labels={({ datum }) => `y: ${datum.y}`}
+        labels={({ datum }) => datum.x}
       />
     </VictoryStack>
   </VictoryChart>

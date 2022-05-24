@@ -5,7 +5,7 @@ import Legend from "./components/Legend";
 import schc from "./SCHC.json";
 import vcit from "./VCIT.json";
 import portfolio from "./portfolio.json";
-import "./styles.css";
+import "./styles1.css";
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -29,6 +29,8 @@ export default function Graph1({stockURL}) {
     color: "grey",
     items: stock != "" ? stock['pv'].map((d) => ({ ...d, date: new Date(d.date) })) :
       portfolio['pv'].map((d) => ({ ...d, date: new Date(d.date) }))
+      // items:
+      // portfolio['pv'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
   const schcData = {
     name: "SCHC",

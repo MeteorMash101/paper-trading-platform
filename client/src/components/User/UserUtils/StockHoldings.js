@@ -15,7 +15,11 @@ const StockHoldings = () => {
           <h5 className={classes.price}> Price </h5>
           <h5 className={classes.change}> Daily Change</h5>
         </div>
-        <UserStockList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`} paramsInfo={"stock_list_display"}/> 
+
+        <div className={classes.holdings}>
+          <UserStockList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`} paramsInfo={"stock_list_display"}/> 
+        </div> 
+        
       </div>
     </div>
   )

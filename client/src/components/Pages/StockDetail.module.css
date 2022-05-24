@@ -1,7 +1,7 @@
 .container {
     height: 100%;
-    width: 80%;
-    margin: 4% 10%;
+    width: 90%;
+    margin: 4% 5%;
     justify-content: center;
     align-content: center;
 }
@@ -60,6 +60,8 @@
     border: 1px solid rgb(204, 204, 204);
     border-radius: 1.4rem;
     margin-left: 1%;
+    margin-top: 3%;
+    margin-bottom: 3%;
 }
 
 .graph{
@@ -79,7 +81,10 @@
     margin-top: 40px;
     margin-bottom: 40px;
     border-radius: 1.4rem;
-    /* background-color: rgb(237, 250, 245); */
+  }
+
+  .wrapperHeader{
+    font-size: 0px;
   }
 
   .stats1 {
@@ -111,14 +116,14 @@
     font-weight: 500;
 }
 .leftSec{
-    width: 67%;
+    width: 63%;
     float: left;
     padding: 15px;
     box-sizing: border-box;
 }
 
 .rightSec{
-    width: 33%;
+    width: 36%;
     float: left;
     padding: 15px;
     box-sizing: border-box;
@@ -140,16 +145,47 @@
 
 }
 
-@media (max-width:950px) {
+@media (max-width:900px) {
     
     .rightSec{
         width: 80%;
         float: left;
         padding: 15px;
     }
-
-    .wrapper{
-        font-size: small;
-    }
 }
 
+@media (max-width:700px) {
+
+.wrapper {
+    display: grid;
+    grid-template-columns: 1;
+    grid-auto-rows: 3;
+    border: 1px solid rgb(204, 202, 202);
+    padding: 20px;
+    border-radius: 1.4rem;
+    font-size: small;
+  }
+
+  .stats1 {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0% 10%;
+    border-right: 0px;
+  }
+  .stats2{
+    grid-column: 1;
+    margin: 0% 10%;
+    grid-row: 2;
+    border-right: 0px;
+  }
+  .stats3 {
+    grid-column: 1;
+    margin: 0% 10%;
+    grid-row: 3;
+  }
+  .wrapperHeader{
+    font-size: small;
+    padding-bottom: 5%;
+  }
+
+}
