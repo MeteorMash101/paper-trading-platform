@@ -50,7 +50,8 @@ def exchange_token(request, backend):
     #curl -X GET "https://www.googleapis.com/oauth2/v1/userinfo?alt=json" -H "Authorization: Bearer ya29.a0ARrdaM988BZFipwvIg2EJxaPK2KR4Q36FkIsVYqrDt9p2FU62aJVArR9k0bcxkX48Q_LnyseC00pT9pYjySGOhLgSuiGuT4qa-Y0-t4uct3plgPmtAM8LCnLUR4J67q-N55Gk5DRtkqsD7SLcuKUOGlGydea"
     #request.data = {"access_token": "9EM7WPfruCSHLQFueB8Sbexq1DbyfQ"}
     print(request.data)
-    serializer = AuthSerializer(data={"access_token": "ya29.a0ARrdaM988BZFipwvIg2EJxaPK2KR4Q36FkIsVYqrDt9p2FU62aJVArR9k0bcxkX48Q_LnyseC00pT9pYjySGOhLgSuiGuT4qa-Y0-t4uct3plgPmtAM8LCnLUR4J67q-N55Gk5DRtkqsD7SLcuKUOGlGydea"})
+    #serializer = AuthSerializer(data={"access_token": "ya29.a0ARrdaM988BZFipwvIg2EJxaPK2KR4Q36FkIsVYqrDt9p2FU62aJVArR9k0bcxkX48Q_LnyseC00pT9pYjySGOhLgSuiGuT4qa-Y0-t4uct3plgPmtAM8LCnLUR4J67q-N55Gk5DRtkqsD7SLcuKUOGlGydea"})
+    serializer = AuthSerializer(data={"access_token": "1LEGKaVhBkT4c9VHvEiW1y6O37PEEn"})
     if serializer.is_valid(raise_exception=True):
         # set up non-field errors key
         # http://www.django-rest-framework.org/api-guide/exceptions/#exception-handling-in-rest-framework-views
