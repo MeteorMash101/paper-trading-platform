@@ -5,14 +5,12 @@ import { Fragment, useContext } from 'react';
 import UserContext from '../../store/user-context';
 import axios from 'axios';
 import tempLogo from '../Header/templogo.jpg';
-import MainFeed from './MainFeed';
 import { Navigate } from 'react-router-dom';
 
 const Login = () => {
     const userCtx = useContext(UserContext);
     console.log("[Login.js]: userCtx CURRENT:", userCtx)
     const onLoginHandler = async (userInfo) => { // workaround to 'only being able to use hooks inside func. component' rule.
-        // Balance & stocklist attributes are unique to each user, fetch those from db.
         let accountFromServer;
         try {
             accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`)

@@ -15,6 +15,7 @@ import {AnimatePresence} from 'framer-motion';
 const App = () => {
   const userCtx = useContext(UserContext);
   const watchlistCtx = useContext(WatchlistContext);
+  const location = useLocation();
 
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
@@ -41,10 +42,10 @@ const App = () => {
                 // default balance, pv, etc.
             })
         } else {
-            // console.log("Account found: ", accountFromServer.data);
+            console.log("Account found: ", accountFromServer.data);
         }
     } catch (err) {
-        // console.log("ERROR: ", err)
+        console.log("ERROR: ", err)
     }
     userInfo.balance = accountFromServer.data.balance
     // console.log("userInfo in APP.js, from persistent login: ", userInfo)
@@ -64,8 +65,6 @@ const App = () => {
     }
     fetchData()
   }, [userCtx.isLoggedIn])
-
-  const location = useLocation();
 
   return (
     <div className="App">
