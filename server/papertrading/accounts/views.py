@@ -161,9 +161,9 @@ class AccountDetail(APIView):
         user.save()
 
     def get(self, request, goog_id):
-        print(request)
-        print("\n\n")
-        exchange_token(request, "google-oauth2")
+        #print(request)
+        #print("\n\n")
+        #exchange_token(request, "google-oauth2")
         #print("OK"*100)
         accountObj = get_object(goog_id)
         if accountObj != None: # account exists
