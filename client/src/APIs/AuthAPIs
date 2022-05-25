@@ -1,0 +1,15 @@
+// EDIT: todo...
+import axios from "axios";
+import {BASE_URL} from "../globals";
+
+
+const hmm = async () => {
+
+}
+
+// NOTE: these methods return promises, be sure to unwrap them or use 'await' when calling!
+const AuthAPIs = {
+	hmm: hmm,
+}
+
+export default AuthAPIs;

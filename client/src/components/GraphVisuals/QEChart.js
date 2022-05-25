@@ -2,9 +2,9 @@ import React from "react";
 import { VictoryBar, VictoryChart, VictoryAxis,
   VictoryTooltip  } from 'victory';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import StockAPIs from "../../APIs/StocksAPIs";
 
-const QEChart = ({stockURL}) => {
+const QEChart = ({symbol}) => {
     const data = [
         {quarter: 1, earnings: 13000},
         {quarter: 2, earnings: 16500},
@@ -14,21 +14,16 @@ const QEChart = ({stockURL}) => {
 
     const [stock, setStock] = useState("");
 
-    useEffect(() => {
-        const fetchStock = async () => {
-            const stockFromServer = await axios.get(stockURL)
-            console.log("[DEBUG]: EARNINGS received from db:", stockFromServer.data)
-            setStock(stockFromServer.data)
-        }
-        fetchStock()
-        }, [])
+    useEffect(async () => {
+      const dataFetched = await StockAPIs.getQuarterlyEarnings()
+      setStock(dataFetched.data)
+    }, [])
 
       return (
         <VictoryChart
           // domainPadding will add space to each side of VictoryBar to
           // prevent it from overlapping the axis
           domainPadding={50}
-
         >
           <VictoryAxis
             // tickValues specifies both the number of ticks and where
@@ -55,7 +50,7 @@ const QEChart = ({stockURL}) => {
             }}
             x="date"
             y="earnings"
-            labelComponent={<VictoryTooltip />}
+            labelComponent={<VictoryTooltip/>}
           />
         </VictoryChart>
       )

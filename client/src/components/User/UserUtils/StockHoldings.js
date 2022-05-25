@@ -17,7 +17,7 @@ const StockHoldings = () => {
         </div>
 
         <div className={classes.holdings}>
-          <UserStockList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`} paramsInfo={"stock_list_display"}/> 
+          <UserStockList/> 
         </div> 
         
       </div>

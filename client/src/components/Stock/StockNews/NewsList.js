@@ -1,6 +1,6 @@
 import classes from './NewsList.module.css';
 import { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import NewsAPIs from '../../../APIs/NewsAPIs';
 import NewsItem from './NewsItem';
 
 /* NOTE:
@@ -20,19 +20,15 @@ display them.
 "url": "https://www.bloomberg.com/news/articles/2022-04-30/russia-to-move-away-from-u-s-dollar-amid-sanctions-xinhua-says",
 "datetime": "2022-04-30T01:56:05Z"
 */
-const NewsList = ({newsAPIUrl}) => {
+const NewsList = () => {
     // const [orderType, setOrderType] = useState("BUY");
 	const [articles, setArticles] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-		const fetchData = async () => {
-			setIsLoading(true);
-			const res = await axios.get(newsAPIUrl)
-            setArticles(res.data.slice(0,10));
-			console.log(res.data.slice(0,10)[0])
-			setIsLoading(false);
-		}
-		fetchData()
+    useEffect(async() => {
+		setIsLoading(true);
+		const dataFetched = await NewsAPIs.getNewsList()
+		setArticles(dataFetched.data.slice(0,10));
+		setIsLoading(false);
   	}, []) 
     return ( 
         <div className={classes.container}>

@@ -1,3 +1,4 @@
+// DEPRECIATED.
 import { useContext } from 'react';
 import classes from './UserTabOpts.module.css';
 import UserContext from '../../../store/user-context';

@@ -3,38 +3,22 @@ import HistoryItem from './HistoryItem';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import AccountsAPIs from '../../../APIs/AccountsAPIs';
 
+// Referring to -> "Transaction History"
 const HistoryList = ({title}) => {
 	const userCtx = useContext(UserContext);
-	const API_SWITCH = false;
-    const MINUTE_MS = 3000; // 3 seconds = 3000
-
 	const [usersStocks, setUsersStocks] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
-	useEffect(() => {
+	useEffect(async() => {
 		setIsLoading(true)
-		const interval = setInterval(() => {
-			const fetchStock = async () => {
-			console.log('FETCHING transaction history...W/ USER CONTEXT:', userCtx)
-			const dataFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/transactionHistory/`)
-			console.log("transaction history DATA:", dataFromServer.data)
-			setUsersStocks(dataFromServer.data);
-			setIsLoading(false)
-		}
-
-		if (!API_SWITCH) {
-			fetchStock()
-		}
-	}, MINUTE_MS);
-	return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
-}, [])
-
-	// useState((usersStocks)=>[...usersStocks].slice().reverse())
+		const dataFetched = await AccountsAPIs.getTransactionHistory(userCtx.user_id)
+		setUsersStocks(dataFetched.data);
+		setIsLoading(false)
+	}, [])
 
 	return (
-		
 		<div className={classes.container}>
 			<h2 className={classes.title}>{title}</h2>
 			{isLoading && <div className={classes.loader}></div>}

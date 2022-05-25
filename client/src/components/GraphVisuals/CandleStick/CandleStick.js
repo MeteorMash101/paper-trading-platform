@@ -1,38 +1,14 @@
 import ReactDOM from 'react-dom';
 import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState, Fragment } from 'react';
-import axios from 'axios';
+import StockAPIs from '../../../APIs/StocksAPIs';
 
-export default function ApexChart({stockURL, onGraphMode}){
-
-  const [array, setArray] = useState([]);
+export default function ApexChart({symbol, onGraphMode}){
   const [series, setSeries] = useState([{data: []}]);
-
-    useEffect(() => {
-        const fetchStock = async () => {    
-            
-          const stockFromServer = await axios.get(stockURL,{ params : {
-            "start_date":"04/01/2017",
-            "version": "new"
-          }
-        })
-
-        stockFromServer.data.historical_data.map(item => {
-                //   console.log("item", item)
-                var sd = [item.date, item.open, item.high, item.low, item.close]
-                array.push(sd)
-
-            })
-
-            setSeries([{data: array}]);
-        
-        console.log("[DEBUG]: history stock received from db:", array)
-        // console.log("[DEBUG]: data stock received from db:", data)
-
-    }
-    fetchStock()
+    useEffect(async() => {
+      const array = await StockAPIs.getStockHistoricalForCandleStick(symbol);
+      setSeries([{data: array}]);
     }, []);
-
     const [options, setOptions] = useState({
         chart: {
           type: 'candlestick',

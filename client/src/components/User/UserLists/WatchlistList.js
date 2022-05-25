@@ -1,48 +1,25 @@
 import classes from './WatchlistList.module.css';
 import WatchlistItem from './WatchlistItem';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
+import AccountsAPIs from '../../../APIs/AccountsAPIs.js'
 
-const WatchlistList = ({title, usersStocksURL, paramsInfo}) => {
-	const dummyData = [ // temp
-		{
-			symbol: "AAPL",
-			price: "[currPrice]",
-			percent_change: "[0.00]",
-			change_direction: true
-		},
-		{
-			symbol: "TSLA",
-			price: "[currPrice]",
-			percent_change: "[0.00]",
-			change_direction: false
-		}
-	]
+const WatchlistList = () => {
 	const watchlistCtx = useContext(WatchlistContext);
 	const userCtx = useContext(UserContext);
-  	const [usersStocks, setUsersStocks] = useState(dummyData);
+  	const [usersStocks, setUsersStocks] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	// API CALL: Fetch user's owned stocklist
-	useEffect(() => {
+	useEffect(async() => {
 		setIsLoading(true)
-		const fetchData = async() => {
-			console.log("FETCHING watchlist W/ URL:", usersStocksURL)
-			const dataFetched = await axios.get(usersStocksURL, {
-				params: {
-					info: paramsInfo
-				}
-			})
-			setUsersStocks(dataFetched.data.stock_list);
-			setIsLoading(false)
-		}
-		fetchData()
+		const dataFetched = await AccountsAPIs.getUsersWatchlist(userCtx.user_id);
+		setUsersStocks(dataFetched.data.stock_list);
+		setIsLoading(false)
 	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
 	return (
 		<div className={classes.container}>
-
 			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
 			{!isLoading &&
 				usersStocks.map((stock) => (
@@ -56,7 +33,6 @@ const WatchlistList = ({title, usersStocksURL, paramsInfo}) => {
 					/>
 				))
 			}
-			
 		</div>
 	);
 };

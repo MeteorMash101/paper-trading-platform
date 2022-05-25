@@ -241,7 +241,7 @@ class AccountStocksOwned(APIView):
         elif data == "portfolio_value":             #returns just the portfolio value
             portfolio_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
             portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, portfolio_value)
-            serializer = PortfolioValueSerializer({"portfolio_value":portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
+            serializer = PortfolioValueSerializer({"portfolio_value": portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
             return Response(serializer.data)
         elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
             stockList = StockLists.ownedStocks(account.ownedStocks)

@@ -1,21 +1,18 @@
 import classes from './SearchBar.module.css';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import StockAPIs from '../../APIs/StocksAPIs';
 
-function NewSearchBar ({stockListURL}) {
-
+function NewSearchBar () {
   const [stockList, setStockList] = useState([]);
-  useEffect(() => {
-    const fetchStocks = async () => {
-      const stocksFromServer = await axios.get(stockListURL)
-      console.log("[DEBUG]: stocks received from db:", stocksFromServer.data)
-      setStockList(stocksFromServer.data)
-    }
-    fetchStocks()
-  }, []) 
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const ref = React.useRef()
+
+  useEffect(async() => {
+      const dataFetched = await StockAPIs.getSearchableStocks
+      setStockList(dataFetched.data)
+  }, []) 
+
+
   useEffect(() => {
     const checkIfClickedOutside = e => {
         // If the menu is open and the clicked target is not within the menu,
@@ -57,9 +54,7 @@ function NewSearchBar ({stockListURL}) {
   };
 
   return (
-
     <div className={classes.container} ref={ref} onClick={() => setIsMenuOpen(oldState => !oldState)}>
-
       <input
         className={classes.searchInput}
         // type="search"
@@ -67,7 +62,6 @@ function NewSearchBar ({stockListURL}) {
         value={wordEntered}
         onChange={handleFilter}
       />
-
       {filteredData.length != 0 && (
         <div className={classes.dataResult}>
           {filteredData.slice(0, 30).map((value, key) => {

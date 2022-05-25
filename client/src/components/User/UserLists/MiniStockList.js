@@ -5,8 +5,9 @@ import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
+import AccountsAPIs from '../../../APIs/AccountsAPIs';
 
-const MiniStockList = ({usersStocksURL, paramsInfo}) => {
+const MiniStockList = () => {
 	const dummyData = [ // temp
 		{
 			symbol: "AAPL",
@@ -28,19 +29,11 @@ const MiniStockList = ({usersStocksURL, paramsInfo}) => {
   	const [usersStocks, setUsersStocks] = useState(dummyData);
 	const [isLoading, setIsLoading] = useState(false);
 	// API CALL: Fetch user's owned stocklist
-	useEffect(() => {
+	useEffect(async () => {
 		setIsLoading(true)
-		const fetchData = async() => {
-			console.log("FETCHING MINISTOCKLIST W/ URL:", usersStocksURL)
-			const dataFetched = await axios.get(usersStocksURL, {
-				params: {
-					info: paramsInfo
-				}
-			})
-			setUsersStocks(dataFetched.data.stock_list);
-			setIsLoading(false)
-		}
-		fetchData()
+		const dataFetched = await AccountsAPIs.getUsersStocksOwned(userCtx.user_id)
+		setUsersStocks(dataFetched.data.stock_list);
+		setIsLoading(false)
 	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
 	return (
 		<div className={classes.container}>

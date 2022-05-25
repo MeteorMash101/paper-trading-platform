@@ -6,23 +6,17 @@ import schc from "./SCHC.json";
 import vcit from "./VCIT.json";
 import portfolio from "./portfolio.json";
 import "./styles1.css";
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useState, useContext } from 'react';
+import AccountsAPIs from "../../../APIs/AccountsAPIs";
+import UserContext from "../../../store/user-context";
 
-export default function Graph1({stockURL}) {
-
+export default function Graph1() {
+  const userCtx = useContext(UserContext);
   const [stock, setStock] = useState("");
-
-  useEffect(() => {
-    const fetchStock = async () => {
-        const stockFromServer = await axios.get(stockURL)
-        // const jsonResponse = await stockFromServer.json();
-        console.log("[DEBUG]: pv received from db:", stockFromServer.data)
-        setStock(stockFromServer.data)
-    }
-    fetchStock()
-}, [])
+  useEffect(async() => {
+    const dataFetched = await AccountsAPIs.getPortfolioValueHistoricalData(userCtx.user_id)
+    setStock(dataFetched.data)
+  }, [])
   
   const portfolioData = {
     name: "Portfolio",

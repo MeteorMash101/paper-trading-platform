@@ -8,9 +8,7 @@ import { useState, useContext, useEffect } from 'react';
 and is just taking in the parameters and using them to build news components.
 */
 const NewsItem = ({title, image, summary, url, postTime}) => {
-
     const options = {month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric'};
-
     return ( 
         <a className={classes.container} href={url} target="_blank">
             <div className={classes.needed}>

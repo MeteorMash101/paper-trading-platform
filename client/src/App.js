@@ -11,6 +11,7 @@ import Login from './components/Pages/Login';
 import { useContext, useEffect } from 'react';
 import axios from 'axios';
 import {AnimatePresence} from 'framer-motion';
+import AccountsAPIs from './APIs/AccountsAPIs';
 
 const App = () => {
   const userCtx = useContext(UserContext);
@@ -49,13 +50,7 @@ const App = () => {
     // NOTE: after this run ends, then context is updated (so it is not immediate).
     // Below is fetching WL data.
     const fetchData = async() => {
-      const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`, {
-        params: {
-          info: "detailed_stocks"
-        }
-      })
-      let listOfTickers = dataFetched.data.stock_list.map((obj) => {return obj.symbol})
-      console.log("we are (on login), sending over to ctx: ", listOfTickers)
+      let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
       watchlistCtx.setWatchlistOnLogin(listOfTickers);
     }
     fetchData()
@@ -63,6 +58,7 @@ const App = () => {
 
   return (
     <div className="App">
+      {/* Page transition animation */}
       <AnimatePresence exitBeforeEnter initial={false}>
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<MainFeed/>} exact/>

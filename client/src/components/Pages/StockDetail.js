@@ -2,27 +2,25 @@ import { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import classes from './StockDetail.module.css';
-import axios from 'axios';
 import OrderWidget from '../User/UserUtils/OrderWidget';
 import Header from '../Header/Header';
 import Graph from '../GraphVisuals/Graph/Graph';
 import React, { Component } from "react";
 import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
-import Chart from '../Stock/StockStats/Chart';
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
 import HoverPrice from '../Stock/StockStats/HoverPrice';
-import { motion } from 'framer-motion';
 import QEChart from '../GraphVisuals/QEChart';
+import StockAPIs from '../../APIs/StocksAPIs';
+import { LIVE_FETCH, TIMER } from '../../globals';
+import MotionWrapper from './MotionWrapper';
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
-    const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!    const [stock, setStock] = useState("");
     const [stock, setStock] = useState("");
     const [livePrice, setLivePrice] = useState("");
     const [isMouseHovering, setIsMouseHovering] = useState(false);
     const { symbol } = useParams();
-    const MINUTE_MS = 5000; // 5 seconds
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
@@ -35,39 +33,31 @@ const StockDetail = () => {
         }
     }
     // Pull the relevant stock info. from DB. using ticker symbol
-    useEffect(() => {
-        const fetchStock = async () => {
-            const stockFromServer = await axios.get(`http://127.0.0.1:8000/stocks/${symbol}/`)
-            console.log("[DEBUG]: stock received from db:", stockFromServer.data)
-            setStock(stockFromServer.data)
-            setLivePrice(stockFromServer.data.price) // set price right away.
-        }
-        fetchStock()
+    useEffect(async() => {
+        const dataFetched = await StockAPIs.getStockDetails(symbol)
+        setStock(dataFetched.data)
+        setLivePrice(dataFetched.data.price) // set price right away.
     }, []) // this DB retreival should only execute the first time this App is loaded.
+    
     // live price fetching w/ timer.
     useEffect(() => {
         const interval = setInterval(() => {
-            const fetchStock = async () => {
-                const livePriceFromServer = await axios.get(`http://127.0.0.1:8000/stocks/getPrice/${symbol}/`)
-                console.log("CURRENT STOCK PRICE FETCHED:", livePriceFromServer.data)
-                if (livePrice != livePriceFromServer.data.live_price) {
+            const fetchStockPrice = async () => {
+                const dataFetched = await StockAPIs.getStockPrice(symbol)
+                if (livePrice != dataFetched.data.live_price) {
                     console.log("changing price!")
-                    setLivePrice(livePriceFromServer.data.live_price);
+                    setLivePrice(dataFetched.data.live_price);
                 }
             }
-            if (!TURN_OFF_LIVE_FETCH) {
-                fetchStock()
+            if (LIVE_FETCH) {
+                fetchStockPrice()
             }
-        }, MINUTE_MS);
+        }, TIMER);
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])
+
     return (
-        <motion.div 
-        initial= {{opacity:0, x:100}} 
-        animate = {{opacity: 1, x:0}}
-        exit = {{opacity: 0, x:-100}}
-        transition={{ duration: 0.7}}>
-        <Fragment>
+        <MotionWrapper>
             {!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
                 // Redirect to /login - User must be logged in to view ALL pages...
                 <Navigate to="/login"/>
@@ -87,10 +77,10 @@ const StockDetail = () => {
                         <div className={classes.leftSec}>
                             <div className={classes.graph}>
                                 {graphMode == "GRAPH" &&
-                                    <Graph stockURL={`http://127.0.0.1:8000/stocks/historical/${symbol}`} onHover={onMouseHoverHandler} onGraphMode={onGraphModeHandler}/>
+                                    <Graph symbol={symbol} onHover={onMouseHoverHandler} onGraphMode={onGraphModeHandler}/>
                                 }
                                 {graphMode == "CANDLESTICK" &&
-                                    <CandleStick stockURL = {`http://127.0.0.1:8000/stocks/hist/${symbol}`} onGraphMode={onGraphModeHandler}/>
+                                    <CandleStick symbol={symbol} onGraphMode={onGraphModeHandler}/>
                                 }
                             </div>
                             
@@ -122,15 +112,14 @@ const StockDetail = () => {
                             <OrderWidget livePrice={livePrice} stock={stock}/>
                             <div className={classes.qe}>
                                 <h3>Quarterly Earnings</h3>
-                                <QEChart stockURL = {`http://127.0.0.1:8000/stocks/quarterlyEarnings/${symbol}`}/>
+                                <QEChart symbol={symbol}/>
                             </div>
                         </div>
                     </div>        
                 </div>
                 </div>
             }
-        </Fragment>
-        </motion.div>
+        </MotionWrapper>
     );
 }
 

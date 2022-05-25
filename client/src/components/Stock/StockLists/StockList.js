@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import classes from './StockList.module.css';
 import StockItem from './StockItem';
-import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
+import StockAPIs from '../../../APIs/StocksAPIs';
+import AccountsAPIs from '../../../APIs/AccountsAPIs';
 
-const StockList = ({title, stockListURL}) => {
+const StockList = ({title}) => {
   	// Only the "first" time this Component is loaded, do we pull everything from DB.
   	// From then on, ReactJS maintains separate state that is "in-sync" with the DB.
   	const userCtx = useContext(UserContext);
@@ -14,30 +15,20 @@ const StockList = ({title, stockListURL}) => {
 	const [stockList, setStockList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 
-  	useEffect(() => {
-		const fetchData = async () => {
-			setIsLoading(true)
-			const dataFetched = await axios.get(stockListURL)
-			// console.log("[DEBUG]: stocks received from db:", stocksFromServer.data)
-			setStockList(dataFetched.data)
-			setIsLoading(false)
-		}
-		fetchData()
+  	useEffect(async() => {
+		setIsLoading(true)
+		const dataFetched = await StockAPIs.getStockList(title)
+		setStockList(dataFetched.data)
+		setIsLoading(false)
   	}, [userCtx.isLoggedIn]) // this DB retreival should only execute the first time this App is loaded.
 	
-	const addToWatchListHandler = async (stock) => {
-		console.log("add to WL clicked!", stock)
-		const res = await axios.put(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`, {
-			"symbol": stock
-		})
-		watchlistCtx.addStock(stock);
+	const addToWatchListHandler = async (stockSymbol) => {
+		await AccountsAPIs.addToWatchList(userCtx.user_id, stockSymbol)
+		watchlistCtx.addStock(stockSymbol);
 	}
-	const removeFromWatchListHandler = async (stock) => {
-		console.log("remove from WL clicked!", stock)
-		const res = await axios.put(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`, {
-			"symbol": stock
-		})
-		watchlistCtx.removeStock(stock);
+	const removeFromWatchListHandler = async (stockSymbol) => {
+		await AccountsAPIs.removeFromWatchList(userCtx.user_id, stockSymbol)
+		watchlistCtx.removeStock(stockSymbol);
 	}
 	return (
 		<div className={classes.container}>

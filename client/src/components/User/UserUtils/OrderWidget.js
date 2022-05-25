@@ -2,6 +2,7 @@ import classes from './OrderWidget.module.css';
 import UserContext from '../../../store/user-context';
 import { useState, useContext, useEffect, useRef } from 'react';
 import axios from 'axios';
+import AccountsAPIs from '../../../APIs/AccountsAPIs';
 import Alert from '../../Alerts/AlertMessage.js';
 import Confetti from '../../Alerts/ConfettiShower';
 
@@ -16,18 +17,11 @@ const OrderWidget = ({livePrice, stock}) => {
     const MS = 5000 // milliseconds
     const containerRef = useRef(null); // for confetti
 
-    useEffect(() => {
-		const fetchData = async() => {
-			const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
-				params: {
-					info: "num_of_ticker_stocks",
-                    symbol: stock.symbol.toLowerCase()
-				}
-			})
-            setSharesOwned(dataFetched.data.quantity_owned)
-		}
-		fetchData()
+    useEffect(async () => {
+        let sharesOwnedFromServer = await AccountsAPIs.getStocksSharesOwned(userCtx.user_id, stock.symbol)
+        setSharesOwned(sharesOwnedFromServer)
 	})
+
     useEffect(() => {
         if (displayMessage == "") { // means component loaded for first time...
             return;
@@ -80,13 +74,7 @@ const OrderWidget = ({livePrice, stock}) => {
         }
         setIsLoading(true)
         // post transaction log to db for this user
-        const dataFromServer = await axios.put(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`,
-            {
-                action: orderType.toLowerCase(),
-                stock: stock.symbol,
-                quantity: shares
-            }
-        )
+        let dataFromServer = await AccountsAPIs.postOrderTransaction(userCtx.user_id, orderType, stock, shares)
         console.log("SUCCESS:", dataFromServer.data)
         userCtx.updateBalance(estimatedCost);
         setIsLoading(false)

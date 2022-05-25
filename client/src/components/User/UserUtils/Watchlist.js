@@ -15,7 +15,7 @@ const Watchlist = () => {
           <h5 className={classes.change}> Daily Change</h5>
         </div>
         <div className={classes.watchlist}>
-          <WatchlistList usersStocksURL={`http://127.0.0.1:8000/accounts/${userCtx.user_id}/watchList/`} paramsInfo={"detailed_stocks"}/> 
+          <WatchlistList/> 
         </div> 
       </div>
     </div>

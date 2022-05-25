@@ -1,3 +1,4 @@
+// DEPRECIATED.
 import { useEffect, useState, useContext } from 'react';
 import { Fragment } from 'react';
 import classes from './UserTab.module.css';

@@ -68,9 +68,6 @@ export const TransHistory = () => {
           price: 222.36,
           value: 444.72,
         }
-
-
-      
       ];
 
       return (

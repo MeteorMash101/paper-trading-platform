@@ -5,62 +5,33 @@ import Legend from "./components/Legend";
 import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
-import axios from 'axios';
+import StockAPIs from "../../../APIs/StocksAPIs";
 
-export default function Graph({stockURL, onHover, onGraphMode}) {
+export default function Graph({ symbol, onHover, onGraphMode}) {
   const [stock, setStock] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect(async() => {
     setIsLoading(true)
-    const fetchStock = async () => {
-      const stockOneDayFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "1D"
-        }
-      });
-      const stockOneWeekFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "1W"
-        }
-      });
-      const stockOneMonthFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "1M"
-        }
-      });
-      const stockThreeMonthFromServer = await axios.get(stockURL, { 
-        params : {
-          "dateRange": "3M"
-        }
-      });
-      const stockSixMonthFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "6M"
-        }
-      });
-      const stockOneYearFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "1Y"
-        }
-      });
-      const stockFiveYearFromServer = await axios.get(stockURL, {
-        params : {
-          "dateRange": "5Y"
-        }
-      });
-      setStock({ 
-        oneDay: stockOneDayFromServer.data,
-        oneWeek: stockOneWeekFromServer.data,
-        oneMonth: stockOneMonthFromServer.data,
-        threeMonth: stockThreeMonthFromServer.data, 
-        sixMonth: stockSixMonthFromServer.data,
-        ytd: stockOneYearFromServer.data, 
-        ytd5: stockFiveYearFromServer.data
-      });
-      setIsLoading(false)
-    }
-  fetchStock()
+    const {
+      stockOneDayFromServer,
+      stockOneWeekFromServer,
+      stockOneMonthFromServer,
+      stockThreeMonthFromServer,
+      stockSixMonthFromServer,
+      stockOneYearFromServer,
+      stockFiveYearFromServer
+    } = await StockAPIs.getStockHistoricalByDateRanges(symbol)
+    setStock({ 
+      oneDay: stockOneDayFromServer.data,
+      oneWeek: stockOneWeekFromServer.data,
+      oneMonth: stockOneMonthFromServer.data,
+      threeMonth: stockThreeMonthFromServer.data, 
+      sixMonth: stockSixMonthFromServer.data,
+      ytd: stockOneYearFromServer.data, 
+      ytd5: stockFiveYearFromServer.data
+    });
+    setIsLoading(false)
   }, []);
 
   const oneDayData = {
@@ -149,12 +120,6 @@ export default function Graph({stockURL, onHover, onGraphMode}) {
       setShowShade(false)
     }
   }
-
-  // **DEBUGGING**:
-  // console.log("[GRAPH.JS]: selectedItems (date range items): ", selectedItems)
-  // console.log("[GRAPH.JS]: legendData: ", legendData)
-  console.log("[GRAPH.JS]: stock: ", stock);
-  console.log("[GRAPH.JS]: chartData ('data'): ", chartData)
 
   return (
     <Fragment>

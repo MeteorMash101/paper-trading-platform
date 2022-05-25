@@ -6,7 +6,6 @@ import SearchBar from './SearchBar';
 import tempLogo from './templogo.jpg';
 import { Link } from 'react-router-dom';
 import { Fragment, useContext } from 'react';
-import axios from 'axios';
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -33,7 +32,7 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className={classes.searchbar}>
-                    <SearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
+                    <SearchBar/>
                 </div>
                 <div className={classes.signin}>
                     {/* {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>} */}

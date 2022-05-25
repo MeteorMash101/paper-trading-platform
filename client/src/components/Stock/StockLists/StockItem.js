@@ -5,33 +5,29 @@ import { GrAddCircle } from "react-icons/gr";
 import { FcCheckmark } from "react-icons/fc";
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import StockAPIs from '../../../APIs/StocksAPIs';
+import { LIVE_FETCH, TIMER } from '../../../globals';
 
 const StockItem = ({colorStyle, symbol, company_name, price, percent_change, change_direction, in_watch_list, onAdd, onRemove}) => {
-  const TURN_OFF_LIVE_FETCH = true; // [DEBUG ONLY]: turn off live fetch during development, overload of requests!
-  // const test = process.env.PRODUCTION_MODE
-  // console.log("THIS", test, typeof(process.env.PRODUCTION_MODE))
+  // NOTE: turn off live fetch during development, overload of requests!
   const [livePrice, setLivePrice] = useState(price);
-  const MINUTE_MS = 5000; // 5 seconds
+  // live price fetching w/ timer.
   useEffect(() => {
-      const interval = setInterval(() => {
-          const fetchStock = async () => {
-              const livePriceFromServer = await axios.get(`http://127.0.0.1:8000/stocks/getPrice/${symbol}/`)
-              console.log("CURRENT STOCK PRICE FETCHED:", livePriceFromServer.data)
-              // For testing:
-              // 88
-              // Math.floor(Math.random() * max);
-              if (livePrice != livePriceFromServer.data.live_price) {
-                  console.log("changing price!")
-                  setLivePrice(livePriceFromServer.data.live_price);
-              }
-          }
-          if (!TURN_OFF_LIVE_FETCH) {
-            fetchStock()
-          }
-      }, MINUTE_MS);
-      return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    const interval = setInterval(() => {
+      const fetchStockPrice = async () => {
+        const dataFetched = await StockAPIs.getStockPrice(symbol)
+        if (livePrice != dataFetched.data.live_price) {
+          console.log("changing price!")
+          setLivePrice(dataFetched.data.live_price);
+        }
+      }
+      if (LIVE_FETCH) {
+        fetchStockPrice()
+      }
+    }, TIMER);
+    return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
   }, [])
+
   return (
     <div className={classes.wrapper}>
       <Link to={`/stock/${symbol}`} className={classes.stockLink}>

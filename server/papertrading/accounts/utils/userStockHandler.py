@@ -28,7 +28,8 @@ class UserStocks:
         totalSpent = 0
         for purchases in owned.values(): #calculate how much was spent on each share at time of purchase
             for purchase in purchases:
-                totalSpent += int(purchase["quantity"]) * float(purchase["price"])
+                print("HERE,",purchase)
+                totalSpent += int(purchase["quantity"]) * float(purchase["purchasePrice"])
         if totalSpent == 0:
             return 0
         percent_change = 100*(curVal - totalSpent) / totalSpent
