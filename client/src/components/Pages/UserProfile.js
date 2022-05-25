@@ -7,6 +7,7 @@ import Graph1 from '../GraphVisuals/PerformanceGraph/Graph1.js';
 import Header from '../Header/Header';
 import { Navigate } from 'react-router-dom';
 import MotionWrapper from './MotionWrapper';
+import TransHistory from '../User/UserStats/TransHistory';
 
 const UserProfile = () => {
     const userCtx = useContext(UserContext);
@@ -34,6 +35,7 @@ const UserProfile = () => {
                     </div>
                 </div>
             }
+            <TransHistory/>
         </MotionWrapper>
     );
 }

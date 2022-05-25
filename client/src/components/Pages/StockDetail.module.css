@@ -6,6 +6,13 @@
     align-content: center;
 }
 
+.miniContainer {
+    display: flex;
+    flex-direction: row;
+    /* border: 2px solid black; */
+    width: auto;
+}
+
 .animate {
     animation: fadeIn linear 1.4s;
     color: rgb(134, 133, 133);
@@ -45,15 +52,19 @@
     100% {opacity:1;}
 }
 
-.name {
+.nameSect {
     text-align: left;
     border-bottom: 1px solid  rgb(173, 173, 173);
     width: 100%;
 }
 
+.companyName {
+    margin-bottom: -5px;
+}
+
 .symbol{
-    margin-top: -15px;
-    margin-left: 7px;
+    color: rgb(80, 79, 79);
+    margin-right: .4rem;
 }
 
 .qe{

@@ -1,0 +1,36 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* border: 2px solid black; */
+    width: 20%;
+    height: auto;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    border: .5px solid rgb(0, 0, 0);
+    min-width: 14px;
+    min-height: 14px;
+    margin: 0 .2rem;
+    border-radius: 50%;
+}
+
+.msg {
+    font-size: larger;
+}
+
+#live {
+    background-color: rgb(233, 60, 60);
+    animation: blinker 1s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+
+#notLive {
+    background-color: rgb(72, 70, 70);
+}
+
+@keyframes blinker {  
+    from { opacity: 1; }
+    to { opacity: .5; }
+}

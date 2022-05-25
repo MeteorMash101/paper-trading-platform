@@ -5,6 +5,24 @@
     margin: 0% 4%;
     height: auto;
     border-bottom: 1px solid rgb(173, 173, 173);
+    animation-name: FadeIn;
+    animation-duration: 1.3s;
+    transition-timing-function: linear;
+}
+
+#fadeIn {
+    animation-name: FadeIn;
+    animation-duration: 1.3s;
+    transition-timing-function: linear;
+}
+
+@keyframes FadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
 }
 
 .stockLink {

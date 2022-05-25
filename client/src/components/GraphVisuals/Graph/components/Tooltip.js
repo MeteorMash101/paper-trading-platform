@@ -32,9 +32,9 @@ const Tooltip = ({
   );
 
   // Assign proper date time format:
-  const dateTimeFormat1D = (x) => { return d3.timeFormat("%H:%M %p")(xScale.invert(x))}
-  const dateTimeFormat1W = (x) => { return d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)) }
-  const dateTimeFormat1M = (x) => { return d3.timeFormat("%b %d, %H:%M %p")(xScale.invert(x)) }
+  const dateTimeFormat1D = (x) => { return d3.timeFormat("%I:%M %p")(xScale.invert(x))}
+  const dateTimeFormat1W = (x) => { return d3.timeFormat("%b %d, %I:%M %p")(xScale.invert(x)) }
+  const dateTimeFormat1M = (x) => { return d3.timeFormat("%b %d, %I:%M %p")(xScale.invert(x)) }
   const dateTimeFormat3M = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
   const dateTimeFormat6M = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
   const dateTimeFormat1Y = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }

@@ -15,7 +15,7 @@ const QEChart = ({symbol}) => {
     const [stock, setStock] = useState("");
 
     useEffect(async () => {
-      const dataFetched = await StockAPIs.getQuarterlyEarnings()
+      const dataFetched = await StockAPIs.getQuarterlyEarnings(symbol)
       setStock(dataFetched.data)
     }, [])
 

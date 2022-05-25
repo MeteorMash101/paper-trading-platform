@@ -1,4 +1,3 @@
-import { Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import classes from './StockDetail.module.css';
@@ -14,6 +13,7 @@ import QEChart from '../GraphVisuals/QEChart';
 import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
 import MotionWrapper from './MotionWrapper';
+import LiveIndicator from '../Alerts/LiveIndicator';
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
@@ -66,12 +66,16 @@ const StockDetail = () => {
                 <div className={classes.everything}>
                 <Header/>
                 <div className={classes.container}>
-                    <div className={classes.name}>
-                        <h1>{stock.company_name} 
+                    <div className={classes.nameSect}>
+                        <h1 className={classes.companyName}>
+                            {stock.company_name} 
                             {!isMouseHovering && <span className={classes.animate}>${livePrice}</span>}
                             {isMouseHovering && <HoverPrice/>}
                         </h1>
-                        <h3 className={classes.symbol}>{stock.symbol}</h3>
+                        <div className={classes.miniContainer}>
+                            <h3 className={classes.symbol}>{stock.symbol}</h3>
+                            {isMouseHovering && <LiveIndicator message={`Current Price: ${livePrice}`}/>}
+                        </div>
                     </div>
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
@@ -83,9 +87,7 @@ const StockDetail = () => {
                                     <CandleStick symbol={symbol} onGraphMode={onGraphModeHandler}/>
                                 }
                             </div>
-                            
                             <div className={classes.wrapper}>
-                                
                                 <div className={classes.stats1}>
                                     <div className={classes.wrapperHeader}>
                                         <h3> Key Statistics </h3>
@@ -106,14 +108,14 @@ const StockDetail = () => {
                                 </div>
 
                             </div>
-                            
-                        </div>
-                        <div className={classes.rightSec}>
-                            <OrderWidget livePrice={livePrice} stock={stock}/>
                             <div className={classes.qe}>
                                 <h3>Quarterly Earnings</h3>
                                 <QEChart symbol={symbol}/>
                             </div>
+                            
+                        </div>
+                        <div className={classes.rightSec}>
+                            <OrderWidget livePrice={livePrice} stock={stock}/>
                         </div>
                     </div>        
                 </div>

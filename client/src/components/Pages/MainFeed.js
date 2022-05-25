@@ -8,6 +8,7 @@ import NewsList from '../Stock/StockNews/NewsList';
 import WatchlistList from '../User/UserLists/WatchlistList';
 import { Navigate } from 'react-router-dom';
 import MotionWrapper from './MotionWrapper';
+import LiveIndicator from '../Alerts/LiveIndicator';
 
 const MainFeed = () => {
   const userCtx = useContext(UserContext);
@@ -21,6 +22,7 @@ const MainFeed = () => {
         <div className={classes.container}>
           <Header/>
           <div className={classes.margin}>
+            <LiveIndicator/>
             <div className={classes.listContainer}>
               <div className={classes.list}>
                   <StockList title={"Top Movers"}/>

@@ -3,12 +3,13 @@
 // Whenever the user state changes here, all users of this Provider will be re-evaluated.
 import { useReducer, useState } from 'react';
 import UserContext from './user-context';
+import { STARTING_BALANCE } from '../globals'
 
 const defaultUserState = { // this will actually be initialized when we first load the user from DB.
 	name: "",
 	user_id: "",
 	isLoggedIn: false,
-	balance: 5000.00, // EDIT: temp. val for testing
+	balance: STARTING_BALANCE, // EDIT: temp. val for testing
 	portfolioInfo: {
 		portfolio_value: "0.00",
 		percent_change: "%",
@@ -27,7 +28,6 @@ const userReducer = (state, action) => { // NOTE: we are guranteed by useReducer
 				balance: parseFloat((state.balance + action.amount).toFixed(2)) 
 			}
 		case SET_PORTFOLIO_INFO:
-			console.log(action.portfolioInfo)
 			return {
 				...state,
 				portfolioInfo: action.portfolioInfo // EDIT: temp, this is an obj
@@ -41,7 +41,6 @@ const userReducer = (state, action) => { // NOTE: we are guranteed by useReducer
 				balance: parseFloat(action.balance),
 			}
 		case SET_PORTFOLIO_INFO:
-			console.log("portfolioInfo obj:", action.portfolioInfo)
 			return {
 				...state,
 				portfolioInfo: action.portfolioInfo // EDIT: temp, this is an obj

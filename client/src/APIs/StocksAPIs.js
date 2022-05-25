@@ -5,7 +5,6 @@ const getStockList = async (listType) => {
     let dataFetched = null;
     if (listType == "Top Movers") {
         dataFetched = await axios.get(`${BASE_URL}/stocks/`)
-
     } else if (listType == "Popular Stocks") {
         dataFetched = await axios.get(`${BASE_URL}/stocks/popular`)
     }

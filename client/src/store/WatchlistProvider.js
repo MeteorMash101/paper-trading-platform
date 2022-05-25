@@ -9,7 +9,6 @@ const watchlistReducer = (state, action) => {
 	if (action.type === 'ADD') {
 		// EDIT: check for dups
 		let updatedWatchlist = new Set(state.watchlist).add(action.stock);
-		console.log("watchlist ctx changed:", state.watchlist, "to", updatedWatchlist)
 		return {
 			...state,
 			watchlist: updatedWatchlist
@@ -18,7 +17,6 @@ const watchlistReducer = (state, action) => {
 	if (action.type === 'REMOVE') {
 		let updatedWatchlist = new Set(state.watchlist);
 		updatedWatchlist.delete(action.stock);
-		console.log("watchlist ctx changed:", state.watchlist, "to", updatedWatchlist)
 		return {
 			...state,
 			watchlist: updatedWatchlist
@@ -29,7 +27,6 @@ const watchlistReducer = (state, action) => {
 		for (let i = 0; i < action.stocks.length; i++) {
 			updatedWatchlist.add(action.stocks[i]);
 		}
-		console.log("watchlist ctx changed:", state.watchlist, "to", updatedWatchlist)
 		return {
 			...state,
 			watchlist: updatedWatchlist

@@ -60,7 +60,6 @@ const getPortfolioValueData = async (user_id) => {
 			info: "portfolio_value"
 		}    
 	})
-	console.log("HERE", dataFetched)
 	return dataFetched
 }
 
@@ -71,6 +70,7 @@ const getPortfolioValueHistoricalData = async (user_id) => {
 
 const getTransactionHistory = async (user_id) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/transactionHistory/`)
+	console.log("HERE", dataFetched)
 	return dataFetched;
 }
 

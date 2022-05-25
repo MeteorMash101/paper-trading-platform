@@ -6,7 +6,6 @@ import UserProfile from './components/Pages/UserProfile';
 import UserContext from './store/user-context';
 import WatchlistContext from './store/watchlist-context';
 import MyStocks from './components/Pages/MyStocks';
-import History from './components/Pages/TransHistory';
 import Login from './components/Pages/Login';
 import { useContext, useEffect } from 'react';
 import axios from 'axios';
@@ -17,7 +16,6 @@ const App = () => {
   const userCtx = useContext(UserContext);
   const watchlistCtx = useContext(WatchlistContext);
   const location = useLocation();
-
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...")
@@ -65,7 +63,6 @@ const App = () => {
           <Route path="/stock/:symbol" element={<StockDetail/>}/>
           <Route path="/user/" element={<UserProfile/>}/>
           <Route path = "/mystocks/" element = {<MyStocks/>}/>
-          <Route path = "/history/" element={<History/>}/>
           <Route path = "/login/" element={<Login/>}/>
         </Routes>
       </AnimatePresence>

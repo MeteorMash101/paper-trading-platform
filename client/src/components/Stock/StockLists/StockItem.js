@@ -29,7 +29,7 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
   }, [])
 
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} id={classes.fadeIn}>
       <Link to={`/stock/${symbol}`} className={classes.stockLink}>
         <div className={classes.container}>
           <h4 className={classes.symbol} id={colorStyle}>{symbol}</h4>

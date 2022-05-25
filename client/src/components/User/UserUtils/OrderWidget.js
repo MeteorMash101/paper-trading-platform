@@ -66,7 +66,6 @@ const OrderWidget = ({livePrice, stock}) => {
             marketPrice: marketPrice, // aka. price brought bought/sold at
             estimatedCost: estimatedCost,
         }
-        console.log("STOCK ORDER obj. data MADE: ", stockOrder)
         // update user's buying power. (used to be called "Balance")
         // if BUY order, we need to subtract from curr. balance...so flip sign.
         if (orderType == "BUY") {
@@ -75,7 +74,6 @@ const OrderWidget = ({livePrice, stock}) => {
         setIsLoading(true)
         // post transaction log to db for this user
         let dataFromServer = await AccountsAPIs.postOrderTransaction(userCtx.user_id, orderType, stock, shares)
-        console.log("SUCCESS:", dataFromServer.data)
         userCtx.updateBalance(estimatedCost);
         setIsLoading(false)
         setDisplayMessage("SUCCESS")
