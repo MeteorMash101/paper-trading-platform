@@ -1,0 +1,44 @@
+.container{
+    margin: 6% 10%;
+    width: 80%;
+}
+
+.content{
+    border-radius: 1.6rem;
+    height:65vh;
+    overflow: scroll;
+}
+
+.header{
+    width: 90%;
+    margin: 0% 4%;
+    border: 1px solid grey;
+    border-radius: 1.6rem;
+    background-color: rgb(193, 240, 248);
+}
+
+.headings{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+}
+
+.names{
+    width: 16%;
+}
+
+.price{
+    width: 16%;
+}
+
+.stock{
+    width: 12%;
+}
+
+@media (max-width:600px) {
+    .price{
+        width: 0%;
+        font-size: 0px;
+    }
+}

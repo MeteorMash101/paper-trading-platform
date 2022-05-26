@@ -2,7 +2,7 @@ import React from "react";
 import { FcCandleSticks } from "react-icons/fc"
 import { VscGraphLine } from "react-icons/vsc"
 
-const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGridlines, onChangeShowAxis, onChangeShowShade, onGraphMode }) => {
+const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGridlines, onChangeShowAxis, onChangeShowShade, onChangeShowColorCode, onGraphMode }) => {
   return (
     <div className="legendContainer">
       <div className="dateRangeOptsContainer">
@@ -48,10 +48,10 @@ const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGrid
           </label>
         </div>
         <div class="switchElement">
-          <label class="switchLabel">Color Code</label>
+          <label class="switchLabel">Trend Col</label>
           <label class="switch">
-            <input type="checkbox" checked/>
-            <span class="slider round" id="NOTAVAIL"></span>
+            <input type="checkbox" onChange={onChangeShowColorCode}/>
+            <span class="slider round"></span>
           </label>
         </div>
       </div>

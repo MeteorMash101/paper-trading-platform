@@ -11,6 +11,8 @@ import { useContext, useEffect } from 'react';
 import axios from 'axios';
 import {AnimatePresence} from 'framer-motion';
 import AccountsAPIs from './APIs/AccountsAPIs';
+import History from './components/Pages/TransHistory';
+
 
 const App = () => {
   const userCtx = useContext(UserContext);
@@ -69,6 +71,7 @@ const App = () => {
           <Route path="/stock/:symbol" element={<StockDetail/>}/>
           <Route path="/user/" element={<UserProfile/>}/>
           <Route path = "/mystocks/" element = {<MyStocks/>}/>
+          <Route path = "/history/" element={<History/>}/>
           <Route path = "/login/" element={<Login/>}/>
         </Routes>
       </AnimatePresence>

@@ -5,7 +5,7 @@ Here we will define our global variables that are being used system-wide.
 const BASE_URL = "http://127.0.0.1:8000"; // for making reqs to server
 const LIVE_FETCH = false; // PRODUCTION ONLY! (TRUE == ON)
 const TIMER = 5000; // PRODUCTION ONLY! (1000 = 1 seconds)
-const STARTING_BALANCE = 5000; // used for calculations (set in backend, change here if necessary.)
+const STARTING_BALANCE = 100000; // used for calculations (set in backend, change here if necessary.)
 const findOutIfMarketOpen = () => {
     var currentDay = new Date();
     var hours = currentDay.getHours();
@@ -17,6 +17,13 @@ const findOutIfMarketOpen = () => {
         && (hours <= 13);
 }
 const IS_MARKET_OPEN = findOutIfMarketOpen();
+const COLOR_CODES = {
+    NEUTRAL: "#99d1e7",
+    POSITIVE: "#51e197",
+    NEGATIVE: "#e25e52"
+}
+
+// EDIT: temp?
 // const IS_MARKET_OPEN = true; // for fun
 // const PRODUCTION_MODE = false; // currently unused
 
@@ -25,3 +32,4 @@ export { LIVE_FETCH }
 export { TIMER } 
 export { STARTING_BALANCE } 
 export { IS_MARKET_OPEN }
+export { COLOR_CODES }

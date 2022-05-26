@@ -28,7 +28,6 @@ class UserStocks:
         totalSpent = 0
         for purchases in owned.values(): #calculate how much was spent on each share at time of purchase
             for purchase in purchases:
-                print("HERE,",purchase)
                 totalSpent += int(purchase["quantity"]) * float(purchase["price"])
         if totalSpent == 0:
             return 0

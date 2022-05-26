@@ -6,6 +6,7 @@ import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import StockAPIs from "../../../APIs/StocksAPIs";
+import { COLOR_CODES } from '../../../globals'
 
 export default function Graph({ symbol, onHover, onGraphMode}) {
   const [stock, setStock] = useState("");
@@ -39,7 +40,7 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
     name: "1D",
     items: stock != "" ? 
       stock.oneDay['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))})) :
-      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+      portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) })),
   };
 
   const oneWeekData = {
@@ -89,6 +90,10 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
   const chartData = [
     ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedItems.includes(d.name))
   ];
+  
+  // Trend color: for showing color code.
+  const trendIsPositive = chartData[0].items[0].open < chartData[0].items[chartData[0].items.length - 1].open;
+  const trendColor = trendIsPositive ? COLOR_CODES.POSITIVE : COLOR_CODES.NEGATIVE;
 
   const onChangeDateRangeHandler = (name) => {
     setSelectedItems([name]);
@@ -97,6 +102,7 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
   const [showGridlines, setShowGridlines] = useState(false);
   const [showAxis, setShowAxis] = useState(false);
   const [showShade, setShowShade] = useState(true);
+  const [showColorCode, setShowColorCode] = useState(false);
 
   const onChangeShowGridlinesHandler = (e) => {
     if (e.target.checked) {
@@ -122,6 +128,14 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
     }
   }
 
+  const onChangeShowColorCode = (e) => {
+    if (e.target.checked) {
+      setShowColorCode(true)
+    } else {
+      setShowColorCode(false)
+    }
+  }
+
   return (
     <Fragment>
       {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
@@ -134,6 +148,8 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
               showGridlines={showGridlines} 
               showAxis={showAxis}
               showShade={showShade}
+              trendColor={trendColor}
+              showColorCode={showColorCode}
             />
           </div>
           <Legend
@@ -143,6 +159,7 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
             onChangeShowGridlines={onChangeShowGridlinesHandler}
             onChangeShowAxis={onChangeShowAxisHandler}
             onChangeShowShade={onChangeShowShadeHandler}
+            onChangeShowColorCode={onChangeShowColorCode}
             onGraphMode={onGraphMode}
           />
         </Fragment>

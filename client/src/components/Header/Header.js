@@ -6,6 +6,9 @@ import SearchBar from './SearchBar';
 import tempLogo from './templogo.jpg';
 import { Link } from 'react-router-dom';
 import { Fragment, useContext } from 'react';
+import {Tabs, Tab } from '@material-ui/core';
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
+
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -34,10 +37,15 @@ const Header = () => {
                 <div className={classes.searchbar}>
                     <SearchBar/>
                 </div>
-                <div className={classes.signin}>
-                    {/* {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>} */}
-                    {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+                <div className={classes.tabs}>
+                    <Tabs>
+                        <Tab component={Link} label="Profile" to="/user"/>
+                        <Tab component={Link} label="My Stocks" to="/mystocks"/>
+                        <Tab component={Link} label="History" to="/history"/>
+                        <Tab icon={<AccountCircleSharpIcon />} onClick={onLogoutHandler} aria-label="profile" />
+                    </Tabs>
                 </div>
+
             </div>
             {/* EDIT: HAVE THIS msg FADE (saying "welcome user")... */}
         </Fragment>
@@ -47,3 +55,8 @@ const Header = () => {
 export default Header; 
 
 
+// DEPRECATED
+{/* <div className={classes.signin}> */}
+    // {/* {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>} */}
+    // {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+// </div>

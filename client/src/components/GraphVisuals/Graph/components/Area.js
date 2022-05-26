@@ -2,8 +2,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as d3 from "d3";
+import { COLOR_CODES } from '../../../../globals'
 
-const Area = ({ xScale, yScale, color, data, disableAnimation, ...props }) => {
+const Area = ({ xScale, yScale, data, disableAnimation, trendColor, showColorCode, ...props }) => {
+  const color = showColorCode ? trendColor : COLOR_CODES.NEUTRAL
   const ref = React.useRef(null);
   React.useEffect(() => {
     if (disableAnimation) {
