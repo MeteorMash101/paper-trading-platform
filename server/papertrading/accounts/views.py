@@ -46,12 +46,9 @@ def exchange_token(request, backend):
     Requests must include the following field
     - `access_token`: The OAuth2 access token provided by the provider
     """
-    print("HEYOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-    #curl -X GET "https://www.googleapis.com/oauth2/v1/userinfo?alt=json" -H "Authorization: Bearer ya29.a0ARrdaM988BZFipwvIg2EJxaPK2KR4Q36FkIsVYqrDt9p2FU62aJVArR9k0bcxkX48Q_LnyseC00pT9pYjySGOhLgSuiGuT4qa-Y0-t4uct3plgPmtAM8LCnLUR4J67q-N55Gk5DRtkqsD7SLcuKUOGlGydea"
-    #request.data = {"access_token": "9EM7WPfruCSHLQFueB8Sbexq1DbyfQ"}
-    print(request.data)
-    #serializer = AuthSerializer(data={"access_token": "ya29.a0ARrdaM988BZFipwvIg2EJxaPK2KR4Q36FkIsVYqrDt9p2FU62aJVArR9k0bcxkX48Q_LnyseC00pT9pYjySGOhLgSuiGuT4qa-Y0-t4uct3plgPmtAM8LCnLUR4J67q-N55Gk5DRtkqsD7SLcuKUOGlGydea"})
-    serializer = AuthSerializer(data={"access_token": "1LEGKaVhBkT4c9VHvEiW1y6O37PEEn"})
+    token = request.query_params.get('token', None)
+    print("Token:", token)
+    serializer = AuthSerializer(data={"access_token": token})
     if serializer.is_valid(raise_exception=True):
         # set up non-field errors key
         # http://www.django-rest-framework.org/api-guide/exceptions/#exception-handling-in-rest-framework-views
@@ -61,55 +58,42 @@ def exchange_token(request, backend):
             nfe = 'non_field_errors'
 
         try:
-            print("WE HERE BOIS")
-            # this line, plus the psa decorator above, are all that's necessary to
-            # get and populate a user object for any properly enabled/configured backend
-            # which python-social-auth can handle.
             user = request.backend.do_auth(serializer.validated_data['access_token'])
-            print("USER:", user)
-            print(vars(user))
-            return Response({"user": user})
+            return {
+                    "result": {
+                        "token": "valid",
+                        "detail": "Succesfully retreived user"
+                    },
+                    "data": {
+                        "name": user.first_name + " " + user.last_name, 
+                        "email": user.email, "google_user_id": user.username
+                    }
+            }
         except HTTPError as e:
             # An HTTPError bubbled up from the request to the social auth provider.
             # This happens, at least in Google's case, every time you send a malformed
             # or incorrect access key.
-            return Response(
-                {'errors': {
-                    'token': 'Invalid token',
+            return {
+                'result': {
+                    'token': 'invalid',
                     'detail': str(e),
-                }},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+                }
+            }
 
-        if user:
-            if user.is_active:
-                token, _ = Token.objects.get_or_create(user=user)
-                return Response({'token': token.key})
-            else:
-                # user is not active; at some point they deleted their account,
-                # or were banned by a superuser. They can't just log in with their
-                # normal credentials anymore, so they can't log in with social
-                # credentials either.
-                return Response(
-                    {'errors': {nfe: 'This user account is inactive'}},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
-        else:
-            # Unfortunately, PSA swallows any information the backend provider
-            # generated as to why specifically the authentication failed;
-            # this makes it tough to debug except by examining the server logs.
-            return Response(
-                {'errors': {nfe: "Authentication Failed"}},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-def get_object(goog_id, *args, **kwargs):
+def get_object(email, *args, **kwargs):
     #pk = kwargs.get('goog_id')
-    pk = goog_id
+    pk = email
     try:
         return Account.objects.get(pk=pk)
     except Account.DoesNotExist:
         return None
+
+def getDataFromToken(request):
+    data = exchange_token(request, "google-oauth2")
+    if data["result"]["token"] == "invalid":
+        return (False, Response(None, status=status.HTTP_401_UNAUTHORIZED))
+    return (True, data["data"])
+
 
 class AccountList(APIView):
     """
@@ -123,7 +107,11 @@ class AccountList(APIView):
 class AccountReset(APIView):
 
     def get(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         account.start_date = datetime.today().strftime("%Y-%m-%d")
         account.portfolio_value_history = {"data": {}}
         account.transaction_history = {"history": []}
@@ -146,15 +134,18 @@ class AccountDetail(APIView):
         # tried: User.objects.get(email=request.data['email']), request.data['email'].split('@')[0]
         # request.data['user'] = ?
         # print("UPDATED REQ. DATA", request.data)
-        serializer = AccountSerializer(data=request.data)
+        (valid, data) = getDataFromToken(request)
+        if not valid:
+            return data
+        serializer = AccountSerializer(data=data)
         if serializer.is_valid():
             serializer.save() # saves to DB
-            self.__initializeUser(request.data["google_user_id"])
+            self.__initializeUser(data["email"])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def __initializeUser(self, google_id):
-        user = get_object(google_id)
+    def __initializeUser(self, email):
+        user = get_object(email)
         user.watchList = {"stocks": []}
         user.transaction_history = {"history": []}
         user.portfolio_value_history = {"data": {}}
@@ -162,11 +153,12 @@ class AccountDetail(APIView):
         user.save()
 
     def get(self, request, goog_id):
-        #print(request)
-        #print("\n\n")
-        #exchange_token(request, "google-oauth2")
-        #print("OK"*100)
-        accountObj = get_object(goog_id)
+
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        accountObj = get_object(data["email"])
         if accountObj != None: # account exists
             serializer = AccountSerializer(accountObj)
             PortfolioValue.load(accountObj)
@@ -175,7 +167,11 @@ class AccountDetail(APIView):
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         serializer = AccountSerializer(account, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -183,7 +179,11 @@ class AccountDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         account.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -205,7 +205,11 @@ class AccountDetail(APIView):
 class AccountTransactionHistory(APIView):
 
     def get(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         history = account.transaction_history["history"][::-1]
         serializer = TransactionHistorySerializer({"transaction_history":history})
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -225,7 +229,11 @@ class AccountStocksOwned(APIView):
     curl -d '{"info":"num_of_ticker_stocks", "symbol": "tsla"}' -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
     '''
     def get(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         if account == None:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
@@ -266,7 +274,11 @@ class AccountStocksOwned(APIView):
     ----This may need to include updating the balance
     '''
     def put(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+        
+        account = get_object(data["email"])
         if account == None:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
 
@@ -286,8 +298,13 @@ class AccountStocksOwned(APIView):
 
 class AccountWatchList(APIView):
     def get(self, request, goog_id):
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         data = request.query_params.get('info', None)
-        account = get_object(goog_id)
+        
         if account == None:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
         
@@ -310,7 +327,13 @@ class AccountWatchList(APIView):
     #not in the list it is added. So if there is say a start symbol next to stocks,
     #clicking it will add it, but clicking it again will remove it.
     def put(self, request, goog_id):
-        account = get_object(goog_id)
+        
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+        
+        account = get_object(data["email"])
+        print("WE HERE NOW")
         if account == None:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
         symbol = request.data["symbol"]
@@ -335,7 +358,11 @@ class AccountWatchList(APIView):
 class AccountStockIndustries(APIView):
 
     def get(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         if account != None:
             symbols = list(account.ownedStocks.keys())
             industries = si.get_industries(symbols)
@@ -357,7 +384,11 @@ class AccountStockIndustries(APIView):
 class AccountHistoricPV(APIView):
     
     def get(self, request, goog_id):
-        account = get_object(goog_id)
+        (valid, data) =  getDataFromToken(request)
+        if not valid:
+            return data
+
+        account = get_object(data["email"])
         
         if account != None:
             balanceHistory = Balance.buildBuyingPowerHistory(account)

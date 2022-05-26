@@ -6,7 +6,8 @@ import {BASE_URL} from "../globals";
 const getWatchListSymbols = async (user_id) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/watchList/`, {
 		params: {
-			info: "detailed_stocks"
+			info: "detailed_stocks",
+			token: localStorage.getItem("access_token")
 		}
 	})
 	let listOfTickers = dataFetched.data.stock_list.map((obj) => {return obj.symbol})
@@ -17,18 +18,21 @@ const getStocksSharesOwned = async (user_id, stockSymbol) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 		params: {
 			info: "num_of_ticker_stocks",
-			symbol: stockSymbol.toLowerCase()
+			symbol: stockSymbol.toLowerCase(),
+			token: localStorage.getItem("access_token")
 		}
 	})
 	return dataFetched.data.quantity_owned
 }
 
 const postOrderTransaction = async (user_id, orderType, stock, shares) => {
-	const dataFromServer = await axios.put(`${BASE_URL}/accounts/${user_id}/getStocks/`,
-		{
+	const dataFromServer = await axios.put(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 			action: orderType.toLowerCase(),
 			stock: stock.symbol,
-			quantity: shares
+			quantity: shares}, {
+			params: {
+				token: localStorage.getItem("access_token")
+			}
 		}
 	)
 	return dataFromServer
@@ -38,7 +42,8 @@ const postOrderTransaction = async (user_id, orderType, stock, shares) => {
 const getUsersStocksOwned = async (user_id) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 		params: {
-			info: "stock_list_display"
+			info: "stock_list_display",
+			token: localStorage.getItem("access_token")
 		}
 	})
 	return dataFetched
@@ -48,7 +53,8 @@ const getUsersStocksOwned = async (user_id) => {
 const getUsersWatchlist = async (user_id) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/watchList/`, {
 		params: {
-			info: "detailed_stocks"
+			info: "detailed_stocks",
+			token: localStorage.getItem("access_token")
 		}
 	})
 	return dataFetched
@@ -57,32 +63,47 @@ const getUsersWatchlist = async (user_id) => {
 const getPortfolioValueData = async (user_id) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 		params: {
-			info: "portfolio_value"
+			info: "portfolio_value",
+			token: localStorage.getItem("access_token")
 		}    
 	})
 	return dataFetched
 }
 
 const getPortfolioValueHistoricalData = async (user_id) => {
-	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/historicPV/`)
+	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/historicPV/`, {
+		params: {
+			token: localStorage.getItem("access_token")
+		}
+	})
 	return dataFetched;
 }
 
 const getTransactionHistory = async (user_id) => {
-	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/transactionHistory/`)
+	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/transactionHistory/`, {
+		params: {
+			token: localStorage.getItem("access_token")
+		}
+	})
 	console.log("HERE", dataFetched)
 	return dataFetched;
 }
 
 const addToWatchList = async (user_id, stockSymbol) => {
 	await axios.put(`${BASE_URL}/accounts/${user_id}/watchList/`, {
-		"symbol": stockSymbol
+		"symbol": stockSymbol}, {
+		params: {
+			token: localStorage.getItem("access_token")
+		}
 	})
 }
 
 const removeFromWatchList = async (user_id, stockSymbol) => {
 	await axios.put(`${BASE_URL}/accounts/${user_id}/watchList/`, {
-		"symbol": stockSymbol
+		"symbol": stockSymbol}, {
+		params: {
+			token: localStorage.getItem("access_token")
+		}
 	})
 }
 

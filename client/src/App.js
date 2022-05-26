@@ -18,7 +18,9 @@ const App = () => {
   const location = useLocation();
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
-    console.log("[APP.JS]: Checking if user already logged in...")
+    console.log("[APP.JS]: Checking if user already logged in...", localStorage.getItem("user_id"))
+    console.log(localStorage.getItem("isLoggedIn"))
+    console.log(localStorage)
     if (localStorage.getItem("user_id") == null) {
       return
     }
@@ -31,13 +33,17 @@ const App = () => {
     // Balance & stocklist attributes are unique to each user, fetch those from db.
     let accountFromServer;
     try {
-        accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`)
+        accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`, {
+          params: {
+            token: localStorage.getItem("access_token"),
+          }
+        })
     } catch (err) {
         // console.log("ERROR: ", err)
-        accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, {
-          name: userInfo.name,
-          email: userInfo.email,
-          google_user_id: userInfo.user_id,
+        accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
+          params: {
+            token: localStorage.getItem("access_token"),
+          }
           // default balance, pv, etc.
         });
     }
