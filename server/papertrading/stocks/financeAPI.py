@@ -49,10 +49,6 @@ class Stock_info:
         data["percent_change"] = 100*data["dollar_change"]/data.open.shift(1)
         data.at[0, "dollar_change"] = 0
         data.at[0, "percent_change"] = 0
-
-        #Convert military time to non-military time
-        #data["time"] = data["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
-
         #convert to output
         jsonData = {
             "historical_data": data.to_dict("records")
@@ -231,6 +227,7 @@ class Stock_info:
         result = result.drop(columns=["Change", "Avg Vol (3 month)", "Market Cap", "PE Ratio (TTM)"])
         result.columns = ["symbol", "company_name", "price", "percent_change", "volume"]
         result.sort_values("volume", ascending=False, inplace=True)
+        result.drop(result.tail(90).index, inplace = True)
         result["change_direction"] = result["percent_change"] > 0
         result["volume"] = result["volume"].astype('int32')
         return result.to_dict("records")
