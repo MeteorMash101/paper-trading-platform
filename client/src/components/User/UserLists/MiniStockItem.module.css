@@ -49,6 +49,17 @@
     }
 }
 
+/* .checkbox{
+    width: 30%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 2px;
+    background-color: rgb(193, 240, 248);
+} */
+
 .symbol {
     font-weight: bold;
     width: 15%;

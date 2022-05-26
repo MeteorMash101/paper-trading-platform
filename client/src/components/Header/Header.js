@@ -7,6 +7,9 @@ import tempLogo from './templogo.jpg';
 import { Link } from 'react-router-dom';
 import { Fragment, useContext } from 'react';
 import axios from 'axios';
+import {Tabs, Tab, AppBar} from '@material-ui/core';
+import { CgProfile } from "react-icons/cg";
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 
 const Header = () => {
     const userCtx = useContext(UserContext);
@@ -35,9 +38,23 @@ const Header = () => {
                 <div className={classes.searchbar}>
                     <SearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
                 </div>
-                <div className={classes.signin}>
+                {/* <div className={classes.signin}> */}
                     {/* {!userCtx.isLoggedIn && <GoogleSocialAuth onLogin={onLoginHandler}/>} */}
-                    {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+                    {/* {userCtx.isLoggedIn && <UserTab onLogout={onLogoutHandler}/>}
+                </div> */}
+
+                <div className={classes.tabs}>
+                    <Tabs>
+                        <Tab component={Link} label="Profile" to="/user"/>
+                        <Tab component={Link} label="My Stocks" to="/mystocks"/>
+                        <Tab component={Link} label="History" to="/history"/>
+                        <Tab icon={<AccountCircleSharpIcon />} onClick={onLogoutHandler} aria-label="profile" />
+                        {/* <Tab>
+                           
+                        onClick={onLogoutHandler} label="logout"
+                        </Tab> */}
+                        
+                    </Tabs>
                 </div>
             </div>
             {/* EDIT: HAVE THIS msg FADE (saying "welcome user")... */}

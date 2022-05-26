@@ -53,7 +53,7 @@ class Stock_info:
         data.reset_index(level=0, inplace=True)
         data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
         data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
-        data = data.drop(columns = ["ticker", "index"])
+        data = data.drop(columns = ["ticker", "index","adjclose","close","high", "low","time"])
         jsonData = {
             "historical_data": data.to_dict("records")
         }

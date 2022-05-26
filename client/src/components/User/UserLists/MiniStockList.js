@@ -49,6 +49,12 @@ const MiniStockList = ({usersStocksURL, paramsInfo}) => {
 				usersStocks.map((stock) => (
 					<MiniStockItem
 						key={stock.id} // required for React warning...
+						// {...<button type = "checkbox"/>}
+						{...<input
+						type="checkbox"
+						value = "check"
+						name = "check"
+                  		/>}
 						symbol={stock.symbol}
 						shares={stock.shares}
 						price={stock.price}
