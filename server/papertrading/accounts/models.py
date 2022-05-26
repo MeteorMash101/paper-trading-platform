@@ -10,8 +10,8 @@ class Account(models.Model):
     # EDIT: need to find unique field in User to connect with this model instance...
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True) # ref. to original User auth info.
     name = models.CharField(max_length=50, null=True)
-    email = models.CharField(max_length=50, unique=True, null=True) # EDIT: add unique later
-    google_user_id = models.CharField(max_length=50, unique=True, primary_key=True) # EDIT: just google ID for now...
+    email = models.CharField(max_length=50, unique=True, primary_key=True) # EDIT: add unique later
+    google_user_id = models.CharField(max_length=50, unique=False, default = "heyo") # EDIT: just google ID for now...
     MAX_DIGITS = 1000 # EDIT: temp?
     # balance == 'buying power'
     balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=5000.00)
