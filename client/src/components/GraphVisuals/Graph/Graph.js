@@ -34,6 +34,7 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
     setIsLoading(false)
   }, []);
 
+  // EDIT: possibly add trend-color here for each range? 
   const oneDayData = {
     name: "1D",
     items: stock != "" ? 

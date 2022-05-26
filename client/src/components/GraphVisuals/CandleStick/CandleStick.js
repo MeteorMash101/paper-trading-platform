@@ -33,7 +33,7 @@ export default function ApexChart({symbol, onGraphMode}){
           <div id="chart">
             <ReactApexChart options={options} series={series} type="candlestick" height={350} />
           </div>
-          <button class="graphSwitch" name="CANDLESTICK" onClick={onGraphMode}>Graph Mode</button>
+          <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}>Graph Mode</button>
         </Fragment>
 
       );

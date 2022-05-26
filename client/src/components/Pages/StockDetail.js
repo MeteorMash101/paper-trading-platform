@@ -27,9 +27,9 @@ const StockDetail = () => {
     const [graphMode, setGraphMode] = useState("GRAPH");
     const onGraphModeHandler = (e) => {
         if (e.target.name == "GRAPH") {
-            setGraphMode("CANDLESTICK")
-        } else { // we were just in candlestick mode
             setGraphMode("GRAPH")
+        } else { // we were just in candlestick mode
+            setGraphMode("CANDLESTICK")
         }
     }
     // Pull the relevant stock info. from DB. using ticker symbol
@@ -74,7 +74,7 @@ const StockDetail = () => {
                         </h1>
                         <div className={classes.miniContainer}>
                             <h3 className={classes.symbol}>{stock.symbol}</h3>
-                            {isMouseHovering && <LiveIndicator message={`Current Price: ${livePrice}`}/>}
+                            {isMouseHovering && <div className={classes.customWrapper}><LiveIndicator message={`Current Price: ${livePrice}`}/></div>}
                         </div>
                     </div>
                     <div className={classes.wrapper1}>

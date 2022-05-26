@@ -17,8 +17,8 @@ const findOutIfMarketOpen = () => {
         && (hours <= 13);
 }
 const IS_MARKET_OPEN = findOutIfMarketOpen();
+// const IS_MARKET_OPEN = true; // for fun
 // const PRODUCTION_MODE = false; // currently unused
-
 
 export { BASE_URL } 
 export { LIVE_FETCH } 
