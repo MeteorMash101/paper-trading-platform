@@ -8,7 +8,7 @@ function NewSearchBar () {
   const ref = React.useRef()
 
   useEffect(async() => {
-      const dataFetched = await StockAPIs.getSearchableStocks
+      const dataFetched = await StockAPIs.getSearchableStocks()
       setStockList(dataFetched.data)
   }, []) 
 
