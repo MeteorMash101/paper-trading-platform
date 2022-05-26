@@ -12,7 +12,7 @@ import HoverPrice from '../Stock/StockStats/HoverPrice';
 import QEChart from '../GraphVisuals/QEChart';
 import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
 
 const StockDetail = () => {

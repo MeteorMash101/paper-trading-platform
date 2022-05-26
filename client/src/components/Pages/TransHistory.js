@@ -5,7 +5,7 @@ import HistoryList from '../User/UserLists/HistoryList';
 import { Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import UserContext from '../../store/user-context';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 
 const History = () => {
   const userCtx = useContext(UserContext);

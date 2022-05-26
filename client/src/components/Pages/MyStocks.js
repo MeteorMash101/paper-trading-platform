@@ -1,13 +1,11 @@
 import React from 'react'
-import Graph from '../GraphVisuals/Graph/Graph';
 import classes from './MyStocks.module.css';
 import Header from '../Header/Header';
 import Tabs from '../User/UserUtils/MyStockTabs';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
 import { useContext } from 'react';
-import { motion } from 'framer-motion';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 
 const MyStocks = () => {
   const userCtx = useContext(UserContext);

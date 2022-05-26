@@ -7,7 +7,7 @@ import Header from '../Header/Header';
 import NewsList from '../Stock/StockNews/NewsList';
 import WatchlistList from '../User/UserLists/WatchlistList';
 import { Navigate } from 'react-router-dom';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
 
 const MainFeed = () => {

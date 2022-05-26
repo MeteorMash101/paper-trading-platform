@@ -6,7 +6,7 @@ import CardTop from '../User/UserStats/CardTop.js';
 import Graph1 from '../GraphVisuals/PerformanceGraph/Graph1.js';
 import Header from '../Header/Header';
 import { Navigate } from 'react-router-dom';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 
 const UserProfile = () => {
     const userCtx = useContext(UserContext);
