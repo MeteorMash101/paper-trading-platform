@@ -58,7 +58,9 @@ def exchange_token(request, backend):
             nfe = 'non_field_errors'
 
         try:
+            print("AUTHENTICATING USER")
             user = request.backend.do_auth(serializer.validated_data['access_token'])
+            print("SUCCESS")
             return {
                     "result": {
                         "token": "valid",
@@ -70,6 +72,7 @@ def exchange_token(request, backend):
                     }
             }
         except HTTPError as e:
+            print("FAILED")
             # An HTTPError bubbled up from the request to the social auth provider.
             # This happens, at least in Google's case, every time you send a malformed
             # or incorrect access key.

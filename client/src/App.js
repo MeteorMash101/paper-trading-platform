@@ -33,13 +33,14 @@ const App = () => {
     // Balance & stocklist attributes are unique to each user, fetch those from db.
     let accountFromServer;
     try {
+      console.log("TRYING TO GET ACCOUNT")
         accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`, {
           params: {
             token: localStorage.getItem("access_token"),
           }
         })
     } catch (err) {
-        // console.log("ERROR: ", err)
+        console.log("ERROR: ", err)
         accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
           params: {
             token: localStorage.getItem("access_token"),
@@ -47,6 +48,7 @@ const App = () => {
           // default balance, pv, etc.
         });
     }
+    console.log(accountFromServer.data)
     userInfo.balance = accountFromServer.data.balance
     // console.log("userInfo in APP.js, from persistent login: ", userInfo)
     // console.log("Setting context...")

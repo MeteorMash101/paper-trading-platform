@@ -29,7 +29,7 @@ const GoogleButton = ({
 
   const clickMe = async () => {
     const client = window.google.accounts.oauth2.initTokenClient({
-        client_id: '253194010149-790b66big5jfquckh50q7di5oetepknd.apps.googleusercontent.com',
+        client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
         scope: "https://www.googleapis.com/auth/userinfo.profile \
                 https://www.googleapis.com/auth/userinfo.email",
         callback: onCredentialResponse,

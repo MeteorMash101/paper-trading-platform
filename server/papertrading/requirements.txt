@@ -8,3 +8,4 @@ drf-social-oauth2==1.2.1
 yahoo_fin==0.8.9.1
 finnhub-python==2.4.13
 django-environ==0.8.1
+psycopg2-binary==2.9.3
