@@ -1,98 +1,98 @@
 .container {
-    /* border: 2px solid black; */
-    position: sticky;
-    top: 0;
-    background-color: rgb(229, 248, 252);
-    height: 60px;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 2;
+  /* border: 2px solid black; */
+  position: sticky;
+  top: 0;
+  background-color: rgb(229, 248, 252);
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2;
 }
 
 .searchbar{
-  width: 50%;
+width: 50%;
 }
 
 .tabs{
-  width: 40%;
+width: 40%;
 }
 
 @media (max-width:900px) {
-    .heading {
-    font-size: 0px !important;
-  }
-  
-  .tempLogo {
-    font-size: 20px !important;
-  }
-}
-
-.tab1:hover{
-  background-color: rgb(200, 200, 200, 0.5);
-  margin-bottom:10px;
-}
-
-.tab1:focus{
-  border-bottom: 5px solid grey;
-  margin-bottom:5px;
-}
-
-.tab2:hover{
-  background-color: rgb(200, 200, 200, 0.5);
-  margin-bottom:10px;
-}
-
-.tab2:focus{
-  border-bottom: 5px solid grey;
-  margin-bottom:5px;
-}
-
-.tab3:hover{
-  background-color: rgba(200, 200, 200, 0.5);
-  margin-bottom:10px;
-}
-
-.tab3:focus{
-  border-bottom: 5px solid grey;
-  margin-bottom:5px;
-}
-
-  .logoandtitle {
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 35px;
-    text-decoration: none;
-    color: rgb(90, 89, 89);  
-}
-
-.heading{
-  font-size: large;
+  .heading {
+  font-size: 0px !important;
 }
 
 .tempLogo {
-    max-width: 90%;
-    max-height: 90%;
-    margin-left: 3%;
-    background-color: transparent;
-    border-radius: 1.6rem;
+  font-size: 20px !important;
+}
+}
+
+.tab1:hover{
+background-color: rgb(200, 200, 200, 0.5);
+margin-bottom:10px;
+}
+
+.tab1:focus{
+border-bottom: 5px solid grey;
+margin-bottom:5px;
+}
+
+.tab2:hover{
+background-color: rgb(200, 200, 200, 0.5);
+margin-bottom:10px;
+}
+
+.tab2:focus{
+border-bottom: 5px solid grey;
+margin-bottom:5px;
+}
+
+.tab3:hover{
+background-color: rgba(200, 200, 200, 0.5);
+margin-bottom:10px;
+}
+
+.tab3:focus{
+border-bottom: 5px solid grey;
+margin-bottom:5px;
+}
+
+.logoandtitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 35px;
+  text-decoration: none;
+  color: rgb(90, 89, 89);  
+}
+
+.heading{
+font-size: large;
+}
+
+.tempLogo {
+  max-width: 90%;
+  max-height: 90%;
+  margin-left: 3%;
+  background-color: transparent;
+  border-radius: 1.6rem;
 }
 
 .searchbar{
-    width: 30%;
-    /* border: 1px solid black; */
+  width: 30%;
+  /* border: 1px solid black; */
 }
 
 .signin{
-    /* margin-right: 30px; */
-    height: fit-content;
-    width: max-content;
+  /* margin-right: 30px; */
+  height: fit-content;
+  width: max-content;
 }
 
 .titleSection{
-  /* border: 2px solid black; */
-  width: 20%;
+/* border: 2px solid black; */
+width: 20%;
 }
