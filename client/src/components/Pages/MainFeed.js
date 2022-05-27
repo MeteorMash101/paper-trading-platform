@@ -20,7 +20,10 @@ const MainFeed = () => {
       {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
         <div className={classes.container}>
           <div className={classes.margin}>
-            <LiveIndicator/>
+            <div className={classes.liveind}>
+              <LiveIndicator/>
+            </div>
+            
             <div className={classes.listContainer}>
               <div className={classes.list}>
                   <StockList title={"Top Movers"}/>
