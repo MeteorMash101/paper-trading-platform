@@ -12,7 +12,7 @@
     "@swup/js-plugin": "^1.0.4",
     "@swup/slide-theme": "^1.0.5",
     "@testing-library/jest-dom": "^5.16.1",
-    "@testing-library/react": "^12.1.2",
+    "@testing-library/react": "^12.1.5",
     "@testing-library/user-event": "^13.5.0",
     "apexcharts": "^3.35.0",
     "axios": "^0.25.0",

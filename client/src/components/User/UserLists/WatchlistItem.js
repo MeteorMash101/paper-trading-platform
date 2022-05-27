@@ -17,7 +17,7 @@ const WatchlistItem = ({symbol, price, percent_change, change_direction, in_watc
             change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
             }
             {
-            !change_direction && <p className={classes.negChange}>{parseInt(percent_change).toFixed(2)}%</p>
+            !change_direction && <p className={classes.negChange}>-{parseInt(percent_change).toFixed(2)}%</p>
             }
             {
             !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>

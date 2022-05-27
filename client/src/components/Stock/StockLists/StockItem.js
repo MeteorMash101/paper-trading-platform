@@ -32,17 +32,17 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
     <div className={classes.wrapper} id={classes.fadeIn}>
       <Link to={`/stock/${symbol}`} className={classes.stockLink}>
         <div className={classes.container}>
-          <h4 className={classes.symbol} id={colorStyle}>{symbol}</h4>
-          <p className={classes.company_name}>{company_name}</p>
-          <p className={classes.price}> $ {livePrice}</p>
+          <h4 className={classes.symbol} id={colorStyle} data-testid={"symbol"}>{symbol}</h4>
+          <p className={classes.company_name} data-testid={"company_name"}>{company_name}</p>
+          <p className={classes.price} data-testid={"price"}> $ {livePrice}</p>
           {
-            change_direction && <p className={classes.percent_change} id={classes.posChange}>+{percent_change}%</p>
+            change_direction && <p className={classes.percent_change} id={classes.posChange} data-testid={"percent_change"}>+{percent_change}%</p>
           }
           {
             change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
           }
           {
-            !change_direction && <p className={classes.percent_change} id={classes.negChange}>{percent_change}%</p>
+            !change_direction && <p className={classes.percent_change} id={classes.negChange} data-testid={"percent_change"}>-{percent_change}%</p>
           }
           {
             !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
