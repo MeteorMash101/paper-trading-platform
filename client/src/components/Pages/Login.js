@@ -42,7 +42,7 @@ const Login = () => {
             
 
         }
-        if(valid) {
+        if (valid) {
             localStorage.setItem("access_token", authData.access_token);
             localStorage.setItem("name", accountFromServer.data["name"]); 
             localStorage.setItem("email", accountFromServer.data["email"]); 
