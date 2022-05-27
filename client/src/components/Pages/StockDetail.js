@@ -104,8 +104,14 @@ const StockDetail = () => {
                                     <h4 className={classes.attribute}> 52W L: <span className={classes.value}>{stock.ft_week_low} </span> </h4>
                                     <h4 className={classes.attribute}> Yeild: <span className={classes.value}>{stock.dividend_yield} </span> </h4>
                                 </div>
-
+                                <div className={classes.about}>
+                                    About The Company
+                                </div>
+                                <div className={classes.summary}>
+                                    {stock.summary}
+                                </div>
                             </div>
+                            
                             <div className={classes.qe}>
                                 <h3>Quarterly Earnings</h3>
                                 <QEChart symbol={symbol}/>

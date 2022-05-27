@@ -40,7 +40,7 @@ const App = () => {
         })
     } catch (err) {
         console.log("ERROR: ", err)
-        if(err.response.status === 401) {
+        if(err.response !== undefined && err.response.status === 401) {
           localStorage.clear();
 	        userCtx.setDefault();
         } else {
@@ -55,8 +55,6 @@ const App = () => {
     }
 
     if(localStorage.getItem("email") !== null) {
-      //localStorage.setItem("access_token", "I bet bet bet")
-      console.log("ACCESS TOKEN:", localStorage.getItem("access_token"))
       userInfo.balance = accountFromServer.data.balance
       // console.log("userInfo in APP.js, from persistent login: ", userInfo)
       // console.log("Setting context...")

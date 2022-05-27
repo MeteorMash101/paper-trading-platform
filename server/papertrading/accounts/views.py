@@ -22,6 +22,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from requests.exceptions import HTTPError
 from social_django.utils import psa
+from decimal import Decimal
 
 #@api_view(http_method_names=['POST'])
 #@permission_classes([AllowAny])
@@ -47,7 +48,6 @@ def exchange_token(request, backend):
     - `access_token`: The OAuth2 access token provided by the provider
     """
     token = request.query_params.get('token', None)
-    print("Token:", token)
     serializer = AuthSerializer(data={"access_token": token})
     if serializer.is_valid(raise_exception=True):
         # set up non-field errors key
@@ -250,8 +250,10 @@ class AccountStocksOwned(APIView):
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
-            portfolio_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
-            portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, portfolio_value)
+            
+            stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
+            portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, stock_value)
+            portfolio_value = Decimal.from_float(stock_value) + account.balance
             serializer = PortfolioValueSerializer({"portfolio_value": portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
             return Response(serializer.data)
         elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
@@ -395,9 +397,8 @@ class AccountHistoricPV(APIView):
         
         if account != None:
             balanceHistory = Balance.buildBuyingPowerHistory(account)
-            performance = Balance.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
+            Balance.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
             data = self.convertToListOfDicts(account.portfolio_value_history["data"])
-            
             serializer = HistoricPortfolioValueSerializer({"pv":data})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -406,8 +407,16 @@ class AccountHistoricPV(APIView):
     #converts the portfolio value history into a format that frontend likes
     def convertToListOfDicts(self, data):
         returnList = []
-        for key, value in data.items():
-            returnList.append({"date": key, "value": value})
+        keys = sorted(data)
+        prevVal = data[keys[0]]
+        for key in sorted(data):
+            returnList.append({
+                "date": key, 
+                "value": data[key], 
+                "value_change": data[key] - prevVal, 
+                "percent_change": 100*(data[key] - prevVal)/prevVal
+            })
+            prevVal = data[key]
         return returnList
 
    
