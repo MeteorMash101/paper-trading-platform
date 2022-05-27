@@ -28,7 +28,11 @@ const UserProfile = () => {
 
     const onClickHandler = async (userInfo) => { // workaround to 'only being able to use hooks inside func. component' rule.
         let accountFromServer;
-        accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${'userCtx.user_id'}/reset/`)
+        accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${'userCtx.user_id'}/reset/`, {
+            params: {
+                token: localStorage.getItem("access_token")
+            }
+        })
         console.log("reset!", accountFromServer)
         window.location.reload(false);
     }

@@ -3,7 +3,7 @@
     position: sticky;
     top: 0;
     background-color: rgb(229, 248, 252);
-    height: 70px;
+    height: 60px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -29,34 +29,34 @@
   }
 }
 
-.tab1{
-  width: 20%;
-  height: inherit;
-}
-
 .tab1:hover{
   background-color: rgb(200, 200, 200, 0.5);
-  height: 5vh;
+  margin-bottom:10px;
 }
 
 .tab1:focus{
   border-bottom: 5px solid grey;
+  margin-bottom:5px;
 }
 
 .tab2:hover{
   background-color: rgb(200, 200, 200, 0.5);
+  margin-bottom:10px;
 }
 
 .tab2:focus{
   border-bottom: 5px solid grey;
+  margin-bottom:5px;
 }
 
 .tab3:hover{
   background-color: rgba(200, 200, 200, 0.5);
+  margin-bottom:10px;
 }
 
 .tab3:focus{
   border-bottom: 5px solid grey;
+  margin-bottom:5px;
 }
 
   .logoandtitle {
