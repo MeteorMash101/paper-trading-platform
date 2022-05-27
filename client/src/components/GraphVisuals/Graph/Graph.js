@@ -8,7 +8,7 @@ import { useEffect, useState, Fragment } from 'react';
 import StockAPIs from "../../../APIs/StocksAPIs";
 import { COLOR_CODES } from '../../../globals'
 
-export default function Graph({ symbol, onHover, onGraphMode}) {
+export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
   const [stock, setStock] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -135,7 +135,16 @@ export default function Graph({ symbol, onHover, onGraphMode}) {
       setShowColorCode(false)
     }
   }
-
+  // EDIT: temp, testing...
+  // console.log("HERE B4",chartData)
+  // let temp = []
+  // if (chartData[0].items != undefined) {
+  //   for (let i = 0; i < chartData[0].items.length; i++) {
+  //     temp.push({...chartData[0].items[i], open: 20.00});
+  //   }
+  //   chartData.push(temp)
+  // }
+  // console.log("HERE AFTER",chartData)
   return (
     <Fragment>
       {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
