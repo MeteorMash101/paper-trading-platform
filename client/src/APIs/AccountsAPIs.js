@@ -85,7 +85,6 @@ const getTransactionHistory = async (user_id) => {
 			token: localStorage.getItem("access_token")
 		}
 	})
-	console.log("HERE", dataFetched)
 	return dataFetched;
 }
 

@@ -38,12 +38,15 @@ const Header = () => {
                     <SearchBar/>
                 </div>
                 <div className={classes.tabs}>
-                    <Tabs>
-                        <Tab icon={<AccountCircleSharpIcon size={10}/>} component={Link} label="Main" to="/user"/>
-                        <Tab icon={<AccountCircleSharpIcon size={10}/>} component={Link} label="Profile" to="/user"/>
+                    <Tabs
+                        textColor="secondary"
+                        indicatorColor="secondary"
+                        aria-label="secondary tabs example"
+                    >
+                        <Tab component={Link} label="Profile" to="/user"/>
                         <Tab component={Link} label="My Stocks" to="/mystocks"/>
                         <Tab component={Link} label="History" to="/history"/>
-                        <Tab label="Logout" onClick={onLogoutHandler} aria-label="profile" />
+                        <Tab label="Logout" onClick={onLogoutHandler}/>
                     </Tabs>
                 </div>
 
