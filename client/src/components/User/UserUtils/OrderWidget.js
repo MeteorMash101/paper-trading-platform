@@ -18,7 +18,15 @@ const OrderWidget = ({livePrice, stock}) => {
     const containerRef = useRef(null); // for confetti
 
     useEffect(async () => {
-        let sharesOwnedFromServer = await AccountsAPIs.getStocksSharesOwned(userCtx.user_id, stock.symbol)
+        let sharesOwnedFromServer
+        try {
+            sharesOwnedFromServer = await AccountsAPIs.getStocksSharesOwned(userCtx.user_id, stock.symbol)
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
         setSharesOwned(sharesOwnedFromServer)
 	})
 

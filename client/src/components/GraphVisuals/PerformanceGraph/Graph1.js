@@ -14,7 +14,16 @@ export default function Graph1() {
   const userCtx = useContext(UserContext);
   const [stock, setStock] = useState("");
   useEffect(async() => {
-    const dataFetched = await AccountsAPIs.getPortfolioValueHistoricalData(userCtx.user_id)
+    let dataFetched;
+    try {
+      dataFetched = await AccountsAPIs.getPortfolioValueHistoricalData(userCtx.user_id)
+    } catch(err) {
+      if(err.response.status === 401) {
+        localStorage.clear();
+        userCtx.setDefault();
+      }
+    }
+    
     setStock(dataFetched.data)
   }, [])
   

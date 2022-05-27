@@ -21,8 +21,6 @@ const App = () => {
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...", localStorage.getItem("user_id"))
-    console.log(localStorage.getItem("isLoggedIn"))
-    console.log(localStorage)
     if (localStorage.getItem("user_id") == null) {
       return
     }
@@ -41,25 +39,37 @@ const App = () => {
           }
         })
     } catch (err) {
-        // console.log("ERROR: ", err)
-        accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
+        console.log("ERROR: ", err)
+        if(err.response.status === 401) {
+          localStorage.clear();
+	        userCtx.setDefault();
+        } else {
+          accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
           params: {
             token: localStorage.getItem("access_token"),
           }
           // default balance, pv, etc.
         });
+        }
+        
     }
-    userInfo.balance = accountFromServer.data.balance
-    // console.log("userInfo in APP.js, from persistent login: ", userInfo)
-    // console.log("Setting context...")
-    userCtx.setUserOnLogin(userInfo)
-    // NOTE: after this run ends, then context is updated (so it is not immediate).
-    // Below is fetching WL data.
-    const fetchData = async() => {
-      let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
-      watchlistCtx.setWatchlistOnLogin(listOfTickers);
+
+    if(localStorage.getItem("email") !== null) {
+      //localStorage.setItem("access_token", "I bet bet bet")
+      console.log("ACCESS TOKEN:", localStorage.getItem("access_token"))
+      userInfo.balance = accountFromServer.data.balance
+      // console.log("userInfo in APP.js, from persistent login: ", userInfo)
+      // console.log("Setting context...")
+      userCtx.setUserOnLogin(userInfo)
+      // NOTE: after this run ends, then context is updated (so it is not immediate).
+      // Below is fetching WL data.
+      const fetchData = async() => {
+        let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
+        watchlistCtx.setWatchlistOnLogin(listOfTickers);
+      }
+      fetchData()
     }
-    fetchData()
+    
   }, [userCtx.isLoggedIn])
 
   return (

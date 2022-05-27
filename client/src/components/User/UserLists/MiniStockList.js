@@ -31,7 +31,15 @@ const MiniStockList = () => {
 	// API CALL: Fetch user's owned stocklist
 	useEffect(async () => {
 		setIsLoading(true)
-		const dataFetched = await AccountsAPIs.getUsersStocksOwned(userCtx.user_id)
+		let dataFetched;
+		try {
+			dataFetched = await AccountsAPIs.getUsersStocksOwned(userCtx.user_id);
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
 		setUsersStocks(dataFetched.data.stock_list);
 		setIsLoading(false)
 	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
