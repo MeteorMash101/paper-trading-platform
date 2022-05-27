@@ -113,7 +113,7 @@ class AccountReset(APIView):
         account.portfolio_value_history = {"data": {}}
         account.transaction_history = {"history": []}
         account.ownedStocks = {}
-        account.balance = 5000
+        account.balance = 100000
         account.save()
         serializer = AccountSerializer(account)#, data=request.data)
         return Response(serializer.data, status=status.HTTP_205_RESET_CONTENT)
