@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import classes from './StockDetail.module.css';
 import OrderWidget from '../User/UserUtils/OrderWidget';
-import Header from '../Header/Header';
 import Graph from '../GraphVisuals/Graph/Graph';
 import React, { Component } from "react";
 import { Navigate } from 'react-router-dom';
@@ -64,7 +63,6 @@ const StockDetail = () => {
             }
             {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
                 <div className={classes.everything}>
-                <Header/>
                 <div className={classes.container}>
                     <div className={classes.nameSect}>
                         <h1 className={classes.companyName}>

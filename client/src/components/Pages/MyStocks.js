@@ -1,6 +1,5 @@
 import React from 'react'
 import classes from './MyStocks.module.css';
-import Header from '../Header/Header';
 import Tabs from '../User/UserUtils/MyStockTabs';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
@@ -17,7 +16,6 @@ const MyStocks = () => {
       }
       {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
         <div>
-          <Header/>
           <div className={classes.container}>
             <div className={classes.graph}> 
             </div>

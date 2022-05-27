@@ -1,6 +1,5 @@
 import React from 'react'
 import classes from './TransHistory.module.css';
-import Header from '../Header/Header';
 import HistoryList from '../User/UserLists/HistoryList';
 import { Navigate } from 'react-router-dom';
 import { useContext } from 'react';
@@ -17,7 +16,6 @@ const History = () => {
     }
     {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
       <div>
-        <Header/>
         <div className={classes.container}>
           <h2>Transaction History</h2>
           <div className={classes.header}>
