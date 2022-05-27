@@ -15,14 +15,13 @@ const Login = () => {
         let accountFromServer;
         let valid = true;
         try {
-            console.log("SEEING IF EXISTS:", authData.access_token)
+            console.log("SEEING IF EXISTS")
             //accountFromServer = await AuthAPIs.getExistingAccount(authData);
             accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${authData.token_type}/`, {
 				params: {
 					token: authData.access_token
 				}
 			})
-            console.log(accountFromServer)
         } catch (err) {
             console.log("ERROR: ", err)
             console.log("Account not found... creating new.");
@@ -49,8 +48,7 @@ const Login = () => {
             localStorage.setItem("user_id", accountFromServer.data["google_user_id"]); 
 
             accountFromServer.data["isLoggedIn"] = true;
-            console.log(accountFromServer.data)
-            console.log("userInfo in onLoginHandler: ", authData)
+            console.log("userInfo in onLoginHandler: ", accountFromServer.data)
             console.log("Setting context...")
             userCtx.setUserOnLogin(accountFromServer.data)
         }

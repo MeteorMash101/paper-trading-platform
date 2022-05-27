@@ -138,6 +138,18 @@
     margin-top: 20px;
     grid-row: 1;
   }
+  .about {
+    text-align: center;
+    font-size: large;
+    grid-column: 1 / span 3;
+    margin-top: 20px;
+    grid-row: 2;
+  }
+  .summary {
+    grid-column: 1 / span 3;
+    margin-top: 20px;
+    grid-row: 3;
+  }
 
 .attribute{
     margin-top: -10px;
