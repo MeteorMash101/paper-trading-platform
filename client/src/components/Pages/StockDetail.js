@@ -78,10 +78,10 @@ const StockDetail = () => {
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
                             <div className={classes.graph}>
-                                {graphMode == "GRAPH" &&
+                                {graphMode === "GRAPH" &&
                                     <Graph symbol={symbol} onHover={onMouseHoverHandler} onGraphMode={onGraphModeHandler}/>
                                 }
-                                {graphMode == "CANDLESTICK" &&
+                                {graphMode === "CANDLESTICK" &&
                                     <CandleStick symbol={symbol} onGraphMode={onGraphModeHandler}/>
                                 }
                             </div>
