@@ -5,41 +5,60 @@ import StockAPIs from '../../../APIs/StocksAPIs';
 
 export default function ApexChart({symbol, onGraphMode}){
   const [array, setArray] = useState([]);
-  const [arrayOneDay, setArrayOneDay] = useState([]);
-  const [arrayOneWeek, setArrayOneWeek] = useState([]);
-  const [arrayOneMonth, setArrayOneMonth] = useState([]);
-  const [arrayThreeMonth, setArrayThreeMonth] = useState([]);
   const [series, setSeries] = useState([{data: []}]);
-  // const [seriesOneDay, setSeriesOneDay] = useState([{data: []}]);
-  // const [seriesOneWeek, setSeriesOneWeek] = useState([{data: []}]);
-  // const [seriesOneMonth, setSeriesOneMonth] = useState([{data: []}]);
-  // const [seriesThreeMonth, setSeriesThreeMonth] = useState([{data: []}]);
-  const [seriesOneDay, setSeriesOneDay] = useState([{data: []}]);
-  const [seriesOneWeek, setSeriesOneWeek] = useState([{data: []}]);
-  const [seriesOneMonth, setSeriesOneMonth] = useState([{data: []}]);
-  const [seriesThreeMonth, setSeriesThreeMonth] = useState([{data: []}]);
+
   useEffect(async() => {
     const array = await StockAPIs.getStockHistoricalForCandleStick(symbol);
+    console.log("array in candlestick:",array);
     setSeries([{data: array}]);
   }, []);
+
     const [options, setOptions] = useState({
-        chart: {
-          type: 'candlestick',
-          height: 350
-        },
-        title: {
-          text: 'CandleStick Chart',
-          align: 'left'
-        },
-        xaxis: {
-          type: 'datetime'
-        },
-        yaxis: {
-          tooltip: {
-            enabled: true
+      chart: {
+        type: 'candlestick',
+        height: 350,
+        background: "#3e3e3e"
+      },
+      title: {
+        text: 'CandleStick Chart',
+        align: 'left'
+      },
+      xaxis: {
+        type: 'datetime',
+        labels: {
+          style: {
+              colors: "#99d1e7"
+          },
+          datetimeFormatter: {
+            year: 'yyyy',
+            month: 'MMMM',
+            day: 'dd MMM',
+            hour: 'HH:mm'
           }
+        }
+      },
+      yaxis: {
+        tooltip: {
+          enabled: true
         },
-      });
+        labels: {
+          style: {
+              colors: "#99d1e7"
+          },
+          formatter: function (value) {
+            return value;
+          }
+        }
+      },
+      plotOptions: {
+        candlestick: {
+            colors: {
+                upward: '#A9A9A9',
+                downward: '#99d1e7'
+            }
+        },
+    },
+  });
 
       return (
         <Fragment>

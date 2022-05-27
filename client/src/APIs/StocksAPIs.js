@@ -75,10 +75,9 @@ const getStockHistoricalByDateRanges = async (symbol) => {
 
 const getStockHistoricalForCandleStick = async (symbol) => {
     let array = []
-    const dataFetched = await axios.get(`${BASE_URL}/stocks/hist/${symbol}`, { 
+    const dataFetched = await axios.get(`${BASE_URL}/stocks/historical/${symbol}`, { 
         params : {
-            "start_date":"04/01/2017",
-            "version": "new"
+            "dateRange": "3M"
         }
     })
     dataFetched.data.historical_data.map(item => 

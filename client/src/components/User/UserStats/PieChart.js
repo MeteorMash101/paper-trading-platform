@@ -1,32 +1,3 @@
-// import { PieChart, Pie, ResponsiveContainer} from 'recharts';
-// import classes from './PieChart.module.css'
-   
-// const PieGraph = () => {
-  
-// // Sample data, change later
-// const data = [
-//     {name: 'Geeksforgeeks', students: 500, fill: "#B0E0E6"},
-//     {name: 'Technical scripter', students: 600, fill: "#00BFFF"},
-//     {name: 'Geek-i-knack', students: 400, fill: "#6495ED"},
-//   ];
-  
-  
-// return (
-//       <div className={classes.main}>
-//         <h2> PORTFOLIO DIVERSITY</h2>
-//         <ResponsiveContainer width={'99%'} height={300}>
-//           <PieChart width={400} height={400}>
-//             <Pie data={data} dataKey="students" outerRadius={100}/>
-//           </PieChart>
-//         </ResponsiveContainer>
-        
-//       </div>
-      
-// );
-// }
-  
-// export default PieGraph;
-
 import { PieChart, Pie, Sector, ResponsiveContainer} from 'recharts';
 import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
@@ -39,10 +10,10 @@ const PieGraph = () => {
   const userCtx = useContext(UserContext);
   const [array, setArray] = useState([]);
   const ce = [];
-  // const [series, setSeries] = useState([{data: []}]);
+
   const [data, setData] = useState([{name: '', number: 0, fill: '#B0E0E6'}]);
   const [tmp, setTmp] = useState([{name: '', number: 0, fill: '#B0E0E6'}]);
-  // const [data, setData] = useState("");
+
   const [useableData, setUseableData] = useState([{data: '', number: 0, fill: ''}]);
 
   const renderActiveShape = (props: any) => {
@@ -128,7 +99,11 @@ const PieGraph = () => {
     useEffect(() => {
         const fetchStock = async () => {   
             
-          const stockFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/diversity/`)
+          const stockFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/diversity/`, {
+            params: {
+              token: localStorage.getItem("access_token")
+            }
+          })
 
         var myColors = [
           "#B0E0E6",
