@@ -223,11 +223,11 @@ class Stock_info:
     #This is for stocks to get the daily most active
     @staticmethod
     def get_top_stocks():
-        result = si.get_day_most_active()
+        result = si.get_day_most_active()[:10]
         result = result.drop(columns=["Change", "Avg Vol (3 month)", "Market Cap", "PE Ratio (TTM)"])
         result.columns = ["symbol", "company_name", "price", "percent_change", "volume"]
         result.sort_values("volume", ascending=False, inplace=True)
-        result.drop(result.tail(90).index, inplace = True)
+        #result.drop(result.tail(90).index, inplace = True)
         result["change_direction"] = result["percent_change"] > 0
         result["volume"] = result["volume"].astype('int32')
         return result.to_dict("records")

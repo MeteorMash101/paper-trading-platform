@@ -1,6 +1,6 @@
 # SOURCE: https://www.django-rest-framework.org/tutorial/3-class-based-views/
 # Create your views here.
-from this import d
+#from this import d
 from accounts.models import Account
 from accounts.serializers import *
 from rest_framework.views import APIView
@@ -17,15 +17,9 @@ from accounts.utils.stockListsHandler import StockLists
 from django.contrib.auth.models import User # we are extending Django's User
 
 from django.conf import settings
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from requests.exceptions import HTTPError
 from social_django.utils import psa
 from decimal import Decimal
 
-#@api_view(http_method_names=['POST'])
-#@permission_classes([AllowAny])
 @psa()
 def exchange_token(request, backend):
     """

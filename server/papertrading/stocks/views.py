@@ -4,13 +4,10 @@
 
 from stocks.models import Stock
 from stocks.serializers import *
-from django.http import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from stocks.financeAPI import Stock_info as si
-from datetime import datetime
-import pandas as pd
 
 class StockList(APIView):
     """
