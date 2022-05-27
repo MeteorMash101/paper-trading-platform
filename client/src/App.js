@@ -11,6 +11,8 @@ import { useContext, useEffect } from 'react';
 import axios from 'axios';
 import {AnimatePresence} from 'framer-motion';
 import AccountsAPIs from './APIs/AccountsAPIs';
+import History from './components/Pages/TransHistory';
+import Header from './components/Header/Header'
 
 const App = () => {
   const userCtx = useContext(UserContext);
@@ -72,6 +74,7 @@ const App = () => {
 
   return (
     <div className="App">
+      {userCtx.isLoggedIn && <Header/>}
       {/* Page transition animation */}
       <AnimatePresence exitBeforeEnter initial={false}>
         <Routes location={location} key={location.pathname}>
@@ -79,6 +82,7 @@ const App = () => {
           <Route path="/stock/:symbol" element={<StockDetail/>}/>
           <Route path="/user/" element={<UserProfile/>}/>
           <Route path = "/mystocks/" element = {<MyStocks/>}/>
+          <Route path = "/history/" element={<History/>}/>
           <Route path = "/login/" element={<Login/>}/>
         </Routes>
       </AnimatePresence>

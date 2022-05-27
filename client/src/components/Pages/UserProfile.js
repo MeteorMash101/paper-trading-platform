@@ -4,10 +4,8 @@ import PieGraph from '../User/UserStats/PieChart.js';
 import classes from './UserProfile.module.css';
 import CardTop from '../User/UserStats/CardTop.js';
 import Graph1 from '../GraphVisuals/PerformanceGraph/Graph1.js';
-import Header from '../Header/Header';
 import { Navigate } from 'react-router-dom';
-import MotionWrapper from './MotionWrapper';
-import TransHistory from '../User/UserStats/TransHistory';
+import MotionWrapper from '../Alerts/MotionWrapper';
 
 const UserProfile = () => {
     const userCtx = useContext(UserContext);
@@ -19,7 +17,6 @@ const UserProfile = () => {
             }
             {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
                 <div className={classes.container}>
-                <Header/>
                     <div className={classes.wrapper}>
                         <div className={classes.cardTop}>
                             <CardTop/>
@@ -35,7 +32,6 @@ const UserProfile = () => {
                     </div>
                 </div>
             }
-            <TransHistory/>
         </MotionWrapper>
     );
 }

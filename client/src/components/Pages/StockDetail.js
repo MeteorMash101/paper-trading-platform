@@ -2,7 +2,6 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import classes from './StockDetail.module.css';
 import OrderWidget from '../User/UserUtils/OrderWidget';
-import Header from '../Header/Header';
 import Graph from '../GraphVisuals/Graph/Graph';
 import React, { Component } from "react";
 import { Navigate } from 'react-router-dom';
@@ -12,7 +11,7 @@ import HoverPrice from '../Stock/StockStats/HoverPrice';
 import QEChart from '../GraphVisuals/QEChart';
 import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
 
 const StockDetail = () => {
@@ -27,9 +26,9 @@ const StockDetail = () => {
     const [graphMode, setGraphMode] = useState("GRAPH");
     const onGraphModeHandler = (e) => {
         if (e.target.name == "GRAPH") {
-            setGraphMode("CANDLESTICK")
-        } else { // we were just in candlestick mode
             setGraphMode("GRAPH")
+        } else { // we were just in candlestick mode
+            setGraphMode("CANDLESTICK")
         }
     }
     // Pull the relevant stock info. from DB. using ticker symbol
@@ -64,7 +63,6 @@ const StockDetail = () => {
             }
             {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
                 <div className={classes.everything}>
-                <Header/>
                 <div className={classes.container}>
                     <div className={classes.nameSect}>
                         <h1 className={classes.companyName}>
@@ -80,10 +78,10 @@ const StockDetail = () => {
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
                             <div className={classes.graph}>
-                                {graphMode == "GRAPH" &&
+                                {graphMode === "GRAPH" &&
                                     <Graph symbol={symbol} onHover={onMouseHoverHandler} onGraphMode={onGraphModeHandler}/>
                                 }
-                                {graphMode == "CANDLESTICK" &&
+                                {graphMode === "CANDLESTICK" &&
                                     <CandleStick symbol={symbol} onGraphMode={onGraphModeHandler}/>
                                 }
                             </div>

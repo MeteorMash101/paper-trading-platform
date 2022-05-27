@@ -3,7 +3,9 @@
     flex-direction: row;
     align-items: center;
     /* border: 2px solid black; */
-    width: 20%;
+    margin: 0;
+    padding: 0;
+    width: 20pxs;
     height: auto;
 }
 

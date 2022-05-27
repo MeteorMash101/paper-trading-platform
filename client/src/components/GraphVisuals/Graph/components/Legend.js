@@ -1,59 +1,36 @@
 import React from "react";
+import { FcCandleSticks } from "react-icons/fc"
+import { VscGraphLine } from "react-icons/vsc"
+import DateRangeController from "./GraphOps/DateRangeController";
+import Switch from "./GraphOps/Switch";
+import Mode from "./GraphOps/Mode";
 
-const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGridlines, onChangeShowAxis, onChangeShowShade, onGraphMode }) => (
-  <div className="legendContainer">
-    <div className="dateRangeOptsContainer">
-      {legendData.map((d) => (
-        <input
-          className="dateRangeOpt"
-          key={d.name}
-          type="button"
-          id={currDateRange == d.name ? "selected" : ""}
-          value={d.name}
-          onClick={() => onChangeDateRange(d.name)}
-        />
-      ))}
-    </div>
-    <div class="switchContainer">
-      <div class="switchElement">
-        <label class="switchLabel">Gridlines</label>
-        <label class="switch">
-          <input type="checkbox" onChange={onChangeShowGridlines}/>
-          <span class="slider round"></span>
-        </label>
+const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGridlines, onChangeShowAxis, onChangeShowShade, onChangeShowColorCode, onGraphMode }) => {
+  return (
+    <div className="legendContainer">
+      {/* Date Range Controller */}
+      <div className="dateRangeOptsContainer">
+        <DateRangeController legendData={legendData} currDateRange={currDateRange} onChangeDateRange={onChangeDateRange} />
       </div>
-      <div class="switchElement">
-        <label class="switchLabel">Axis</label>
-        <label class="switch">
-          <input type="checkbox" onChange={onChangeShowAxis}/>
-          <span class="slider round"></span>
-        </label>
+      {/* Graph Switches */}
+      <div class="switchContainer">
+        <Switch label="Gridlines" onChangeHandler={onChangeShowGridlines}/>
+        <Switch label="Axis" onChangeHandler={onChangeShowAxis}/>
+        <Switch label="Shade" onChangeHandler={onChangeShowShade}/>
+        <Switch label="Trend Col" onChangeHandler={onChangeShowColorCode}/>
+        {/* <Switch label="Volume" onChangeHandler={onChangeShowVolume}/> */}
       </div>
-      <div class="switchElement">
-        <label class="switchLabel">Shade</label>
-        <label class="switch">
-          {/* EDIT: checked by default breaks...? */}
-          <input type="checkbox" onChange={onChangeShowShade}/>
-          <span class="slider round"></span>
-        </label>
-      </div>
-      <div class="switchElement">
-        <label class="switchLabel">Volume</label>
-        <label class="switch">
-          <input type="checkbox" checked/>
-          <span class="slider round" id="NOTAVAIL"></span>
-        </label>
-      </div>
-      <div class="switchElement">
-        <label class="switchLabel">Color Code</label>
-        <label class="switch">
-          <input type="checkbox" checked/>
-          <span class="slider round" id="NOTAVAIL"></span>
-        </label>
+      {/* Graph Mode Options */}
+      <div class="graphModeSwitchContainer">
+        <Mode name="GRAPH" onClick={onGraphMode}>
+          <VscGraphLine class="svgLogo"/>
+        </Mode>
+        <Mode name="CANDLESTICK" onClick={onGraphMode}>
+          <FcCandleSticks class="svgLogo"/>
+        </Mode>
       </div>
     </div>
-    <button class="candleStickSwitch" name="GRAPH" onClick={onGraphMode}>Candlestick Mode</button>
-  </div>
-);
+  );
+}
 
 export default Legend;

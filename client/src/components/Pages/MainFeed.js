@@ -3,11 +3,10 @@ import StockList from '../Stock/StockLists/StockList.js';
 import UserCard from '../User/UserStats/UserCard.js';
 import { useContext } from 'react';
 import UserContext from '../../store/user-context';
-import Header from '../Header/Header';
 import NewsList from '../Stock/StockNews/NewsList';
 import WatchlistList from '../User/UserLists/WatchlistList';
 import { Navigate } from 'react-router-dom';
-import MotionWrapper from './MotionWrapper';
+import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
 
 const MainFeed = () => {
@@ -20,7 +19,6 @@ const MainFeed = () => {
       }
       {userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
         <div className={classes.container}>
-          <Header/>
           <div className={classes.margin}>
             <LiveIndicator/>
             <div className={classes.listContainer}>

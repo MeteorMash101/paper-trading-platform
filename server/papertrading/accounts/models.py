@@ -14,7 +14,7 @@ class Account(models.Model):
     google_user_id = models.CharField(max_length=50, unique=False, default = "EMPTY") # EDIT: just google ID for now...
     MAX_DIGITS = 1000 # EDIT: temp?
     # balance == 'buying power'
-    balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=5000.00)
+    balance = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=100000.00)
 
     # EDIT: PV is client-side store only (dynamically changes)
     portfolio_value = models.DecimalField(max_digits=MAX_DIGITS, decimal_places=2, default=0.00)
@@ -25,7 +25,7 @@ class Account(models.Model):
     start_date = models.CharField(max_length=50, null=True)
     
     def __str__(self):
-        return self.google_user_id
+        return self.email
 
     # EDIT: For later?
     # friends, ranking, STATS, isActive, LastLoginDate:, etc.

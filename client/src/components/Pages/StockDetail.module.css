@@ -11,6 +11,29 @@
     flex-direction: row;
     /* border: 2px solid black; */
     width: auto;
+    height: 60px;
+    margin: .7rem;
+    padding: 0;
+}
+
+.customWrapper {
+    width: auto;
+    height: auto;
+    margin-top: .2rem;
+    padding: 0rem .4rem;
+    background-color: rgb(184, 212, 203);
+    border-radius: 10px;
+    animation-name: flash;
+    animation-duration: 0.25s;
+    animation-timing-function: linear;
+    animation-iteration-count: 3;
+    animation-direction: alternate;
+    animation-play-state: running;
+}
+
+@keyframes flash {
+    from {color: rgb(194, 203, 85);}
+    to {color: rgb(82, 127, 142);}
 }
 
 .animate {

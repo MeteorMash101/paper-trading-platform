@@ -5,8 +5,10 @@ import { MultiLineDataPropTypes } from "../../utils/propTypes";
 import { Line, Axis, GridLine, Overlay, Tooltip, Area } from "../../components";
 import useController from "./MultilineChart.controller";
 import useDimensions from "../../utils/useDimensions";
+import { COLOR_CODES } from "../../../../../globals"
 
-const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAxis, showShade, }) => {
+const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAxis, showShade, trendColor, showColorCode, }) => {
+  const color = showColorCode ? trendColor : COLOR_CODES.NEUTRAL
   const overlayRef = React.useRef(null);
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
@@ -52,17 +54,17 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
               disableAnimation
             />
           }
-          {data.map(({ name, items = [], color }) => (
+          {data.map(({ name, items = [] }) => (
             <Line
               key={name}
               data={items}
               xScale={xScale}
               yScale={yScale}
-              color={"#99d1e7"}
+              color={color}
             />
           ))}
           {/* NOTE: shaders below */}
-          {showShade && <Area data={data[0].items} xScale={xScale} yScale={yScale} />}
+          {showShade && <Area data={data[0].items} xScale={xScale} yScale={yScale} trendColor={trendColor} showColorCode={showColorCode}/>}
           <Overlay onHover={onHover} ref={overlayRef} width={width} height={height}>
             {/* NOTE: y-axis labels below */}
             {showAxis && 

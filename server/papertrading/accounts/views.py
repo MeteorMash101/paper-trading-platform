@@ -232,7 +232,7 @@ class AccountStocksOwned(APIView):
     curl -d '{"info":"num_of_ticker_stocks", "symbol": "tsla"}' -H "Content-Type: application/json" -X GET http://127.0.0.1:8000/accounts/[ACCOUNT_GOOG_ID]/getStocks
     '''
     def get(self, request, goog_id):
-        (valid, data) =  getDataFromToken(request)
+        (valid, data) = getDataFromToken(request)
         if not valid:
             return data
 
