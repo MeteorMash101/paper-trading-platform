@@ -26,21 +26,27 @@
 
 .userinfo{
     border: 1px solid rgb(173, 173, 173);
-    height: 40vh;
+    background-color: rgba(154, 215, 235, 0.1);
     margin-top: 3%;
     border-radius: 1.6rem;
 }
 
 .news{
     border: 1px solid rgb(173, 173, 173);
+    background-color: rgba(154, 215, 235, 0.1);
     border-radius: 1.6rem;
     margin: 3% 0%;
 }
 
 .watchlist{
     border: 1px solid rgb(173, 173, 173);
+    background-color: rgba(154, 215, 235, 0.1);
     border-radius: 1.6rem;
     margin-top: 3%;
+}
+
+.liveind{
+    height: 30px;
 }
 
 @media (max-width:900px) {

@@ -22,8 +22,27 @@ const getStockPrice = async (symbol) => {
 }
 
 const getQuarterlyEarnings = async (symbol) => {
+    let array = []
+    let xaxisval = []
+
     const dataFetched = await axios.get(`${BASE_URL}/stocks/quarterlyEarnings/${symbol}`)
-    return dataFetched
+    dataFetched.data.quarterly_earnings.map(d => 
+        // dataFetched['quarterly_earnings'].map(d => 
+            {
+                var sd = (d.actual)
+                array.push(sd)
+            }
+        )
+    
+    dataFetched.data.quarterly_earnings.map(item => 
+        // dataFetched['quarterly_earnings'].map(d => 
+            {
+                var date = (item.estimate)
+                xaxisval.push(date)
+            }
+        )
+
+    return {array,xaxisval};
 }
 
 // For search bar...
