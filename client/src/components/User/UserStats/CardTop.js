@@ -14,7 +14,15 @@ const CardTop = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             const fetchPV = async () => {
-                const dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id)
+                let dataFetched;
+                try {
+                    dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id);
+                } catch (err) {
+                    if(err.response.status === 401) {
+                        localStorage.clear();
+                          userCtx.setDefault();
+                    }
+                }
                 if (userCtx.portfolioInfo.portfolio_value != dataFetched.data) {
                     userCtx.setPortfolioInfo(dataFetched.data);
                 }

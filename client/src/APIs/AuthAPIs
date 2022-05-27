@@ -1,15 +1,40 @@
-// EDIT: todo...
 import axios from "axios";
 import {BASE_URL} from "../globals";
 
-
-const hmm = async () => {
-
+const getExistingAccount = async (authData) => {
+	const accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${authData.token_type}/`, {
+		params: {
+			token: authData.access_token
+		}
+	})
+	return accountFromServer
 }
+
+const createNewAccount = async (authData) => {
+	const accountFromServer = await axios.post(`${BASE_URL}/accounts/new/`, "",{
+		params: {
+			token: authData.access_token
+		},
+    });
+	return accountFromServer
+} 
+
+const getWatchListSymbols = async (user_id) => {
+	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/watchList/`, {
+		params: {
+			info: "detailed_stocks",
+			token: localStorage.getItem("access_token")
+		}
+	})
+	let listOfTickers = dataFetched.data.stock_list.map((obj) => {return obj.symbol})
+	return listOfTickers
+}
+
 
 // NOTE: these methods return promises, be sure to unwrap them or use 'await' when calling!
 const AuthAPIs = {
-	hmm: hmm,
+	getExistingAccount: getExistingAccount,
+	createNewAccount: createNewAccount,
 }
 
 export default AuthAPIs;

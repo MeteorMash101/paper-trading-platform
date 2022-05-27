@@ -13,7 +13,15 @@ const HistoryList = ({title}) => {
 
 	useEffect(async() => {
 		setIsLoading(true)
-		const dataFetched = await AccountsAPIs.getTransactionHistory(userCtx.user_id)
+		let dataFetched;
+		try {
+			dataFetched = await AccountsAPIs.getTransactionHistory(userCtx.user_id);
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
 		setUsersStocks(dataFetched.data);
 		setIsLoading(false)
 	}, [])

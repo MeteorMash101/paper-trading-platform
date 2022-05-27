@@ -71,7 +71,7 @@ def exchange_token(request, backend):
                         "email": user.email, "google_user_id": user.username
                     }
             }
-        except HTTPError as e:
+        except BaseException as e:
             print("FAILED")
             # An HTTPError bubbled up from the request to the social auth provider.
             # This happens, at least in Google's case, every time you send a malformed

@@ -23,11 +23,25 @@ const StockList = ({title}) => {
   	}, [userCtx.isLoggedIn]) // this DB retreival should only execute the first time this App is loaded.
 	
 	const addToWatchListHandler = async (stockSymbol) => {
-		await AccountsAPIs.addToWatchList(userCtx.user_id, stockSymbol)
+		try {
+			await AccountsAPIs.addToWatchList(userCtx.user_id, stockSymbol)
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
 		watchlistCtx.addStock(stockSymbol);
 	}
 	const removeFromWatchListHandler = async (stockSymbol) => {
-		await AccountsAPIs.removeFromWatchList(userCtx.user_id, stockSymbol)
+		try {
+			await AccountsAPIs.removeFromWatchList(userCtx.user_id, stockSymbol)
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
 		watchlistCtx.removeStock(stockSymbol);
 	}
 	return (

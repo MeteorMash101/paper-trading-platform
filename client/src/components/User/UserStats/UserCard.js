@@ -17,7 +17,15 @@ const UserCard = () => {
             });
 			return
 		}
-        const dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id)
+        let dataFetched;
+        try {
+            dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id)
+		} catch (err) {
+			if(err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
         userCtx.setPortfolioInfo(dataFetched.data);
     }, [userCtx.isLoggedIn]);
       

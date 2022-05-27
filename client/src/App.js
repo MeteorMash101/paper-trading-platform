@@ -19,8 +19,6 @@ const App = () => {
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
     console.log("[APP.JS]: Checking if user already logged in...", localStorage.getItem("user_id"))
-    console.log(localStorage.getItem("isLoggedIn"))
-    console.log(localStorage)
     if (localStorage.getItem("user_id") == null) {
       return
     }
@@ -33,7 +31,6 @@ const App = () => {
     // Balance & stocklist attributes are unique to each user, fetch those from db.
     let accountFromServer;
     try {
-      console.log("TRYING TO GET ACCOUNT")
         accountFromServer = await axios.get(`http://127.0.0.1:8000/accounts/${userInfo.user_id}/`, {
           params: {
             token: localStorage.getItem("access_token"),
@@ -41,25 +38,36 @@ const App = () => {
         })
     } catch (err) {
         console.log("ERROR: ", err)
-        accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
+        if(err.response.status === 401) {
+          localStorage.clear();
+	        userCtx.setDefault();
+        } else {
+          accountFromServer = await axios.post(`http://127.0.0.1:8000/accounts/new/`, "", {
           params: {
             token: localStorage.getItem("access_token"),
           }
           // default balance, pv, etc.
         });
+        }
+        
     }
-    console.log(accountFromServer.data)
-    userInfo.balance = accountFromServer.data.balance
-    // console.log("userInfo in APP.js, from persistent login: ", userInfo)
-    // console.log("Setting context...")
-    userCtx.setUserOnLogin(userInfo)
-    // NOTE: after this run ends, then context is updated (so it is not immediate).
-    // Below is fetching WL data.
-    const fetchData = async() => {
-      let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
-      watchlistCtx.setWatchlistOnLogin(listOfTickers);
+
+    if(localStorage.getItem("email") !== null) {
+      //localStorage.setItem("access_token", "I bet bet bet")
+      console.log("ACCESS TOKEN:", localStorage.getItem("access_token"))
+      userInfo.balance = accountFromServer.data.balance
+      // console.log("userInfo in APP.js, from persistent login: ", userInfo)
+      // console.log("Setting context...")
+      userCtx.setUserOnLogin(userInfo)
+      // NOTE: after this run ends, then context is updated (so it is not immediate).
+      // Below is fetching WL data.
+      const fetchData = async() => {
+        let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
+        watchlistCtx.setWatchlistOnLogin(listOfTickers);
+      }
+      fetchData()
     }
-    fetchData()
+    
   }, [userCtx.isLoggedIn])
 
   return (
