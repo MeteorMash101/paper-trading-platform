@@ -47,7 +47,6 @@ def exchange_token(request, backend):
     - `access_token`: The OAuth2 access token provided by the provider
     """
     token = request.query_params.get('token', None)
-    print("Token:", token)
     serializer = AuthSerializer(data={"access_token": token})
     if serializer.is_valid(raise_exception=True):
         # set up non-field errors key
@@ -395,9 +394,8 @@ class AccountHistoricPV(APIView):
         
         if account != None:
             balanceHistory = Balance.buildBuyingPowerHistory(account)
-            performance = Balance.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
+            Balance.addBalance(account.portfolio_value_history["data"], balanceHistory["data"])
             data = self.convertToListOfDicts(account.portfolio_value_history["data"])
-            
             serializer = HistoricPortfolioValueSerializer({"pv":data})
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
@@ -406,8 +404,16 @@ class AccountHistoricPV(APIView):
     #converts the portfolio value history into a format that frontend likes
     def convertToListOfDicts(self, data):
         returnList = []
-        for key, value in data.items():
-            returnList.append({"date": key, "value": value})
+        keys = sorted(data)
+        prevVal = data[keys[0]]
+        for key in sorted(data):
+            returnList.append({
+                "date": key, 
+                "value": data[key], 
+                "value_change": data[key] - prevVal, 
+                "percent_change": 100*(data[key] - prevVal)/prevVal
+            })
+            prevVal = data[key]
         return returnList
 
    
