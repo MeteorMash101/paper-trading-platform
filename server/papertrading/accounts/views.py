@@ -22,6 +22,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from requests.exceptions import HTTPError
 from social_django.utils import psa
+from decimal import Decimal
 
 #@api_view(http_method_names=['POST'])
 #@permission_classes([AllowAny])
@@ -249,8 +250,10 @@ class AccountStocksOwned(APIView):
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
-            portfolio_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
-            portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, portfolio_value)
+            
+            stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
+            portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, stock_value)
+            portfolio_value = Decimal.from_float(stock_value) + account.balance
             serializer = PortfolioValueSerializer({"portfolio_value": portfolio_value, "percent_change": portfolio_change, "change_direction": portfolio_change > 0})
             return Response(serializer.data)
         elif data == "stock_list_display":          #returns each stock they own with how much they own, price, %change, and changeDir
