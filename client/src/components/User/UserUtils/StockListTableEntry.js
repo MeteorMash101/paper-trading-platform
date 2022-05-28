@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom'; // needs to link to specific stock page
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
 
-const StockListTableEntry = ({symbol, shares, price, percent_change, change_direction, in_watch_list, onSelect}) => {
+const StockListTableEntry = ({symbol, shares, price, percent_change, change_direction, in_list, onSelect}) => {
     return (
         // EDIT: not able to fade out!!! halp.
-        <div className={classes.container} id={in_watch_list ? classes.fadeOut : classes.fadeIn}>
+        <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
             <input 
                 type="checkbox"
                 onChange={onSelect}

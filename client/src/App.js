@@ -5,6 +5,7 @@ import StockDetail from './components/Pages/StockDetail';
 import UserProfile from './components/Pages/UserProfile';
 import UserContext from './store/user-context';
 import WatchlistContext from './store/watchlist-context';
+import StocksOwnedContext from './store/stocks-owned-context'
 import MyStocks from './components/Pages/MyStocks';
 import Login from './components/Pages/Login';
 import { useContext, useEffect } from 'react';
@@ -17,6 +18,7 @@ import Header from './components/Header/Header'
 const App = () => {
   const userCtx = useContext(UserContext);
   const watchlistCtx = useContext(WatchlistContext);
+  const stocksOwnedCtx = useContext(StocksOwnedContext);
   const location = useLocation();
   // EDIT: temp. workaround for persistent User // (change this?)
   useEffect(async () => {
@@ -57,11 +59,13 @@ const App = () => {
       // console.log("userInfo in APP.js, from persistent login: ", userInfo)
       // console.log("Setting context...")
       userCtx.setUserOnLogin(userInfo)
-      // NOTE: after this run ends, then context is updated (so it is not immediate).
-      // Below is fetching WL data.
+      // NOTE: after this run ends, then context(s) are updated (so it is not immediate).
+      // Below is fetching WL data + SO data.
       const fetchData = async() => {
         let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
         watchlistCtx.setWatchlistOnLogin(listOfTickers);
+        listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
+        stocksOwnedCtx.setStocksOwnedOnLogin(listOfTickers);
       }
       fetchData()
     }

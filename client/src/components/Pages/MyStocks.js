@@ -3,25 +3,20 @@ import classes from './MyStocks.module.css';
 import MyStocksTabsSwitch from '../User/UserUtils/MyStockTabsSwitch';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
-import { useContext, useState, useEffect } from 'react';
+import { useContext, useState } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
 import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
-import AccountsAPIs from '../../APIs/AccountsAPIs'
+
 
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
 	const [stocksSelected, setStocksSelected] = useState([]);
+	const [isMouseHovering, setIsMouseHovering] = useState(false);
+    const onMouseHoverHandler = (bool) => {
+        setIsMouseHovering(bool)
+    }
 
-	// const [isMouseHovering, setIsMouseHovering] = useState(false);
-    // const onMouseHoverHandler = (bool) => {
-    //     setIsMouseHovering(bool)
-    // }
-
-	useEffect(async() => {
-		const temp = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id)
-		console.log("HERE", temp);
-	});
-
+	// When the stock selection changes...
 	const onSelectHandler = (e) => {
 		if (e.target.checked) { // means this was just checked
 			setStocksSelected((prevStocksSelected) => {
@@ -44,9 +39,7 @@ const MyStocks = () => {
 			<div>
 				<div className={classes.container}>
 					<div className={classes.graph}> 
-						{/* NOT THIS GRAPH! */}
-						{/* <Graph symbol={"AAPL"} onHover={onMouseHoverHandler}/> */}
-						<MultilineGraph stocksSelected={stocksSelected}/>
+						<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
 					</div>
 					<div className={classes.table}> 
 						<MyStocksTabsSwitch onSelect={onSelectHandler}/>

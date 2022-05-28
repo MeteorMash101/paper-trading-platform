@@ -46,7 +46,7 @@ const UserWatchListTable = ({onSelect}) => {
                   price={stock.price}
                   percent_change={stock.percent_change}
                   change_direction={stock.change_direction}
-                  in_watch_list={watchlistCtx.watchlist.has(stock.symbol)}
+                  in_list={watchlistCtx.watchlist.has(stock.symbol)}
                   onSelect={onSelect}
                 />
               ))
