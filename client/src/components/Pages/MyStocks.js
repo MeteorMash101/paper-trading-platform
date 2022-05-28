@@ -1,21 +1,39 @@
 import React from 'react'
 import classes from './MyStocks.module.css';
-import Tabs from '../User/UserUtils/MyStockTabs';
+import MyStocksTabsSwitch from '../User/UserUtils/MyStockTabsSwitch';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
-import Graph from '../GraphVisuals/Graph/Graph';
 import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
-// import Graph from '../GraphVisuals/MyStocksGraph/Graph.js'
-// import { getStockHistoricalByDateRanges } from '../../APIs/StocksAPIs'
+import AccountsAPIs from '../../APIs/AccountsAPIs'
 
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
-	const [isMouseHovering, setIsMouseHovering] = useState(false);
-    const onMouseHoverHandler = (bool) => {
-        setIsMouseHovering(bool)
-    }
+	const [stocksSelected, setStocksSelected] = useState([]);
+
+	// const [isMouseHovering, setIsMouseHovering] = useState(false);
+    // const onMouseHoverHandler = (bool) => {
+    //     setIsMouseHovering(bool)
+    // }
+
+	useEffect(async() => {
+		const temp = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id)
+		console.log("HERE", temp);
+	});
+
+	const onSelectHandler = (e) => {
+		if (e.target.checked) { // means this was just checked
+			setStocksSelected((prevStocksSelected) => {
+				return [...prevStocksSelected, e.target.id.toUpperCase()]
+			})
+		} else { // just unchecked
+			setStocksSelected((prevStocksSelected) => {
+				return [...prevStocksSelected].filter(stockTicker => stockTicker != e.target.id.toUpperCase())
+			})
+		}
+	}
+
 	return (
 	<MotionWrapper>
 		{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
@@ -28,11 +46,10 @@ const MyStocks = () => {
 					<div className={classes.graph}> 
 						{/* NOT THIS GRAPH! */}
 						{/* <Graph symbol={"AAPL"} onHover={onMouseHoverHandler}/> */}
-						<MultilineGraph stockURL = {`http://127.0.0.1:8000/stocks/historical/fb`}/>
-						{/* <Graph stockURL={`http://127.0.0.1:8000/stocks/hist/aapl`}/> */}
+						<MultilineGraph stocksSelected={stocksSelected}/>
 					</div>
 					<div className={classes.table}> 
-						<Tabs/>
+						<MyStocksTabsSwitch onSelect={onSelectHandler}/>
 					</div>
 				</div>
 			</div>

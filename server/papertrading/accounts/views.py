@@ -238,13 +238,16 @@ class AccountStocksOwned(APIView):
         if data == "stock_list_detailed":            #Returns list of all their transactions with stocks they currently own.
             serializer = StockListSerializer({"stock_list":account.ownedStocks})
             return Response(serializer.data)
+        # EDIT: need this for new stuff on frontend.
+        elif data == "stocks_symbols": # Returns a list of just the symbols for user owned stocks.
+            serializer = StockSymbolsSerializer({"stock_symbols":account.ownedStocks.keys()})
+            return Response(serializer.data, status=status.HTTP_200_OK)
         elif data == "num_of_ticker_stocks":        #returns the amount of the stock they have for the given ticker
             symbol = request.query_params.get('symbol', None)
             numOfStock = UserStocks.countNumberOfSharesOwned(account.ownedStocks, symbol)
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
-            
             stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
             portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, stock_value)
             portfolio_value = Decimal.from_float(stock_value) + account.balance

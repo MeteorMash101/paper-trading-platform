@@ -13,6 +13,9 @@ class AccountSerializer(serializers.ModelSerializer):
 class StockListSerializer(serializers.Serializer):
     stock_list = serializers.JSONField()
 
+class StockSymbolsSerializer(serializers.Serializer):
+    stock_symbols = serializers.JSONField()
+
 class StockNumSerializer(serializers.Serializer):
     quantity_owned = serializers.IntegerField()
 

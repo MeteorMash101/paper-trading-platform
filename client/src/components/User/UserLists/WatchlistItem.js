@@ -1,10 +1,10 @@
-import classes from './WatchlistItem.module.css';
+import classes from './WatchListItem.module.css';
 import { Link } from 'react-router-dom'; // needs to link to specific stock page.
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
 
 
-const WatchlistItem = ({symbol, price, percent_change, change_direction, in_watch_list}) => {
+const WatchListItem = ({symbol, price, percent_change, change_direction, in_watch_list}) => {
     return (
 
         <Link to={`/stock/${symbol}`} className={classes.container} id={in_watch_list ? classes.fadeOut : classes.fadeIn}>
@@ -26,4 +26,4 @@ const WatchlistItem = ({symbol, price, percent_change, change_direction, in_watc
     );
 };
 
-export default WatchlistItem;
+export default WatchListItem;

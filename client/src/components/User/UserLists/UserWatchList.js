@@ -1,17 +1,17 @@
-import classes from './WatchlistList.module.css';
-import WatchlistItem from './WatchlistItem';
+import classes from './UserWatchList.module.css';
+import WatchListItem from './WatchListItem';
 import { useEffect, useState } from 'react';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
 import AccountsAPIs from '../../../APIs/AccountsAPIs.js'
 
-const WatchlistList = () => {
+const UserWatchList = () => {
 	const watchlistCtx = useContext(WatchlistContext);
 	const userCtx = useContext(UserContext);
   	const [usersStocks, setUsersStocks] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-	// API CALL: Fetch user's owned stocklist
+	// API CALL: Fetch user's watchlist
 	useEffect(async() => {
 		setIsLoading(true)
 		let dataFetched
@@ -31,7 +31,7 @@ const WatchlistList = () => {
 			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
 			{!isLoading &&
 				usersStocks.map((stock) => (
-					<WatchlistItem
+					<WatchListItem
 						key={stock.id} // required for React warning...
 						symbol={stock.symbol}
 						price={stock.price}
@@ -45,4 +45,4 @@ const WatchlistList = () => {
 	);
 };
 
-export default WatchlistList;
+export default UserWatchList;

@@ -2,10 +2,10 @@ import * as React from 'react';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
-import StockHoldings from './StockHoldings';
-import Watchlist from './Watchlist';
+import UserStockListTable from './UserStockListTable';
+import UserWatchListTable from './UserWatchListTable';
 
-export default function ColorTabs() {
+export default function MyStockTabsSwitch({onSelect}) {
   const [value, setValue] = React.useState('one');
 
   const handleChange = (event, newValue) => {
@@ -23,10 +23,8 @@ export default function ColorTabs() {
         <Tab value="one" label="Stock Holdings" />
         <Tab value="two" label="Watchlist" />
       </Tabs>
-
-      {value === "one" && <StockHoldings/>}
-      {value === "two" && <Watchlist/>}
-
+      {value === "one" && <UserStockListTable onSelect={onSelect}/>}
+      {value === "two" && <UserWatchListTable onSelect={onSelect}/>}
     </Box>
 
   );

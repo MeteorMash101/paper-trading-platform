@@ -135,6 +135,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
       setShowColorCode(false)
     }
   }
+  
   // EDIT: temp, testing...
   // console.log("HERE B4",chartData)
   // let temp = []

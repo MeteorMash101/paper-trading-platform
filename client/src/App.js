@@ -50,10 +50,8 @@ const App = () => {
           }
           // default balance, pv, etc.
         });
-        }
-        
+      }
     }
-
     if(localStorage.getItem("email") !== null) {
       userInfo.balance = accountFromServer.data.balance
       // console.log("userInfo in APP.js, from persistent login: ", userInfo)

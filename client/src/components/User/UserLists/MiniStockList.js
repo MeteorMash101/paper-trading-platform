@@ -1,7 +1,6 @@
 import classes from './MiniStockList.module.css';
 import MiniStockItem from './MiniStockItem';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import WatchlistContext from '../../../store/watchlist-context';
