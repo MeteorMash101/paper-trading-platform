@@ -19,8 +19,6 @@ const NewsItem = ({title, image, summary, url, postTime}) => {
                     <img className={classes.img} src={image}></img>
                 </div>
             </div>
-            
-            
         </a>
     );
 }

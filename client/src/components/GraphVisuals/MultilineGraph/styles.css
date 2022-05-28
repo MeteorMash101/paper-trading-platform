@@ -22,7 +22,7 @@
   }
   
   .tooltipLine {
-    stroke: #ff007a;
+    stroke: #f5f5f5;
     stroke-width: 1px;
   }
   
@@ -31,7 +31,7 @@
   }
   
   .tooltipLinePoint {
-    fill: #ff007a;
+    fill: #ffffff;
   }
   
   .legendContainer {

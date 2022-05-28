@@ -26,7 +26,7 @@ const StockList = ({title}) => {
 		try {
 			await AccountsAPIs.addToWatchList(userCtx.user_id, stockSymbol)
 		} catch (err) {
-			if(err.response.status === 401) {
+			if (err.response.status === 401) {
 				localStorage.clear();
       			userCtx.setDefault();
 			}
@@ -37,7 +37,7 @@ const StockList = ({title}) => {
 		try {
 			await AccountsAPIs.removeFromWatchList(userCtx.user_id, stockSymbol)
 		} catch (err) {
-			if(err.response.status === 401) {
+			if (err.response.status === 401) {
 				localStorage.clear();
       			userCtx.setDefault();
 			}

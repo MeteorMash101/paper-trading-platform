@@ -50,11 +50,11 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
         </div>
       </Link>
       {!in_watch_list && 
-        <GrAddCircle className={classes.watchListBtn} id={classes.tooltipBG} size={23} onClick={onAdd}>
-          <span className={classes.tooltip}>TOOLTIP TEST</span>
+        <GrAddCircle className={classes.watchListBtn} id={classes.tooltipBG} size={23} onClick={onAdd} data-testid={"watchlist_button_add"}>
+          {/* <span className={classes.tooltip}>TOOLTIP TEST</span> */}
         </GrAddCircle>
       }
-      {in_watch_list && <FcCheckmark className={classes.watchListBtn} id={classes.tooltipBG} size={23} onClick={onRemove}/>}
+      {in_watch_list && <FcCheckmark className={classes.watchListBtn} id={classes.tooltipBG} size={23} onClick={onRemove} data-testid={"watchlist_button_remove"}/>}
     </div>
 
   );
