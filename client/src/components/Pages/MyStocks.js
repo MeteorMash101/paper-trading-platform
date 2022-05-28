@@ -7,7 +7,6 @@ import { useContext, useState } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
 import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
 
-
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
 	const [stocksSelected, setStocksSelected] = useState([]);
