@@ -1,4 +1,5 @@
 import axios from "axios";
+import { curveNatural } from "d3";
 import {BASE_URL} from "../globals";
 
 const getStockList = async (listType) => {
@@ -52,6 +53,7 @@ const getSearchableStocks = async () => {
 }
 
 const getStockHistoricalByDateRanges = async (symbol) => {
+    console.log("StockAPI called! getStockHistoricalByDateRanges")
     const stockURL = `${BASE_URL}/stocks/historical/${symbol}`;
     let dataFetched = {}
     dataFetched.stockOneDayFromServer = await axios.get(stockURL, {

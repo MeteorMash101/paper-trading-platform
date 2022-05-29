@@ -7,11 +7,11 @@ const DateRangeController = ({legendData, currDateRange, onChangeDateRange}) => 
       {legendData.map((d) => (
         <input
           className="dateRangeOpt"
-          key={d.name}
+          key={d.dateOpt}
           type="button"
-          id={currDateRange == d.name ? "selected" : ""}
-          value={d.name}
-          onClick={() => onChangeDateRange(d.name)}
+          id={currDateRange == d.dateOpt ? "selected" : ""}
+          value={d.dateOpt}
+          onClick={() => onChangeDateRange(d.dateOpt)}
         />
       ))}
     </Fragment>

@@ -1,21 +1,36 @@
 import React from 'react'
 import classes from './MyStocks.module.css';
-import Tabs from '../User/UserUtils/MyStockTabs';
+import MyStocksTabsSwitch from '../User/UserUtils/MyStockTabsSwitch';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
-import Graph from '../GraphVisuals/Graph/Graph';
+// OUR CODE:
 import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
-// import Graph from '../GraphVisuals/MyStocksGraph/Graph.js'
-// import { getStockHistoricalByDateRanges } from '../../APIs/StocksAPIs'
+// SOURCE:
+// import MultilineGraph from '../GraphVisuals/MultilineGraph_Depreciated/MultilineGraph';
 
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
+	const [stocksSelected, setStocksSelected] = useState([]);
 	const [isMouseHovering, setIsMouseHovering] = useState(false);
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
+	
+	// When the stock selection changes...
+	const onSelectHandler = (e) => {
+		if (e.target.checked) { // means this was just checked
+			setStocksSelected((prevStocksSelected) => {
+				return [...prevStocksSelected, e.target.id.toUpperCase()]
+			})
+		} else { // just unchecked
+			setStocksSelected((prevStocksSelected) => {
+				return [...prevStocksSelected].filter(stockTicker => stockTicker != e.target.id.toUpperCase())
+			})
+		}
+	}
+
 	return (
 	<MotionWrapper>
 		{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
@@ -26,13 +41,13 @@ const MyStocks = () => {
 			<div>
 				<div className={classes.container}>
 					<div className={classes.graph}> 
-						{/* NOT THIS GRAPH! */}
-						{/* <Graph symbol={"AAPL"} onHover={onMouseHoverHandler}/> */}
-						<MultilineGraph stockURL = {`http://127.0.0.1:8000/stocks/historical/fb`}/>
-						{/* <Graph stockURL={`http://127.0.0.1:8000/stocks/hist/aapl`}/> */}
+						{/* OUR CODE */}
+						<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+						{/* SOURCE CODE */}
+						{/* <MultilineGraph/> */}
 					</div>
 					<div className={classes.table}> 
-						<Tabs/>
+						<MyStocksTabsSwitch onSelect={onSelectHandler}/>
 					</div>
 				</div>
 			</div>

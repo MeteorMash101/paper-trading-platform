@@ -90,8 +90,8 @@ const OrderWidget = ({livePrice, stock}) => {
         <div className={classes.wrapper}>
             <form className={classes.container} id={orderTypeStyle} onSubmit={stockOrderHandler} ref={containerRef}>
                 <div className={classes.orderType}>
-                    <h3 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder}>Buy {stock.symbol}</h3>
-                    <h3 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder}>Sell {stock.symbol}</h3>
+                    <h3 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder} data-testid={"buyButton"}>Buy {stock.symbol}</h3>
+                    <h3 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder} data-testid={"sellButton"}>Sell {stock.symbol}</h3>
                 </div>
                 <div className={classes.options}><h4>Order Type: </h4><h4>"Market Order"</h4></div> 
                 <div className={classes.options}><h4>Shares: </h4>

@@ -35,7 +35,6 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
     setIsLoading(false)
   }, []);
 
-  // EDIT: possibly add trend-color here for each range? 
   const oneDayData = {
     name: "1D",
     items: stock != "" ? 
@@ -85,10 +84,11 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
       portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
-  const [selectedItems, setSelectedItems] = React.useState(["1D"]);
-  const legendData = [oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData];
+  // EDIT: we don't need to be sending in this whole data to legendData, just the date values.
+  const [selectedDate, setSelectedDate] = React.useState(["1D"]);
+  const legendData = [{dateOpt: "1D"}, {dateOpt: "1W"}, {dateOpt: "1M"}, {dateOpt: "3M"}, {dateOpt: "6M"}, {dateOpt: "1Y"}, {dateOpt: "5Y"}];
   const chartData = [
-    ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedItems.includes(d.name))
+    ...[oneDayData, oneWeekData, oneMonthData, threeMonthsData, sixMonthsData, oneYearData, fiveYearData].filter((d) => selectedDate.includes(d.name))
   ];
   
   // Trend color: for showing color code.
@@ -96,7 +96,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
   const trendColor = trendIsPositive ? COLOR_CODES.POSITIVE : COLOR_CODES.NEGATIVE;
 
   const onChangeDateRangeHandler = (name) => {
-    setSelectedItems([name]);
+    setSelectedDate([name]);
   };
 
   const [showGridlines, setShowGridlines] = useState(false);
@@ -135,16 +135,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
       setShowColorCode(false)
     }
   }
-  // EDIT: temp, testing...
-  // console.log("HERE B4",chartData)
-  // let temp = []
-  // if (chartData[0].items != undefined) {
-  //   for (let i = 0; i < chartData[0].items.length; i++) {
-  //     temp.push({...chartData[0].items[i], open: 20.00});
-  //   }
-  //   chartData.push(temp)
-  // }
-  // console.log("HERE AFTER",chartData)
+  console.log("[Graph.js] chartData after render/proc:", chartData[0])
   return (
     <Fragment>
       {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
@@ -163,7 +154,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
           </div>
           <Legend
             legendData={legendData}
-            currDateRange={selectedItems[0]}
+            currDateRange={selectedDate[0]}
             onChangeDateRange={onChangeDateRangeHandler}
             onChangeShowGridlines={onChangeShowGridlinesHandler}
             onChangeShowAxis={onChangeShowAxisHandler}

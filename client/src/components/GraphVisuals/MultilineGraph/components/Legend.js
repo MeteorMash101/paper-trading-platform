@@ -1,23 +1,23 @@
 import React from "react";
+import DateRangeController from "./GraphOps/DateRangeController";
+import Switch from "./GraphOps/Switch";
 
-const Legend = ({ data, selectedItems, onChange }) => (
-  <div className="legendContainer">
-    {data.map((d) => (
-      <div className="checkbox" style={{ color: d.color }} key={d.name}>
-        <label>
-          {d.name !== "Portfolio" && (
-            <input
-              type="checkbox"
-              value={d.name}
-              checked={selectedItems.includes(d.name)}
-              onChange={() => onChange(d.name)}
-            />
-          )}
-          {d.name}
-        </label>
+const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGridlines, onChangeShowAxis, onChangeShowShade, onChangeShowColorCode }) => {
+  return (
+    <div className="legendContainer">
+      {/* Date Range Controller */}
+      <div className="dateRangeOptsContainer">
+        <DateRangeController legendData={legendData} currDateRange={currDateRange} onChangeDateRange={onChangeDateRange} />
       </div>
-    ))}
-  </div>
-);
+      {/* Graph Switches */}
+      <div class="switchContainer">
+        <Switch label="Gridlines" onChangeHandler={onChangeShowGridlines}/>
+        <Switch label="Axis" onChangeHandler={onChangeShowAxis}/>
+        <Switch label="Shade" onChangeHandler={onChangeShowShade}/>
+        <Switch label="Trend Col" onChangeHandler={onChangeShowColorCode}/>
+      </div>
+    </div>
+  );
+}
 
 export default Legend;

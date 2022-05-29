@@ -14,6 +14,17 @@ const getWatchListSymbols = async (user_id) => {
 	return listOfTickers
 }
 
+const getStocksOwnedSymbols = async (user_id) => {
+	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
+		params: {
+			info: "stocks_symbols",
+			token: localStorage.getItem("access_token")
+		}
+	})
+	let listOfTickers = dataFetched.data.stock_symbols
+	return listOfTickers
+}
+
 const getStocksSharesOwned = async (user_id, stockSymbol) => {
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 		params: {
@@ -109,6 +120,7 @@ const removeFromWatchList = async (user_id, stockSymbol) => {
 // NOTE: these methods return promises, be sure to unwrap them or use 'await' when calling!
 const AccountsAPIs = {
 	getWatchListSymbols: getWatchListSymbols,
+	getStocksOwnedSymbols: getStocksOwnedSymbols,
 	getStocksSharesOwned: getStocksSharesOwned,
 	postOrderTransaction: postOrderTransaction,
 	getUsersStocksOwned: getUsersStocksOwned,

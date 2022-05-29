@@ -4,7 +4,7 @@ import UserCard from '../User/UserStats/UserCard.js';
 import { useContext } from 'react';
 import UserContext from '../../store/user-context';
 import NewsList from '../Stock/StockNews/NewsList';
-import WatchlistList from '../User/UserLists/WatchlistList';
+import UserWatchList from '../User/UserLists/UserWatchList';
 import { Navigate } from 'react-router-dom';
 import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
@@ -38,7 +38,7 @@ const MainFeed = () => {
                 </div>
               <div className={classes.watchlist}>
                 <h2>Watchlist</h2>
-              <WatchlistList/> 
+              <UserWatchList/> 
               </div>
               <div className={classes.news}>
                 <h2>News</h2>

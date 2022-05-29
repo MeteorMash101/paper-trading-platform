@@ -5,8 +5,10 @@ import { MultiLineDataPropTypes } from "../../utils/propTypes";
 import { Line, Axis, GridLine, Overlay, Tooltip, Area } from "../../components";
 import useController from "./MultilineChart.controller";
 import useDimensions from "../../utils/useDimensions";
+import { COLOR_CODES } from "../../../../../globals"
 
-const MultilineChart = ({ data = [], margin = {} }) => {
+const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAxis, showShade, trendColor, showColorCode, }) => {
+  const color = showColorCode ? trendColor : COLOR_CODES.NEUTRAL
   const overlayRef = React.useRef(null);
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
@@ -20,33 +22,39 @@ const MultilineChart = ({ data = [], margin = {} }) => {
     yScale,
     yScaleForAxis
   } = controller;
-
   return (
     <div ref={containerRef}>
       <svg width={svgWidth} height={svgHeight}>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          <GridLine
-            type="vertical"
-            scale={xScale}
-            ticks={5}
-            size={height}
-            transform={`translate(0, ${height})`}
-          />
-          <GridLine
-            type="horizontal"
-            scale={yScaleForAxis}
-            ticks={2}
-            size={width}
-          />
-          <GridLine
-            type="horizontal"
-            className="baseGridLine"
-            scale={yScale}
-            ticks={1}
-            size={width}
-            disableAnimation
-          />
-          {data.map(({ name, items = [], color }) => (
+          {/* NOTE: gridlines thing below? */}
+          {showGridlines && 
+            <GridLine
+              type="vertical"
+              scale={xScale}
+              ticks={5}
+              size={height}
+              transform={`translate(0, ${height})`}
+            />
+          }
+          {showGridlines &&
+            <GridLine
+              type="horizontal"
+              scale={yScaleForAxis}
+              ticks={2}
+              size={width}
+            />
+          }
+          {showGridlines &&
+            <GridLine
+              type="horizontal"
+              className="baseGridLine"
+              scale={yScale}
+              ticks={1}
+              size={width}
+              disableAnimation
+            />
+          }
+          {data.map(({ name, items = [] }) => (
             <Line
               key={name}
               data={items}
@@ -55,24 +63,31 @@ const MultilineChart = ({ data = [], margin = {} }) => {
               color={color}
             />
           ))}
-          <Area data={data[0].items} xScale={xScale} yScale={yScale} />
-          <Axis
-            type="left"
-            scale={yScaleForAxis}
-            transform="translate(0, -10)"
-            ticks={5}
-            tickFormat={yTickFormat}
-          />
-          <Overlay ref={overlayRef} width={width} height={height}>
-            <Axis
-              type="bottom"
-              className="axisX"
-              anchorEl={overlayRef.current}
-              scale={xScale}
-              transform={`translate(10, ${height - height / 6})`}
-              ticks={5}
-              tickFormat={xTickFormat}
-            />
+          {/* NOTE: shaders below */}
+          {showShade && <Area data={data[0].items} xScale={xScale} yScale={yScale} trendColor={trendColor} showColorCode={showColorCode}/>}
+          <Overlay onHover={onHover} ref={overlayRef} width={width} height={height}>
+            {/* NOTE: y-axis labels below */}
+            {showAxis && 
+              <Axis
+                type="left"
+                scale={yScale}
+                transform="translate(0, -10)"
+                ticks={5}
+                tickFormat={yTickFormat}
+              />
+            }
+            {/* NOTE: x-axis labels below */}
+            {showAxis && 
+              <Axis
+                type="bottom"
+                className="axisX"
+                anchorEl={overlayRef.current}
+                scale={xScale}
+                transform={`translate(10, ${height - height / 6})`}
+                ticks={5}
+                tickFormat={xTickFormat}
+              />
+            }
             <Tooltip
               className="tooltip"
               anchorEl={overlayRef.current}

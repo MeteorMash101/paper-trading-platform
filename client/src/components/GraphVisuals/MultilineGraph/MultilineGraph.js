@@ -1,163 +1,197 @@
 /** Graph.js */
 import React from "react";
-import MultilineChart from "./views/MultilineChart";
-// import MultilineLegend from "./components/MultilineLegend";
-import Legend from "./components/Legend";
-import schc from "./SCHC.json";
-import vcit from "./VCIT.json";
-import portfolio from "./portfolio.json";
 import "./styles.css";
-// import "multilinestyles.css";
-import { useParams } from 'react-router-dom';
+// DEPRECIATED BELOW
+// import MultilineChart from "../MultilineGraph_Depreciated/views/MultilineChart/MultilineChart"
+// OUR CODE
+import MultilineChart from "../Graph/views/MultilineChart/MultilineChart.js"
+import Legend from "./components/Legend";
 import { useEffect, useState, Fragment, useContext } from 'react';
-import axios from 'axios';
+import { COLOR_CODES } from '../../../globals'
+import StockAPIs from "../../../APIs/StocksAPIs";
+import AccountsAPIs from "../../../APIs/AccountsAPIs";
+import StocksOwnedContex from '../../../store/stocks-owned-context';
 import UserContext from '../../../store/user-context';
+import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 
-
-export default function Graph({stockURL}) {
-
+export default function Graph({ stocksSelected, onHover }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [stocksOwnedAllDateRanges, setStocksOwnedAllDateRanges] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(["1D"]);
+  const legendData = [{dateOpt: "1D"}, {dateOpt: "1W"}, {dateOpt: "1M"}, {dateOpt: "3M"}, {dateOpt: "6M"}, {dateOpt: "1Y"}, {dateOpt: "5Y"}];
   const userCtx = useContext(UserContext);
+  const stocksOwnedCtx = useContext(StocksOwnedContex);
 
-  const [graphStocks, setGraphStocks] = useState([]);
-  const [stockFromServer, setStockFromServer] = useState([]);
+  console.log("selectedDate (date changed!)", selectedDate)
 
-  const [stock, setStock] = useState("");
-  const [stockData, setStockData] = useState({date: '', value: 0, volume: '0'});
-
-  useEffect(() => {
-    const fetchStock = async () => {
-      console.log(userCtx);
-
-      // Getting the stocks that the user owns
-       const dataFetched = await axios.get(`http://127.0.0.1:8000/accounts/${userCtx.user_id}/getStocks/`, {
-				params: {
-					info: "stock_list_detailed",
-          token: localStorage.getItem("access_token")
-				}
-			});
-
-
-      console.log("Inside my stocks");
-      console.log("FETCHING USER STOCK SYMBOLS W/ URL:", dataFetched);
-
-      Object.keys(dataFetched.data.stock_list).map( async (keyName, i) => {
-        
-        // Get stocks from each individual symbol
-        stockFromServer.push(await axios.get(`http://127.0.0.1:8000/stocks/historical/${keyName}`, {
-          // params : {
-          //   "dateRange": "1M"
-          // }
-        }));
-
-        console.log("stock from server here: ", stockFromServer)
-
-        // Push each as an object into graphStocks
-
-      });
-      
-      console.log("This is actually chart data: ", chartData)
-
-      // To test basic chart functionality
-      const stockOneMonthFromServer = await axios.get('http://127.0.0.1:8000/stocks/historical/f', {
-        // params : {
-        //   "dateRange": "1M"
-        // }
-      });
-      const stockThreeMonthFromServer = await axios.get('http://127.0.0.1:8000/stocks/historical/nly', { 
-        // params : {
-        //   "dateRange": "3M"
-        // }
-      });
-      const stockSixMonthFromServer = await axios.get('http://127.0.0.1:8000/stocks/historical/aapl', {
-        // params : {
-        //   "dateRange": "3M"
-        // }
-      });
-
-      setStock({ 
-        oneMonth: stockOneMonthFromServer.data,
-        threeMonth: stockThreeMonthFromServer.data, 
-        sixMonth: stockSixMonthFromServer.data
-      });
+  // Strategy: fetch all date range data of every stock the user owns, and filter accordingly to what has been selected.
+  // helper func: required format for graph
+  const formatData = (currSymbol, dateRange, stockData) => {
+    return {
+      name: currSymbol.toUpperCase() + ": " + dateRange,
+      items: stockData['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))}))
     }
-    fetchStock()
+  }
 
+  useEffect(async() => {
+    // setIsLoading(true)
+    const stocksOwnedAllDateRangesArray = []
+		const listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
+    for (let i = 0; i < listOfTickers.length; i++) {
+      const currSymbol = listOfTickers[i]
+      const {
+        stockOneDayFromServer,
+        stockOneWeekFromServer,
+        stockOneMonthFromServer,
+        stockThreeMonthFromServer,
+        stockSixMonthFromServer,
+        stockOneYearFromServer,
+        stockFiveYearFromServer
+      } = await StockAPIs.getStockHistoricalByDateRanges(currSymbol)
+      stocksOwnedAllDateRangesArray.push({
+        symbol: currSymbol,
+        // all date range data for this stock (complete & proper).
+        oneDay: formatData(currSymbol, "1D", stockOneDayFromServer.data),
+        oneWeek: formatData(currSymbol, "1W", stockOneWeekFromServer.data),
+        oneMonth: formatData(currSymbol, "1M", stockOneMonthFromServer.data),
+        threeMonth: formatData(currSymbol, "3M", stockThreeMonthFromServer.data),
+        sixMonth: formatData(currSymbol, "6M", stockSixMonthFromServer.data),
+        ytd: formatData(currSymbol, "1Y", stockOneYearFromServer.data),
+        ytd5: formatData(currSymbol, "5Y", stockFiveYearFromServer.data),
+      })
+    }
+    setStocksOwnedAllDateRanges(stocksOwnedAllDateRangesArray);
+    // setIsLoading(false)
+  }, [stocksOwnedCtx.stocksOwned]);
 
+  // EDIT: we don't need to be sending in this whole data to legendData, just the date values.
 
-}, [])
+  const chartData = [];
+  console.log("stocksOwnedAllDateRanges before chartData Proc:", stocksOwnedAllDateRanges)
+  console.log("stocksSelected, before chartData Proc:", stocksSelected)
+
+  if (stocksOwnedAllDateRanges.length > 0 && stocksSelected.length > 0) {
+    let stocksSelectedToShow = []
+    for (let i = 0; i < stocksOwnedAllDateRanges.length; i++) {
+      console.log("looking at symbol:", (stocksOwnedAllDateRanges[i].symbol.toUpperCase()))
+      if (stocksSelected.includes(stocksOwnedAllDateRanges[i].symbol.toUpperCase())) {
+        console.log("MATCHED!")
+        stocksSelectedToShow.push(stocksOwnedAllDateRanges[i])
+      }
+    }
+    // let stocksSelectedToShow = stocksOwnedAllDateRanges.filter((stockData) => stocksSelected.includes(stockData.symbol.toLowerCase()))
+    console.log("stocksSelectedToShow (we are going to show these!):", stocksSelectedToShow)
+    // now add these stock's currently selected dateRanges...
+    for (let i = 0; i < stocksSelectedToShow.length; i++) {
+      let currStockToShow = stocksSelectedToShow[i]
+      switch (selectedDate[0]) {
+        case "1D":
+          chartData.push(currStockToShow.oneDay)
+          break
+        case "1W":
+          chartData.push(currStockToShow.oneWeek)
+          break
+        case "1M":
+          chartData.push(currStockToShow.oneMonth)
+          break
+        case "3M":
+          chartData.push(currStockToShow.threeMonth)
+          break
+        case "6M":
+          chartData.push(currStockToShow.sixMonth)
+          break
+        case "1Y":
+          chartData.push(currStockToShow.ytd)
+          break
+        case "5Y":
+          chartData.push(currStockToShow.ytd5)
+          break
+        default:
+          chartData.push(currStockToShow.oneDay)
+          break
+      }
+    }
+  } else { // default required for chartData, or else empty data sent to MultilineChart.js
+    chartData.push(
+      {
+        name: "1D",
+        items: portfolio['historical_data'].map((d) => ({ ...d, date: new Date(d.date) }))
+      }
+    )
+  }
+
+  console.log("chartData after RENDER + PROCESSING:", chartData)
   
-  const portfolioData = {
-    name: "Portfolio",
-    color: "grey",
-    items: portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-    
-  };
-  const schcData = {
-    name: "SCHC",
-    color: "#d53e4f",
-    items: schc.map((d) => ({ ...d, date: new Date(d.date) }))
+  // Trend color: for showing color code.
+  // const trendIsPositive = chartData[0].items[0].open < chartData[0].items[chartData[0].items.length - 1].open;
+  // const trendColor = trendIsPositive ? COLOR_CODES.POSITIVE : COLOR_CODES.NEGATIVE;
 
-  };
-  const vcitData = {
-    name: "VCIT",
-    color: "#5e4fa2",
-    items: vcit.map((d) => ({ ...d, date: new Date(d.date) }))
+  const [showGridlines, setShowGridlines] = useState(false);
+  const [showAxis, setShowAxis] = useState(false);
+  const [showShade, setShowShade] = useState(true);
+  const [showColorCode, setShowColorCode] = useState(false);
+
+  const onChangeDateRangeHandler = (name) => {
+    setSelectedDate([name]);
   };
 
-  const data = {
-    name: "data",
-    color: "#5e4fa2",
-    items: stock != "" ? 
-      stock.sixMonth['historical_data'].map((d) => ({  ...d,date: new Date(d.date)})) :
-      portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-  };
+  const onChangeShowGridlinesHandler = (e) => {
+    if (e.target.checked) {
+      setShowGridlines(true)
+    } else {
+      setShowGridlines(false)
+    }
+  }
 
+  const onChangeShowAxisHandler = (e) => {
+    if (e.target.checked) {
+      setShowAxis(true)
+    } else {
+      setShowAxis(false)
+    }
+  }
 
- const data1 = {
-    name: "data1",
-    color: "#d53e4f",
-    items: stock != "" ? 
-      stock.oneMonth['historical_data'].map((d) => ({  ...d,date: new Date(d.date)})) :
-      portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-  };
+  const onChangeShowShadeHandler = (e) => {
+    if (e.target.checked) {
+      setShowShade(true)
+    } else {
+      setShowShade(false)
+    }
+  }
 
-  const [selectedItems, setSelectedItems] = React.useState([]);
-
-  const chartData = [
-    ...[data, data1]
-  ];
-
-  stockFromServer.map((s) => {
-    graphStocks.push({
-      name: s.name, 
-      color: '#B0E0E6',
-      items: stock.data ? s.data['historical_data']
-              .map((d) => ({ ...d, date: new Date(d.date) })) :
-              portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
-    });
-
-  })
-
-  console.log(stockFromServer)
-
-  console.log("this is chart data: ", stockFromServer);
-
-  const onChangeSelection = (name) => {
-    const newSelectedItems = selectedItems.includes(name)
-      ? selectedItems.filter((item) => item !== name)
-      : [...selectedItems, name];
-    setSelectedItems(newSelectedItems);
-  };
+  const onChangeShowColorCode = (e) => {
+    if (e.target.checked) {
+      setShowColorCode(true)
+    } else {
+      setShowColorCode(false)
+    }
+  }
 
   return (
-
     <Fragment>
-      <div>
-      </div>
-      <div className="Graph">
-        <MultilineChart data={chartData}/>
-      </div>
-      
+      {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
+      {!isLoading &&
+        <Fragment>
+          <div className="Graph">
+            <MultilineChart 
+              data={chartData} 
+              onHover={onHover} 
+              showGridlines={showGridlines} 
+              showAxis={showAxis}
+              showShade={showShade}
+            />
+          </div>
+          <Legend
+            legendData={legendData}
+            currDateRange={selectedDate[0]}
+            onChangeDateRange={onChangeDateRangeHandler}
+            onChangeShowGridlines={onChangeShowGridlinesHandler}
+            onChangeShowAxis={onChangeShowAxisHandler}
+            onChangeShowShade={onChangeShowShadeHandler}
+            onChangeShowColorCode={onChangeShowColorCode}
+          />
+        </Fragment>
+      }
     </Fragment>
   );
 }

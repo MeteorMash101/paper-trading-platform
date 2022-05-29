@@ -6,10 +6,12 @@ import PropTypes from "prop-types";
  * Use Overlay as a wrapper for components that need mouse events to be handled.
  * For example: Tooltip, AxisX.
  */
-const Overlay = React.forwardRef(({ width, height, children }, ref) => (
-  <g>
+
+
+const Overlay = React.forwardRef(({onHover, width, height, children }, ref) => (
+  <g onMouseEnter={() => {onHover(true)}} onMouseLeave={() => {onHover(false)}}>
     {children}
-    <rect ref={ref} width={width} height={height} opacity={0} />
+    <rect ref={ref} width={width} height={height} opacity={0}/>
   </g>
 ));
 

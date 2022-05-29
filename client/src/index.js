@@ -7,17 +7,20 @@ import { BrowserRouter } from 'react-router-dom';
 import UserProvider from './store/UserProvider';
 import WatchlistProvider from './store/WatchlistProvider';
 import HoverInfoProvider from './store/HoverInfoProvider';
+import StocksOwnedProvider from './store/StocksOwnedProvider';
 
 ReactDOM.render(
   <React.StrictMode>
     <UserProvider>
-      <WatchlistProvider>
-        <HoverInfoProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </HoverInfoProvider>
-      </WatchlistProvider>
+      <StocksOwnedProvider>
+        <WatchlistProvider>
+          <HoverInfoProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </HoverInfoProvider>
+        </WatchlistProvider>
+      </StocksOwnedProvider>
     </UserProvider>
   </React.StrictMode>,
   document.getElementById('root')
