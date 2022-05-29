@@ -45,8 +45,10 @@ class Stock_info:
         data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
         data = data.drop(columns = ["ticker", "index"])
         #Add the price change/percent change from the previous entry
-        data["dollar_change"] = data.open - data.open.shift(1)
-        data["percent_change"] = 100*data["dollar_change"]/data.open.shift(1)
+        print(data.open - data.open[0])
+        data["dollar_change"] = data.open - data.open[0]#data.open.shift(1)
+        data["percent_change"] = 100*data["dollar_change"]/data.open[0]#data.open.shift(1)
+        data["change_direction"] = data.dollar_change > 0
         data.at[0, "dollar_change"] = 0
         data.at[0, "percent_change"] = 0
         #convert to output
