@@ -52,12 +52,22 @@ export default function Graph() {
       portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
   };
 
+  const data2 = {
+    name: "data0",
+    color: '#B0E0E6',
+    items: stock != "" ? 
+      stock.threeMonth['historical_data'].map((d) => ({  ...d,date: new Date(d.date)})) :
+      portfolio.map((d) => ({ ...d, date: new Date(d.date) }))
+  };
+
   const [selectedItems, setSelectedItems] = React.useState([]);
 
   
   const chartData = [
-    ...[data0, data1]
+    ...[data0, data1, data2]
   ];
+
+  console.log("[G_Depreciated.js] chartData: ", chartData);
 
   const onChangeSelection = (name) => {
     const newSelectedItems = selectedItems.includes(name)

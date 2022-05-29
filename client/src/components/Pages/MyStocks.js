@@ -3,9 +3,12 @@ import classes from './MyStocks.module.css';
 import MyStocksTabsSwitch from '../User/UserUtils/MyStockTabsSwitch';
 import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
+// OUR CODE:
 import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
+// SOURCE:
+// import MultilineGraph from '../GraphVisuals/MultilineGraph_Depreciated/MultilineGraph';
 
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
@@ -14,7 +17,7 @@ const MyStocks = () => {
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
-
+	
 	// When the stock selection changes...
 	const onSelectHandler = (e) => {
 		if (e.target.checked) { // means this was just checked
@@ -38,7 +41,10 @@ const MyStocks = () => {
 			<div>
 				<div className={classes.container}>
 					<div className={classes.graph}> 
+						{/* OUR CODE */}
 						<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+						{/* SOURCE CODE */}
+						{/* <MultilineGraph/> */}
 					</div>
 					<div className={classes.table}> 
 						<MyStocksTabsSwitch onSelect={onSelectHandler}/>

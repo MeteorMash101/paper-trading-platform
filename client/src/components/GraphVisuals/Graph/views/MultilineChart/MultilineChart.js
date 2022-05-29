@@ -13,6 +13,13 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
     margin
+    // EDIT: changing margin here can fix the graph container constraint problem!
+    // margin: {
+    //   left: 55,
+    //   right: 15,
+    //   top: 5,
+    //   bottom: 5
+    // }
   });
   const controller = useController({ data, width, height });
   const {
@@ -22,6 +29,7 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
     yScale,
     yScaleForAxis
   } = controller;
+  console.log("[Graph.js MultilineChart]:", data)
   return (
     <div ref={containerRef}>
       <svg width={svgWidth} height={svgHeight}>

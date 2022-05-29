@@ -10,7 +10,7 @@ const StockListTableEntry = ({symbol, shares, price, percent_change, change_dire
             <input 
                 type="checkbox"
                 onChange={onSelect}
-                id={symbol}
+                id={symbol.toUpperCase()} // MUST BE UPPER CASE!
             />
             {/* NOTE: only this ticker becomes the link to the stock page, also has a style attribute to it to have a color ID. */}
             <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: "#d53e4f" }}>{symbol}</Link>
