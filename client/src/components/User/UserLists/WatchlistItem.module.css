@@ -12,6 +12,47 @@
     transition-timing-function: linear;
 }
 
+.linkWrapper {
+    text-decoration: none;
+    color: black;
+    display: flex;
+    width: 100%;
+    height: auto;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.removeBtn {
+    display: none;
+    z-index: 2;
+    border: none;
+    /* border-radius: 10px; */
+    font-weight: bolder;
+    cursor: pointer;
+    color: rgb(248, 216, 216);
+    background-color: rgb(240, 105, 105);
+    width: 8%;
+    height: 100%;
+    align-items: center; 
+    justify-content: center;
+    /* visibility: hidden; */
+    animation: fadeInRight .5s ease-in-out;
+}
+
+@keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(300px);
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+.container:hover .removeBtn {
+    display: flex;
+}
+
 .container:hover {
     background-color: rgb(232, 232, 232);
     cursor: pointer;

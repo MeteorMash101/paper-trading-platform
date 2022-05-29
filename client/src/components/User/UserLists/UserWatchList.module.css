@@ -8,6 +8,8 @@
     overflow: scroll;
     margin-top: 1rem;
     /* border: 1px solid black; */
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
 

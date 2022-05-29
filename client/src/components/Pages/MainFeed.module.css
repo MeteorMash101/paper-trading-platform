@@ -5,6 +5,38 @@
     padding: 5px;
 }
 
+.tabContainer {
+    /* border: 5px solid pink; */
+    display: flex;
+    justify-content: center;
+    margin: 0 0;
+}
+
+.listTab {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    padding: .4rem .4rem;
+    cursor: pointer;
+    width: 40%;
+    height: 100%;
+    background-position: center;
+    transition: background 0.8s;
+}
+
+#selectedTab {
+    border-bottom: 2px solid rgb(88, 124, 134);
+}
+
+/* Ripple effect */
+.listTab:hover {
+    background: rgb(158, 193, 203) radial-gradient(circle, transparent 1%, rgb(135, 175, 186) 1%) center/15000%;
+}
+.listTab:active {
+    background-color: rgb(88, 124, 134);
+    background-size: 100%;
+    transition: background 0s;
+}
+
 .userContainer{
     width: 35%;
     float: left;
@@ -38,7 +70,7 @@
     margin: 3% 0%;
 }
 
-.watchlist{
+.listContainerForTab{
     border: 1px solid rgb(173, 173, 173);
     background-color: rgba(154, 215, 235, 0.1);
     border-radius: 1.6rem;

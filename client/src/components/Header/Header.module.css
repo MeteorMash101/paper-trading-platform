@@ -100,7 +100,8 @@ margin-bottom:5px;
   width: 100%;
   height: 35px;
   text-decoration: none;
-  color: rgb(90, 89, 89);  
+  color: rgb(90, 89, 89); 
+  /* margin-right: .5rem;  */
 }
 
 .heading{
