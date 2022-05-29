@@ -57,11 +57,11 @@ const Header = () => {
                     <SearchBar/>
                 </div>
                 <div className={classes.tabs}>
-                    <Tabs variant="fullWidth" aria-label="secondary tabs example" indicatorColor="primary" onChange={handleChange}>
+                    <Tabs aria-label="secondary tabs example" indicatorColor="primary" onChange={handleChange}>
                         <Tab icon={<PersonIcon/>} value="one" className={classes.tab1} component={Link} label="Profile" to="/user"/>
                         <Tab icon={<ShowChartIcon />} value="two" className={classes.tab2} component={Link} label="My Stocks" to="/mystocks"/>
                         <Tab icon={<HistoryIcon />} value="three" className={classes.tab3} component={Link} label="History" to="/history"/>
-                        <Tab icon={<LogoutIcon />} onClick={onLogoutHandler} label="Logout" />
+                        <Tab icon={<LogoutIcon />} className={classes.tab4} onClick={onLogoutHandler} label="Logout" />
                     </Tabs>
                 </div>
             </div>

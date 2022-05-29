@@ -15,10 +15,6 @@
 width: 50%;
 }
 
-.tabs{
-width: 40%;
-}
-
 @media (max-width:900px) {
   .heading {
   font-size: 0px !important;
@@ -26,6 +22,34 @@ width: 40%;
 
 .tempLogo {
   font-size: 20px !important;
+}
+
+.tab1{
+  font-size: 0px !important;
+  width: 5%;
+}
+
+.tab2{
+  font-size: 0px !important;
+  width: 5%;
+}
+
+.tab3{
+  font-size: 0px !important;
+  width: 5%;
+}
+
+.tab4{
+  font-size: 0px !important;
+  width: 5%;
+}
+
+.searchbar{
+  width: 50%;
+}
+
+.tabs{
+  width:70%;
 }
 }
 
@@ -59,6 +83,16 @@ border-bottom: 5px solid grey;
 margin-bottom:5px;
 }
 
+.tab4:hover{
+  background-color: rgb(200, 200, 200, 0.5);
+  margin-bottom:10px;
+}
+
+.tab4:focus{
+  border-bottom: 5px solid grey;
+  margin-bottom:5px;
+}
+
 .logoandtitle {
   display: flex;
   align-items: center;
@@ -81,10 +115,9 @@ font-size: large;
   border-radius: 1.6rem;
 }
 
-.searchbar{
+/* .searchbar{
   width: 30%;
-  /* border: 1px solid black; */
-}
+} */
 
 .signin{
   /* margin-right: 30px; */
