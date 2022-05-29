@@ -8,7 +8,7 @@ import useDimensions from "../../utils/useDimensions";
 import { COLOR_CODES } from "../../../../../globals"
 
 const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAxis, showShade, trendColor, showColorCode, }) => {
-  const color = showColorCode ? trendColor : color
+  const color = showColorCode ? trendColor : COLOR_CODES.NEUTRAL;
   const overlayRef = React.useRef(null);
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
