@@ -1,10 +1,10 @@
 /** Graph.js */
 import React from "react";
 import "./styles.css";
-// DEPRECIATED BELOW
+// USING [DEPRECIATED] MultilineChart for now (works better):
 // import MultilineChart from "../MultilineGraph_Depreciated/views/MultilineChart/MultilineChart"
-// OUR CODE
-import MultilineChart from "../Graph/views/MultilineChart/MultilineChart.js"
+// OUR CODE:
+import MultilineChart from "./views/MultilineChart/MultilineChart.js" 
 import Legend from "./components/Legend";
 import { useEffect, useState, Fragment, useContext } from 'react';
 import { COLOR_CODES } from '../../../globals'
@@ -17,7 +17,7 @@ import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 export default function Graph({ stocksSelected, onHover }) {
   const [isLoading, setIsLoading] = useState(false);
   const [stocksOwnedAllDateRanges, setStocksOwnedAllDateRanges] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(["1D"]);
+  const [selectedDate, setSelectedDate] = useState(["5Y"]);
   const legendData = [{dateOpt: "1D"}, {dateOpt: "1W"}, {dateOpt: "1M"}, {dateOpt: "3M"}, {dateOpt: "6M"}, {dateOpt: "1Y"}, {dateOpt: "5Y"}];
   const userCtx = useContext(UserContext);
   const stocksOwnedCtx = useContext(StocksOwnedContex);
@@ -26,15 +26,16 @@ export default function Graph({ stocksSelected, onHover }) {
 
   // Strategy: fetch all date range data of every stock the user owns, and filter accordingly to what has been selected.
   // helper func: required format for graph
-  const formatData = (currSymbol, dateRange, stockData) => {
+  const formatData = (colorId, currSymbol, dateRange, stockData) => {
     return {
+      color: colorId,
       name: currSymbol.toUpperCase() + ": " + dateRange,
       items: stockData['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))}))
     }
   }
 
   useEffect(async() => {
-    // setIsLoading(true)
+    setIsLoading(true)
     const stocksOwnedAllDateRangesArray = []
 		const listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
     for (let i = 0; i < listOfTickers.length; i++) {
@@ -48,20 +49,22 @@ export default function Graph({ stocksSelected, onHover }) {
         stockOneYearFromServer,
         stockFiveYearFromServer
       } = await StockAPIs.getStockHistoricalByDateRanges(currSymbol)
+      // rand. color ID for this stock.
+      const colorId = "#" + Math.floor(Math.random()*16777215).toString(16);
       stocksOwnedAllDateRangesArray.push({
         symbol: currSymbol,
         // all date range data for this stock (complete & proper).
-        oneDay: formatData(currSymbol, "1D", stockOneDayFromServer.data),
-        oneWeek: formatData(currSymbol, "1W", stockOneWeekFromServer.data),
-        oneMonth: formatData(currSymbol, "1M", stockOneMonthFromServer.data),
-        threeMonth: formatData(currSymbol, "3M", stockThreeMonthFromServer.data),
-        sixMonth: formatData(currSymbol, "6M", stockSixMonthFromServer.data),
-        ytd: formatData(currSymbol, "1Y", stockOneYearFromServer.data),
-        ytd5: formatData(currSymbol, "5Y", stockFiveYearFromServer.data),
+        oneDay: formatData(colorId, currSymbol, "1D", stockOneDayFromServer.data),
+        oneWeek: formatData(colorId, currSymbol, "1W", stockOneWeekFromServer.data),
+        oneMonth: formatData(colorId, currSymbol, "1M", stockOneMonthFromServer.data),
+        threeMonth: formatData(colorId, currSymbol, "3M", stockThreeMonthFromServer.data),
+        sixMonth: formatData(colorId, currSymbol, "6M", stockSixMonthFromServer.data),
+        ytd: formatData(colorId, currSymbol, "1Y", stockOneYearFromServer.data),
+        ytd5: formatData(colorId, currSymbol, "5Y", stockFiveYearFromServer.data),
       })
     }
     setStocksOwnedAllDateRanges(stocksOwnedAllDateRangesArray);
-    // setIsLoading(false)
+    setIsLoading(false)
   }, [stocksOwnedCtx.stocksOwned]);
 
   // EDIT: we don't need to be sending in this whole data to legendData, just the date values.
@@ -175,13 +178,13 @@ export default function Graph({ stocksSelected, onHover }) {
           <div className="Graph">
             <MultilineChart 
               data={chartData} 
-              onHover={onHover} 
-              showGridlines={showGridlines} 
-              showAxis={showAxis}
-              showShade={showShade}
+              // onHover={onHover} 
+              // showGridlines={showGridlines} 
+              // showAxis={showAxis}
+              // showShade={showShade}
             />
           </div>
-          <Legend
+          {/* <Legend
             legendData={legendData}
             currDateRange={selectedDate[0]}
             onChangeDateRange={onChangeDateRangeHandler}
@@ -189,7 +192,7 @@ export default function Graph({ stocksSelected, onHover }) {
             onChangeShowAxis={onChangeShowAxisHandler}
             onChangeShowShade={onChangeShowShadeHandler}
             onChangeShowColorCode={onChangeShowColorCode}
-          />
+          /> */}
         </Fragment>
       }
     </Fragment>
