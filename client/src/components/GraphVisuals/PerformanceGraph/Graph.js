@@ -9,7 +9,7 @@ import "./styles1.css";
 import { useEffect, useState, useContext } from 'react';
 import AccountsAPIs from "../../../APIs/AccountsAPIs";
 import UserContext from "../../../store/user-context";
-// import { Shimmer } from 'react-shimmer'
+import ShimmerGraph from '../../Alerts/ShimmerGraph'
 
 export default function Graph1() {
   const userCtx = useContext(UserContext);
@@ -29,7 +29,7 @@ export default function Graph1() {
       }
     }
     setStock(dataFetched.data)
-    setIsLoading(true)
+    setIsLoading(false)
   }, [])
   
   const portfolioData = {
@@ -71,7 +71,7 @@ export default function Graph1() {
         selectedItems={selectedItems}
         onChange={onChangeSelection}
       /> */}
-      {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
+      {isLoading && <ShimmerGraph height={200}/>}
       {!isLoading &&
         <MultilineChart data={chartData} />
       }

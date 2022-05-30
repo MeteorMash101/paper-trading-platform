@@ -7,6 +7,7 @@ import "./styles.css";
 import { useEffect, useState, Fragment } from 'react';
 import StockAPIs from "../../../APIs/StocksAPIs";
 import { COLOR_CODES } from '../../../globals'
+import ShimmerGraph from '../../Alerts/ShimmerGraph';
 
 export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
   const [stock, setStock] = useState("");
@@ -32,7 +33,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
       ytd: stockOneYearFromServer.data, 
       ytd5: stockFiveYearFromServer.data
     });
-    // setIsLoading(false)
+    setIsLoading(false)
   }, []);
 
   const oneDayData = {
@@ -138,7 +139,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
   console.log("[Graph.js] chartData after render/proc:", chartData[0])
   return (
     <Fragment>
-      {isLoading && <div class="loaderWrapper"><div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>}
+      {isLoading && <ShimmerGraph height={400}/>}
       {!isLoading &&
         <Fragment>
           <div className="Graph">
