@@ -69,7 +69,7 @@ const Login = () => {
                             We are Team SWAT. Welcome to our Paper Trading Application. The goal of this application 
                             is to help beginners in the world of stocks to warm up to all the confusing abbreviations 
                             and seemingly foreign terminology without any risk. This means that you can buy, sell, 
-                            compare and analyze stocks with ‘fake’ money with ‘fake’ money that we provide to you. Now, whenever 
+                            compare and analyze stocks with ‘fake’ money that we provide to you. Now, whenever 
                             you feel ready to dive into the world of P/E ratios and candlesticks with your carefully preserved wallet out, 
                             head on over to something like Robinhood perhaps.
                             </h4>
