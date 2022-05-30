@@ -10,6 +10,8 @@
 
 .livePrice {
     /* border: 5px solid green; */
+    /* bit of a temp fix margin */
+    margin-top: .3rem;
     color: rgb(79, 79, 79);
     text-align: right;
     justify-content: right;

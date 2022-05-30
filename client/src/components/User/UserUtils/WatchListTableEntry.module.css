@@ -1,6 +1,4 @@
 .container {
-    text-decoration: none;
-    color: black;
     border-bottom: 1px solid rgb(207, 206, 206);
     width: 100%;
     height: 50px;
@@ -50,6 +48,8 @@
 }
 
 .symbol {
+    text-decoration: none;
+    color: black;
     font-weight: bold;
     width: 20%;
     height: 60%;

@@ -5,27 +5,28 @@ import { BiDownArrow } from "react-icons/bi";
 
 const WatchListTableEntry = ({symbol, price, percent_change, change_direction, in_list, onSelect}) => {
     return (
-        <Link to={`/stock/${symbol}`} className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
+        <div className={classes.container}>
             <input 
                 type="checkbox"
                 onChange={onSelect}
                 id={symbol.toUpperCase()} // MUST BE UPPER CASE!
             />
-            <div className={classes.symbol}>{symbol}</div>
-            <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
-            {
-            change_direction && <p className={classes.posChange}>+{parseInt(percent_change).toFixed(2)}%</p>
-            }
-            {
-            change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
-            }
-            {
-            !change_direction && <p className={classes.negChange}>-{parseInt(percent_change).toFixed(2)}%</p>
-            }
-            {
-            !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
-            }
-        </Link>
+            <Link to={`/stock/${symbol}`} className={classes.symbol} id={in_list ? classes.fadeOut : classes.fadeIn}>{symbol.toUpperCase()}</Link>
+                <div ></div>
+                <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
+                {
+                change_direction && <p className={classes.posChange}>+{parseInt(percent_change).toFixed(2)}%</p>
+                }
+                {
+                change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
+                }
+                {
+                !change_direction && <p className={classes.negChange}>-{parseInt(percent_change).toFixed(2)}%</p>
+                }
+                {
+                !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
+                }
+        </div>
     );
 };
 

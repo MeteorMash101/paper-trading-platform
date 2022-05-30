@@ -5,10 +5,7 @@ import UserContext from '../../store/user-context';
 import { Navigate } from 'react-router-dom';
 import { useContext, useState, useEffect } from 'react';
 import MotionWrapper from '../Alerts/MotionWrapper';
-// OUR CODE:
-import MultilineGraph from '../GraphVisuals/MultilineGraph/MultilineGraph';
-// SOURCE:
-// import MultilineGraph from '../GraphVisuals/MultilineGraph_Depreciated/MultilineGraph';
+import Graph from '../GraphVisuals/MultilineGraph/Graph';
 
 const MyStocks = () => {
 	const userCtx = useContext(UserContext);
@@ -41,10 +38,7 @@ const MyStocks = () => {
 				<div>
 					<div className={classes.container}>
 						<div className={classes.graph}> 
-							{/* OUR CODE */}
-							<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
-							{/* SOURCE CODE */}
-							{/* <MultilineGraph/> */}
+							<Graph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
 						</div>
 						<div className={classes.table}> 
 							<MyStocksTabsSwitch onSelect={onSelectHandler}/>

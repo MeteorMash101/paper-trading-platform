@@ -8,12 +8,13 @@ const StockListTableEntry = ({symbol, shares, price, percent_change, change_dire
         // EDIT: not able to fade out!!! halp.
         <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
             <input 
+                className={classes.checkmark}
                 type="checkbox"
                 onChange={onSelect}
                 id={symbol.toUpperCase()} // MUST BE UPPER CASE!
             />
             {/* NOTE: only this ticker becomes the link to the stock page, also has a style attribute to it to have a color ID. */}
-            <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: "#d53e4f" }}>{symbol}</Link>
+            <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: "#d53e4f" }}>{symbol.toUpperCase()}</Link>
             <div className={classes.shares}>{shares}</div>
             <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
             {

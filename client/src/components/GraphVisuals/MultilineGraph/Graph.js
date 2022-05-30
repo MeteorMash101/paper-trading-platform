@@ -39,6 +39,7 @@ export default function Graph({ stocksSelected, onHover }) {
     const stocksOwnedAllDateRangesArray = []
 		const listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
     for (let i = 0; i < listOfTickers.length; i++) {
+      // EDIT: get the symbol & color id here.
       const currSymbol = listOfTickers[i]
       const {
         stockOneDayFromServer,
@@ -178,7 +179,7 @@ export default function Graph({ stocksSelected, onHover }) {
           <div className="Graph">
             <MultilineChart 
               data={chartData} 
-              // onHover={onHover} 
+              onHover={onHover} 
               // showGridlines={showGridlines} 
               // showAxis={showAxis}
               // showShade={showShade}
