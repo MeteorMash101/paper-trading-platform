@@ -181,6 +181,7 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
             <MultilineChart 
               data={chartData} 
               onHover={onHover} 
+              selectedDate={selectedDate[0]}
               // showGridlines={showGridlines} 
               // showAxis={showAxis}
               // showShade={showShade}

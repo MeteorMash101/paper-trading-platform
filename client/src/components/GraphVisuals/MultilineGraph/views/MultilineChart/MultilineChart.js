@@ -6,7 +6,7 @@ import { Line, Axis, GridLine, Overlay, Tooltip, Area } from "../../components";
 import useController from "./MultilineChart.controller";
 import useDimensions from "../../utils/useDimensions";
 
-const MultilineChart = ({ data = [], margin = {} }) => {
+const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
   const overlayRef = React.useRef(null);
   const [containerRef, { svgWidth, svgHeight, width, height }] = useDimensions({
     maxHeight: 400,
@@ -55,8 +55,8 @@ const MultilineChart = ({ data = [], margin = {} }) => {
               color={color}
             />
           ))}
-          {/* EDIT: only shades 2 stocks! */}
-          <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/>
+          {/* EDIT: only shades 2 stocks! So turned off for now. */}
+          {/* <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/> */}
           <Axis
             type="left"
             scale={yScaleForAxis}
@@ -83,6 +83,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
               xScale={xScale}
               yScale={yScale}
               data={data}
+              selectedDate={selectedDate}
             />
           </Overlay>
         </g>
