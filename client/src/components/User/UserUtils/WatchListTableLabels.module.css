@@ -8,16 +8,16 @@
 
 .list{
     width: 100%;
-    /* border: 1px solid black; */
 }
 
 .symbol{
-    display: inline-block;
-    width: 30%;
+    width: 50%;
+    text-align: center;
 }
 
 .price{
-    width: 30%;
+    width: 10%;
+    text-align: left;
 }
 
 .change{

@@ -58,6 +58,9 @@ const OrderWidget = ({livePrice, stock}) => {
     const stockOrderHandler = async (event) => {
         event.preventDefault();
         // Error handling
+        if (shares < 1) {
+            return
+        }
         if (orderType == "BUY" && estimatedCost > userCtx.balance) {
             setDisplayMessage(errorMsgs[0])
             return // exit early.
@@ -120,9 +123,9 @@ const OrderWidget = ({livePrice, stock}) => {
                     <Alert severity="error" message={displayMessage} size={22}/>
                 }
                 <div className={classes.options}><h4>Current Balance: </h4><h4>{userCtx.balance}</h4></div>
+                {orderType == "BUY" && <Alert severity="info" message={`You currently own ${sharesOwned} shares`}/>}
+                {orderType == "SELL" && <Alert severity="info" message={`You have ${sharesOwned} shares available`}/>}
             </form>
-            {orderType == "BUY" && <Alert severity="info" message={`You currently own ${sharesOwned} shares`}/>}
-            {orderType == "SELL" && <Alert severity="info" message={`You have ${sharesOwned} shares available`}/>}
         </div>
     );
 }

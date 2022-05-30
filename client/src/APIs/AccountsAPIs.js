@@ -37,10 +37,14 @@ const getStocksSharesOwned = async (user_id, stockSymbol) => {
 }
 
 const postOrderTransaction = async (user_id, orderType, stock, shares) => {
-	const dataFromServer = await axios.put(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
+	console.log("received:", user_id, orderType, stock, shares);
+	const dataFromServer = await axios.put(`${BASE_URL}/accounts/${user_id}/getStocks/`, 
+		{
 			action: orderType.toLowerCase(),
 			stock: stock.symbol,
-			quantity: shares}, {
+			quantity: shares
+		}, 
+		{
 			params: {
 				token: localStorage.getItem("access_token")
 			}

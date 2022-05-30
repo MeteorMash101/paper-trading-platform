@@ -74,6 +74,7 @@
 }
 
 .orderBtn {
+    /* AMZN */
     background-image: linear-gradient(to right, rgb(240, 227, 53),rgb(232, 165, 51));
     border-radius: 1.6rem;
     font-size: large;

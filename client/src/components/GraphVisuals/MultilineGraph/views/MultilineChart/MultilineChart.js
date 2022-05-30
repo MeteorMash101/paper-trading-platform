@@ -61,6 +61,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
           {/* <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/> */}
           <Axis
             type="left"
+            className="axisY"
             scale={yScaleForAxis}
             transform="translate(0, -10)"
             ticks={5}

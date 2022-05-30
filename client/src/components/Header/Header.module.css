@@ -1,5 +1,4 @@
 .container {
-  /* border: 2px solid black; */
   position: sticky;
   top: 0;
   background-color: rgb(229, 248, 252);
@@ -9,6 +8,8 @@
   justify-content: space-between;
   align-items: center;
   z-index: 2;
+  padding: .2rem .1rem;
+  padding-top: .7rem;
 }
 
 .searchbar{
@@ -53,24 +54,39 @@ width: 40%;
 }
 }
 
+.tab1 {
+  bottom: 5px
+}
+
+.tab2 {
+  bottom: 5px
+}
+
+.tab3 {
+  bottom: 5px
+}
+
+.tab4 {
+  bottom: 5px
+}
+
 .tab1:hover {
 background-color: rgb(200, 200, 200, 0.5);
-margin-bottom:10px;
 }
 
 .tab2:hover {
 background-color: rgb(200, 200, 200, 0.5);
-margin-bottom:10px;
+/* margin-bottom:10px; */
 }
 
 .tab3:hover {
 background-color: rgba(200, 200, 200, 0.5);
-margin-bottom:10px;
+/* margin-bottom:10px; */
 }
 
 .tab4:hover {
   background-color: rgb(200, 200, 200, 0.5);
-  margin-bottom:10px;
+  /* margin-bottom:10px; */
 }
 
 .logoandtitle {

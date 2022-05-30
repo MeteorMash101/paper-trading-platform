@@ -68,39 +68,19 @@ const UserProfile = () => {
                             <Graph/>
                         </div>
                         <div className={classes.button}>
-                            <Tooltip 
+                        <Tooltip 
                                 open={open} 
                                 onClose={handleClose} 
                                 onOpen={handleOpen} 
                                 title={<h4>Reset Portfolio Data</h4>} 
                                 TransitionComponent={Fade}
                                 TransitionProps={{ timeout: 600 }}>
-                                    <Button variant="contained" color="error" 
-                                        size='large' 
-                                        startIcon={<RotateLeftIcon />}
-                                        onClick={togglePopup}
-                                        // onClick={onClickHandler}
-                                        sx={{
-                                            width: 200,
-                                            height: 70,
-                                            fontSize:20,
-                                            marginTop: '5%',
-                                            marginRight: '33%',
-                                            marginBottom: '5%',   
-                                            }}>
-                                            RESET
-                                    </Button>
+                                <button className = {classes.reset} onClick={togglePopup}> RESET </button>                                    
                             </Tooltip>
                             {isOpen && <PopupMessage
                                 content={<>
                                     <p>This will reset your account balance, transaction history, portfolio value, and stock holdings</p>
-                                    {/*  */}
-                                    <Button variant="contained" color="error" 
-                                        size='medium' 
-                                        startIcon={<RotateLeftIcon />}
-                                        onClick={onClickHandler}>
-                                        RESET ACCOUNT
-                                    </Button>
+                                    <button className = {classes.confirm} onClick={onClickHandler}> RESET ACCOUNT </button>
                                 </>}
                                 handleClose={togglePopup}
                                 />}

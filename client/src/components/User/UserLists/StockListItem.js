@@ -3,17 +3,53 @@ import { Link } from 'react-router-dom'; // needs to link to specific stock page
 import { FcCheckmark } from "react-icons/fc";
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import AccountsAPIs from '../../../APIs/AccountsAPIs';
+import UserContext from '../../../store/user-context';
+import { FcCancel } from "react-icons/fc";
 
 
-const StockListItem = ({symbol, shares, price, percent_change, change_direction, in_watch_list}) => {
+const StockListItem = ({symbol, shares, price, percent_change, change_direction, in_list}) => {
+    const userCtx = useContext(UserContext);
     const [showOrderConfirm, setShowOrderConfirm] = useState(false);
-    const onClickHandler = () => {
+    const [sharesSelected, setSharesSelected] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const onClickSellHandler = () => {
         setShowOrderConfirm(true);
+    }
+    const setSharesSelectedHandler = (event) => {
+        setSharesSelected(event.target.value);
+    }
+    let estimatedCost = parseFloat((price * sharesSelected).toFixed(2));
+    const onClickCheckHandler = async(e) => { // SELL ONLY.        
+        e.preventDefault();
+        // Error handling:
+        if (sharesSelected > shares) {
+            return
+        }
+        // EDIT: why we not using this obj?! (also problem in OrderWidget.js)
+        // const stockOrder = {
+        //     orderType: "SELL",
+        //     shares: sharesSelected,
+        //     marketPrice: price, // aka. price brought bought/sold at
+        //     estimatedCost: estimatedCost,
+        // }
+        setIsLoading(true)
+        // post transaction log to db for this user
+        let stock = {symbol: symbol}
+        await AccountsAPIs.postOrderTransaction(userCtx.user_id, "SELL", stock, sharesSelected)
+        userCtx.updateBalance(estimatedCost);
+        setIsLoading(false)
+    }
+    const onClickCancelHandler = () => {
+        // setSharesSelected(1)
+        console.log("ckliceked")
+        setSharesSelected(1)
+        setShowOrderConfirm(false)
     }
     return (
         // EDIT: not able to fade out!!! halp.
-        <div className={classes.container} id={in_watch_list ? classes.fadeOut : classes.fadeIn}>
+        <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
             <Link className={classes.linkWrapper} to={`/stock/${symbol}`}>
                 <div className={classes.symbol}>{symbol.toUpperCase()}</div>
                 <div className={classes.shares}>{shares}</div>
@@ -31,15 +67,31 @@ const StockListItem = ({symbol, shares, price, percent_change, change_direction,
                 !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
                 }
             </Link>
-            {!showOrderConfirm &&
-                <button className={classes.removeBtn} onClick={onClickHandler}>Sell</button>
+            {(!showOrderConfirm && !isLoading) && 
+                <button className={classes.removeBtn} onClick={onClickSellHandler}>Sell</button>
             }
-            {showOrderConfirm &&
+            {(showOrderConfirm && !isLoading) &&
                 <div className={classes.qtyNConfirmContainer}>
-                    <input className={classes.qtyInput} type="number" id="quantity"  min="1" max={shares}/>
-                    <FcCheckmark className={classes.confirm}/>
+                    <input 
+                        className={classes.qtyInput} 
+                        value={sharesSelected} 
+                        onChange={setSharesSelectedHandler} 
+                        type="number" 
+                        id="quantity" 
+                        min="1" 
+                        max={shares.toString()}
+                    />
+                    <div className={classes.optsWrapper}>
+                        {(showOrderConfirm && !isLoading) &&
+                            <FcCheckmark className={classes.opt} id={classes.check} onClick={onClickCheckHandler}/>
+                        }
+                        {(showOrderConfirm && !isLoading) && 
+                            <FcCancel className={classes.opt} id={classes.cancel} onClick={onClickCancelHandler}/>
+                        }
+                    </div>
                 </div>
             }
+            {isLoading && <div className={classes.loader}><div></div><div></div><div></div></div>}
         </div>
     );
 };

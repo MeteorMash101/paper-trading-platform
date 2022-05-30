@@ -89,7 +89,7 @@ const Tooltip = ({
 
     d3.selectAll(".performanceItemMarketValue").attr(
       "transform",
-      `translate(${maxNameWidth + 80},4)`
+      `translate(${maxNameWidth + 20},4)`
     );
   }, []);
 
@@ -174,18 +174,18 @@ const Tooltip = ({
               <text className="performanceItemName" transform="translate(10,4)">
                 {name}
               </text>
-              <text
+              {/* <text
                 className="performanceItemValue"
                 opacity={0.5}
                 fontSize={10}
-              />
-              <text className="performanceItemMarketValue" />
+              /> */}
+              <text className="performanceItemMarketValue"/>
             </g>
           ))}
         </g>
       </g>
       {data.map(({ name }) => (
-        <circle className="tooltipLinePoint" r={6} key={name} opacity={0} />
+        <circle className="tooltipLinePoint" r={6} key={name} opacity={0}/>
       ))}
     </g>
   );

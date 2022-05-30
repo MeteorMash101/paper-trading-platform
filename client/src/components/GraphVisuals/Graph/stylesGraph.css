@@ -7,9 +7,13 @@
   width: 100%;
   /* height: 420px; */
 }
-
 .axisX text {
   text-anchor: start;
+  color: rgb(53, 54, 54);
+}
+
+.axisY text {
+  /* text-anchor: start; */
   color: rgb(53, 54, 54);
 }
 

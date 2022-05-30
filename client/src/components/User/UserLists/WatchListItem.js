@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'; // needs to link to specific stock page
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
 
-const WatchListItem = ({symbol, price, percent_change, change_direction, in_watch_list}) => {
+const WatchListItem = ({symbol, price, percent_change, change_direction, in_list, onRemove}) => {
     return (
-        <div className={classes.container} id={in_watch_list ? classes.fadeOut : classes.fadeIn}>
+        <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
             <Link className={classes.linkWrapper} to={`/stock/${symbol}`}>
                 <div className={classes.symbol}>{symbol}</div>
                 <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
@@ -22,7 +22,7 @@ const WatchListItem = ({symbol, price, percent_change, change_direction, in_watc
                 !change_direction && <BiDownArrow size={18} className={classes.downArrow}/>
                 }
             </Link>
-            <button className={classes.removeBtn}>X</button>
+            <button className={classes.removeBtn} onClick={onRemove}>X</button>
         </div>
     );
 };

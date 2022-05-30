@@ -26,6 +26,17 @@ const UserWatchList = () => {
 		setUsersStocks(dataFetched.data.stock_list);
 		setIsLoading(false)
 	}, [userCtx.isLoggedIn, watchlistCtx.watchlist])
+	const removeFromWatchListHandler = async (stockSymbol) => {
+		try {
+			await AccountsAPIs.removeFromWatchList(userCtx.user_id, stockSymbol)
+		} catch (err) {
+			if (err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
+		watchlistCtx.removeStock(stockSymbol);
+	}
 	return (
 		<div className={classes.container}>
 			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
@@ -38,6 +49,8 @@ const UserWatchList = () => {
 						percent_change={stock.percent_change}
 						change_direction={stock.change_direction}
 						in_watch_list={watchlistCtx.watchlist.has(stock.symbol)}
+						// onAdd={addToWatchListHandler.bind(null, stock.symbol)}
+						onRemove={removeFromWatchListHandler.bind(null, stock.symbol)}
 					/>
 				))
 			}
