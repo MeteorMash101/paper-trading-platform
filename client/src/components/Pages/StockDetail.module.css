@@ -105,14 +105,15 @@
   .about {
     text-align: center;
     font-size: large;
-    grid-column: 1 / span 3;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 1.4rem;
+    padding: 5%;
+    background-color: rgba(154, 215, 235, 0.1);
+    
     margin-top: 20px;
-    grid-row: 2;
   }
   .summary {
-    grid-column: 1 / span 3;
     margin-top: 20px;
-    grid-row: 3;
   }
 
 .attribute{
