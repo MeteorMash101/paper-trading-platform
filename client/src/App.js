@@ -56,9 +56,11 @@ const App = () => {
     }
     if(localStorage.getItem("email") !== null) {
       userInfo.balance = accountFromServer.data.balance
-      // console.log("userInfo in APP.js, from persistent login: ", userInfo)
-      // console.log("Setting context...")
+
+      userInfo.portfolioInfo = {}
       userCtx.setUserOnLogin(userInfo)
+      userCtx.setPortfolioInfo({"portfolio_value": accountFromServer.data.portfolio_value, "percent_change": "%",
+      "change_direction": false,});
       // NOTE: after this run ends, then context(s) are updated (so it is not immediate).
       // Below is fetching WL data + SO data.
       const fetchData = async() => {

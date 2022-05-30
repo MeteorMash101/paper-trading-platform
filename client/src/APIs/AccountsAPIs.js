@@ -72,12 +72,14 @@ const getUsersWatchlist = async (user_id) => {
 }
 
 const getPortfolioValueData = async (user_id) => {
+	console.log("GETTING PORTFOLIO VALUE DATA")
 	const dataFetched = await axios.get(`${BASE_URL}/accounts/${user_id}/getStocks/`, {
 		params: {
 			info: "portfolio_value",
 			token: localStorage.getItem("access_token")
 		}    
 	})
+	console.log(dataFetched)
 	return dataFetched
 }
 
