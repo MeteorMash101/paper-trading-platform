@@ -45,9 +45,9 @@
 .companyName {
     /* border: 5px solid purple; */
     display: flex;
-    height: 1vh;
+    height: 5vh;
     align-items: center;
-    /* margin-bottom: -5px; */
+    margin-bottom: -5px;
 }
 
 .symbol{

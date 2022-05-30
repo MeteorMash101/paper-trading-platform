@@ -93,18 +93,28 @@
     /* color: rgba(25, 139, 95, 0.884); */
     background-color: rgb(226, 249, 226);
     border-radius: 10px;
-    width: 14%;
+    width: 10%;
     text-align: left;
     padding: 6px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 #negChange {
     /* color: rgb(185, 52, 19); */
-    background-color: rgb(246, 221, 221);
+    /* background-color: rgb(246, 221, 221); */
     border-radius: 10px;
-    width: 14%;
+    width: 10%;
     text-align: left;
     padding: 6px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .upArrow {
@@ -112,6 +122,7 @@
     color: rgba(25, 139, 95, 0.884);
     left: 94%;
     width: 5%;
+    /* bottom: 0.5%; */
 }
 
 .downArrow {
@@ -119,6 +130,7 @@
     color: rgb(185, 52, 19);
     left: 94%;
     width: 5%;
+    text-justify: center;
 }
 
 .watchListBtn:hover {
