@@ -58,7 +58,7 @@
     align-items: center;
     border-radius: 10px;
     padding: 2px;
-    background-color: rgb(193, 240, 248);
+    /* background-color: rgb(193, 240, 248); */
 }
 
 .symbol:hover {

@@ -25,7 +25,8 @@ const MyStocks = () => {
 	const [usersStocksOwned, setUsersStocksOwned] = useState([]);
 	const [usersWatchList, setUsersWatchList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
-
+	// EDIT: for some reason ctx is not updated right away...
+	// console.log("[MyStocks.js]: stocksOwnedCtx", stocksOwnedCtx)
 	// API CALL: Fetch user's data for Stock List & Watch List on render.
 	useEffect(async () => {
 		setIsLoading(true)
@@ -38,6 +39,10 @@ const MyStocks = () => {
 				userCtx.setDefault();
 			}
 		}
+		// Add rand. color ID for each stock data.
+		dataFetched.data.stock_list.forEach((stockData) => { 
+			stockData.colorId = "#" + Math.floor(Math.random()*16777215).toString(16)
+		});
 		setUsersStocksOwned(dataFetched.data.stock_list);
 		try {
 			dataFetched = await AccountsAPIs.getUsersWatchlist(userCtx.user_id);
@@ -47,6 +52,10 @@ const MyStocks = () => {
       			userCtx.setDefault();
 			}
 		}
+		// Add rand. color ID for each stock data.
+		dataFetched.data.stock_list.forEach((stockData) => { 
+			stockData.colorId = "#" + Math.floor(Math.random()*16777215).toString(16)
+		});
 		setUsersWatchList(dataFetched.data.stock_list);
 		setIsLoading(false)
 	}, [userCtx.isLoggedIn, stocksOwnedCtx.stocksOwned, watchlistCtx.watchlist])
@@ -79,9 +88,11 @@ const MyStocks = () => {
 			{userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
 				<div>
 					<div className={classes.mainContainer}>
-						{/* <div className={classes.graph}> 
-							<Graph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
-						</div> */}
+						{/* Multi-line Display Graph */}
+						<div className={classes.graph}> 
+							<Graph usersStocksOwnedNWatchList={usersStocksOwned.concat(usersWatchList)} usersWatchList={usersWatchList} stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+						</div>
+						{/* The Stock List & Watch List Tables */}
 						<div className={classes.table}> 
 							<Box sx={{ width: '90%', margin: '5%', border:'1px solid grey', borderRadius:'1.6rem', height:'65vh'}}>
 								<Tabs
@@ -104,13 +115,14 @@ const MyStocks = () => {
 														usersStocksOwned.map((stock) => (
 															<StockTableEntry
 																key={stock.id} // required for React warning...
+																colorId={stock.colorId.toString()}
 																symbol={stock.symbol}
 																shares={stock.shares}
 																price={stock.price}
 																percent_change={stock.percent_change}
 																change_direction={stock.change_direction}
 																in_list={stocksOwnedCtx.stocksOwned.has(stock.symbol)}
-																isWL={false}
+																IS_WATCHLIST_TABLE={false}
 																onSelect={onSelectHandler}
 															/>
 														))
@@ -131,12 +143,13 @@ const MyStocks = () => {
 														usersWatchList.map((stock) => (
 															<StockTableEntry
 																key={stock.id} // required for React warning...
+																colorId={stock.colorId.toString()}
 																symbol={stock.symbol}
 																price={stock.price}
 																percent_change={stock.percent_change}
 																change_direction={stock.change_direction}
 																in_list={watchlistCtx.watchlist.has(stock.symbol)}
-																isWL={true}
+																IS_WATCHLIST_TABLE={true}
 																onSelect={onSelectHandler}
 															/>
 														))

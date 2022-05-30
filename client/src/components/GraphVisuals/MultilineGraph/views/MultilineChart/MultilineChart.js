@@ -20,7 +20,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
     yScale,
     yScaleForAxis
   } = controller;
-  console.log("Inside [MultilineChart.js]: data.color", data, data[0].color)
+  
   return (
     <div ref={containerRef}>
       <svg width={svgWidth} height={svgHeight}>
@@ -56,7 +56,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
             />
           ))}
           {/* EDIT: only shades 2 stocks! */}
-          {/* <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/> */}
+          <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/>
           <Axis
             type="left"
             scale={yScaleForAxis}

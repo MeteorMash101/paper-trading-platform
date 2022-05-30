@@ -14,7 +14,7 @@ import StocksOwnedContex from '../../../store/stocks-owned-context';
 import UserContext from '../../../store/user-context';
 import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
 
-export default function Graph({ stocksSelected, onHover }) {
+export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHover }) {
   const [isLoading, setIsLoading] = useState(false);
   const [stocksOwnedAllDateRanges, setStocksOwnedAllDateRanges] = useState([]);
   const [selectedDate, setSelectedDate] = useState(["5Y"]);
@@ -28,7 +28,7 @@ export default function Graph({ stocksSelected, onHover }) {
   // helper func: required format for graph
   const formatData = (colorId, currSymbol, dateRange, stockData) => {
     return {
-      color: colorId,
+      color: colorId, // req. must be named "color"
       name: currSymbol.toUpperCase() + ": " + dateRange,
       items: stockData['historical_data'].map((d) => ({ ...d, date: new Date(Date.parse(d.date + "T" + d.time))}))
     }
@@ -37,10 +37,11 @@ export default function Graph({ stocksSelected, onHover }) {
   useEffect(async() => {
     setIsLoading(true)
     const stocksOwnedAllDateRangesArray = []
-		const listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
-    for (let i = 0; i < listOfTickers.length; i++) {
+		// const listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
+    for (let i = 0; i < usersStocksOwnedNWatchList.length; i++) {
       // EDIT: get the symbol & color id here.
-      const currSymbol = listOfTickers[i]
+      const currSymbol = usersStocksOwnedNWatchList[i].symbol
+      const currColorId = usersStocksOwnedNWatchList[i].colorId
       const {
         stockOneDayFromServer,
         stockOneWeekFromServer,
@@ -50,18 +51,18 @@ export default function Graph({ stocksSelected, onHover }) {
         stockOneYearFromServer,
         stockFiveYearFromServer
       } = await StockAPIs.getStockHistoricalByDateRanges(currSymbol)
-      // rand. color ID for this stock.
-      const colorId = "#" + Math.floor(Math.random()*16777215).toString(16);
+      // const colorId = "#" + Math.floor(Math.random()*16777215).toString(16);
       stocksOwnedAllDateRangesArray.push({
         symbol: currSymbol,
+        colorId: currColorId,
         // all date range data for this stock (complete & proper).
-        oneDay: formatData(colorId, currSymbol, "1D", stockOneDayFromServer.data),
-        oneWeek: formatData(colorId, currSymbol, "1W", stockOneWeekFromServer.data),
-        oneMonth: formatData(colorId, currSymbol, "1M", stockOneMonthFromServer.data),
-        threeMonth: formatData(colorId, currSymbol, "3M", stockThreeMonthFromServer.data),
-        sixMonth: formatData(colorId, currSymbol, "6M", stockSixMonthFromServer.data),
-        ytd: formatData(colorId, currSymbol, "1Y", stockOneYearFromServer.data),
-        ytd5: formatData(colorId, currSymbol, "5Y", stockFiveYearFromServer.data),
+        oneDay: formatData(currColorId, currSymbol, "1D", stockOneDayFromServer.data),
+        oneWeek: formatData(currColorId, currSymbol, "1W", stockOneWeekFromServer.data),
+        oneMonth: formatData(currColorId, currSymbol, "1M", stockOneMonthFromServer.data),
+        threeMonth: formatData(currColorId, currSymbol, "3M", stockThreeMonthFromServer.data),
+        sixMonth: formatData(currColorId, currSymbol, "6M", stockSixMonthFromServer.data),
+        ytd: formatData(currColorId, currSymbol, "1Y", stockOneYearFromServer.data),
+        ytd5: formatData(currColorId, currSymbol, "5Y", stockFiveYearFromServer.data),
       })
     }
     setStocksOwnedAllDateRanges(stocksOwnedAllDateRangesArray);
@@ -77,9 +78,9 @@ export default function Graph({ stocksSelected, onHover }) {
   if (stocksOwnedAllDateRanges.length > 0 && stocksSelected.length > 0) {
     let stocksSelectedToShow = []
     for (let i = 0; i < stocksOwnedAllDateRanges.length; i++) {
-      console.log("looking at symbol:", (stocksOwnedAllDateRanges[i].symbol.toUpperCase()))
+      // console.log("looking at symbol:", (stocksOwnedAllDateRanges[i].symbol.toUpperCase()))
       if (stocksSelected.includes(stocksOwnedAllDateRanges[i].symbol.toUpperCase())) {
-        console.log("MATCHED!")
+        // console.log("MATCHED!")
         stocksSelectedToShow.push(stocksOwnedAllDateRanges[i])
       }
     }

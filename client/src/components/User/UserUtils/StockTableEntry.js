@@ -5,7 +5,7 @@ import { BiDownArrow } from "react-icons/bi";
 import TableSymbolButton from './TableSymbolButton';
 import { useState } from 'react';
 
-const StockTableEntry = ({symbol, shares, price, percent_change, change_direction, in_list, isWL, onSelect}) => {
+const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change_direction, in_list, IS_WATCHLIST_TABLE, onSelect}) => {
     const [mouseIsHovering, setIsMouseHovering] = useState(false);
     const onMouseEnterHandler = () => {
         setIsMouseHovering(true)
@@ -24,9 +24,9 @@ const StockTableEntry = ({symbol, shares, price, percent_change, change_directio
             />
             {/* NOTE: only this ticker becomes the link to the stock page, also has a style attribute to it to have a color ID. */}
             
-            <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: "#d53e4f" }} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler}>{symbol.toUpperCase()}</Link>
+            <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: colorId }} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler}>{symbol.toUpperCase()}</Link>
             {mouseIsHovering && <TableSymbolButton/>}
-            {!isWL && <div className={classes.shares}>{shares}</div>}
+            {!IS_WATCHLIST_TABLE && <div className={classes.shares}>{shares}</div>}
             <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
             {
             change_direction && <p className={classes.posChange}>+{parseInt(percent_change).toFixed(2)}%</p>
