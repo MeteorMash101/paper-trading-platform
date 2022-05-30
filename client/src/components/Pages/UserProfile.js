@@ -12,11 +12,13 @@ import RotateLeftIcon from '@mui/icons-material/RotateLeft';
 import Tooltip from '@mui/material/Tooltip';
 import Fade from '@mui/material/Fade';
 import axios from 'axios';
+import PopupMessage from '../User/UserUtils/Popup';
 
 const UserProfile = () => {
     const userCtx = useContext(UserContext);
 
     const [open, setOpen] = useState(false);
+    // const [reset, setReset] = useState(false);
 
     const handleClose = () => {
         setOpen(false);
@@ -33,8 +35,15 @@ const UserProfile = () => {
                 token: localStorage.getItem("access_token")
             }
         })
-        console.log("reset!", accountFromServer)
+        console.log("account reset!", accountFromServer)
         window.location.reload(false);
+        // setReset(true);
+    }
+
+    const [isOpen, setIsOpen] = useState(false);
+ 
+    const togglePopup = () => {
+      setIsOpen(!isOpen);
     }
 
     return(
@@ -69,7 +78,8 @@ const UserProfile = () => {
                                     <Button variant="contained" color="error" 
                                         size='large' 
                                         startIcon={<RotateLeftIcon />}
-                                        onClick={onClickHandler}
+                                        onClick={togglePopup}
+                                        // onClick={onClickHandler}
                                         sx={{
                                             width: 200,
                                             height: 70,
@@ -81,6 +91,19 @@ const UserProfile = () => {
                                             RESET
                                     </Button>
                             </Tooltip>
+                            {isOpen && <PopupMessage
+                                content={<>
+                                    <p>This will reset your account balance, transaction history, portfolio value, and stock holdings</p>
+                                    {/*  */}
+                                    <Button variant="contained" color="error" 
+                                        size='medium' 
+                                        startIcon={<RotateLeftIcon />}
+                                        onClick={onClickHandler}>
+                                        RESET ACCOUNT
+                                    </Button>
+                                </>}
+                                handleClose={togglePopup}
+                                />}
                         </div>
                         
                     </div>

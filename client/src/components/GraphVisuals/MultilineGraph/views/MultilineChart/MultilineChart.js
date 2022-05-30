@@ -26,6 +26,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
       <svg width={svgWidth} height={svgHeight}>
         <g transform={`translate(${margin.left},${margin.top})`}>
           <GridLine
+            className="yAxisGridLine"
             type="vertical"
             scale={xScale}
             ticks={5}
@@ -33,6 +34,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
             transform={`translate(0, ${height})`}
           />
           <GridLine
+            className="xAxisGridLine"
             type="horizontal"
             scale={yScaleForAxis}
             ticks={2}

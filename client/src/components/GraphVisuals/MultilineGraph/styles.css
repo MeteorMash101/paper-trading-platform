@@ -1,44 +1,45 @@
-/* body {
-  font-family: sans-serif;
-  background-color: #000000cc;
-} */
-
 .Graph {
-  background-color: rgb(31, 31, 31);
-  border-left: 5px solid rgb(0, 0, 0);
-  border-bottom: 5px solid rgb(0, 0, 0);
-  /* border: 5px solid pink; */
   width: 100%;
-  height: 420px;
 }
 
 .axisX text {
   text-anchor: start;
-  color: rgb(138, 141, 141);
+  color: rgb(53, 54, 54);
 }
 
 .baseGridLine line {
-  stroke: rgba(83, 83, 83, 0.5);
+  stroke: rgba(184, 181, 181, 0.5);
+}
+
+.xAxisGridLine line {
+  stroke: rgba(230, 228, 228, 0.5);
+}
+
+.yAxisGridLine line {
+  stroke: rgba(227, 224, 224, 0.5);
 }
 
 .tooltip text {
-  font-size: 12px;
-  fill: #efe7e7;
+  font-size: 13px;
+  fill: #4a4949;
+  text-align: center;
+  align-items: center;
 }
 
 .tooltipLine {
-  stroke: #878a8a;
+  stroke: #cccfcf;
   stroke-width: 1px;
 }
 
 .tooltipContent .contentTitle {
   font-weight: bold;
-  font-size: 20px;
-  color: rgb(255, 255, 255);
+  font-size: 15px;
+  text-align: center;
+  color: rgb(153, 153, 153);
 }
 
 .tooltipLinePoint {
-  fill: rgb(255, 255, 255);
+  fill: rgb(163, 160, 160);
 }
 
 .legendContainer {
@@ -47,58 +48,77 @@
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  border: 2px solid rgb(26, 38, 49);
   border-radius: 5px;
-  background-color: #bec3c7;
   margin-top: 10px;
   padding: .3rem;
   color: #8e8c8f;
   width: 100%;
-  max-width: 764px;
-  height: auto
 }
 
 .switchContainer {
   display: flex;
-  /* border: 2px solid rgb(0, 0, 0); */
-  width: 60%;
-  height: auto;
+  width: 98%;
 }
 
 .switchElement {
-  display: flex;
   flex-direction: column;
-  width: 20%;
-  height: auto;
-  padding: .2rem .2rem;
-  margin: .2rem .2rem;
-  background-color: rgb(217, 243, 234);
-  border-left: 2px solid pink;
-  border-radius: 5px;
+  width: 30%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  padding: .5rem .5rem;
+  margin: .5rem .5rem;
+  background-color: rgba(222, 233, 233, 0.5);
+  border-radius: 10px;
+}
+
+.switchElement:hover {
+  background-color: rgba(176, 176, 178, 0.5);
 }
 
 .switchLabel {
   color: black;
-  margin-bottom: .2rem;
+  width: 100%;
+  /* border: 1px solid black; */
+  text-align: center;
+  align-items: center;
+  margin-right: 20px;
+  margin-top: 2px;
 }
 
 .dateRangeOptsContainer {
-  /* border: 2px solid pink; */
-  height: 38%;
+  border: 1px solid rgba(171, 166, 167, 0.77);
+  border-radius: 10px;
+  width: 95%;
+  align-items: center;
+  height: 5vh;
+  margin: 0% 2%;
+  border-radius: 10px;
+  align-items: center;
+  padding-bottom: 0.5%;
+}
+
+.dateRangeOpt:hover {
+  background-color: rgba(176, 176, 178, 0.5);
+  padding: 1%;
+  border-radius: 10px;
 }
 
 .dateRangeOpt {
-  /* border-radius: 5px; */
-  border: 2px solid black;
-  background-color: rgb(167, 215, 244);
-  color: rgb(0, 0, 0);
+  border: white;
+  width: 14%;
+  background-color: rgb(252, 252, 252);
+  color: rgb(62, 62, 62);
   margin: .4rem 0rem;
   padding: .5rem;
 }
 
 #selected {
-  background-color: rgb(112, 189, 237);
-  color: whitesmoke;
+  background-color: rgb(206, 223, 234);
+  padding: 1%;
+  border-radius:10px;
+  font-weight: 900;
 }
 
 #notAvail {
@@ -181,22 +201,34 @@
 
 /* Legend.js toggle switches */
 .graphModeSwitch {
-  border: 2px solid black;
-  border-radius: 5px;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 10px;
+  width: 100%;
   cursor: pointer;
-  background-color: whitesmoke;
-  font-size: 15px;
-  width: 80%;
+  background-color: rgba(222, 233, 233, 0.5);
+  font-size: 16px;
+  text-align: center;
+  text-justify: center;
+  justify-content: center;
+  width: 20%;
   height: 100%;
-  margin: .2rem .2rem;
+}
+
+.graphModeSwitch:hover {
+  background-color:rgba(176, 176, 178, 0.5);
 }
 
 .graphModeSwitchContainer {
   display: flex;
   flex-direction: row;
-  border: 2px solid pink;
-  width: 30%;
-  height: 70px;
+  /* border: 2px solid rgb(130, 7, 27); */
+  width: 98%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-justify: center;
+  margin: 1%;
+  height: 5vh;
 }
 
 .candleStickSwitch:active {
@@ -210,16 +242,19 @@
 
 /* Legend.js toggle switches */
 .graphSwitch {
-  border: 2px solid black;
   border-radius: 5px;
   cursor: pointer;
-  color: black;
   font-size: 15px;
   width: 20%;
   height: 42%;
   margin: .2rem .2rem;
   padding: .2rem .2rem;
-  background-image: linear-gradient(rgb(91, 255, 244), rgb(68, 174, 207));
+  border: 1px solid white;
+  background-color: rgba(222, 233, 233, 0.5);
+}
+
+.graphSwitch:hover {
+  background-color:rgba(176, 176, 178, 0.5);
 }
 
 .graphSwitch:active {
@@ -233,8 +268,8 @@
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 25px;
 }
 
 .switch input { 
@@ -250,7 +285,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: rgb(224, 222, 222);
   -webkit-transition: .4s;
   transition: .4s;
 }
@@ -258,21 +293,21 @@
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
+  height: 20px;
+  width: 20px;
+  left: 2px;
+  bottom: 2px;
+  background-color: rgb(158, 157, 157);
   -webkit-transition: .4s;
   transition: .4s;
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #b8cee1;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px #afc1d0;
 }
 
 #NOTAVAIL {
@@ -296,4 +331,23 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+@media (max-width:1400px) {
+  .switchElement {
+    height: 40px;
+    margin-right: 2%;
+  }
+}
+
+@media (max-width:1000px) {
+  .switchElement {
+    font-size: small;
+    height: 50px;
+    margin-right: 2%;
+  }
+
+  .graphModeSwitchContainer {
+    height: 10vh;
+  }
 }

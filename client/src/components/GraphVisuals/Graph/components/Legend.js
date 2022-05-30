@@ -1,6 +1,6 @@
 import React from "react";
-import { FcCandleSticks } from "react-icons/fc"
-import { VscGraphLine } from "react-icons/vsc"
+import CandlestickChartTwoToneIcon from '@mui/icons-material/CandlestickChartTwoTone';
+import ShowChartTwoToneIcon from '@mui/icons-material/ShowChartTwoTone';
 import DateRangeController from "./GraphOps/DateRangeController";
 import Switch from "./GraphOps/Switch";
 import Mode from "./GraphOps/Mode";
@@ -23,10 +23,10 @@ const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGrid
       {/* Graph Mode Options */}
       <div class="graphModeSwitchContainer">
         <Mode name="GRAPH" onClick={onGraphMode}>
-          <VscGraphLine class="svgLogo"/>
+          <ShowChartTwoToneIcon/>
         </Mode>
         <Mode name="CANDLESTICK" onClick={onGraphMode}>
-          <FcCandleSticks class="svgLogo"/>
+          <CandlestickChartTwoToneIcon/> 
         </Mode>
       </div>
     </div>

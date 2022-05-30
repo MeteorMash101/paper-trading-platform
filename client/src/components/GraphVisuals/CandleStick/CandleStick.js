@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState, Fragment } from 'react';
 import StockAPIs from '../../../APIs/StocksAPIs';
+import ShowChartTwoToneIcon from '@mui/icons-material/ShowChartTwoTone';
 
 export default function ApexChart({symbol, onGraphMode}){
   const [array, setArray] = useState([]);
@@ -65,7 +66,7 @@ export default function ApexChart({symbol, onGraphMode}){
           <div id="chart">
             <ReactApexChart options={options} series={series} type="candlestick" height={350} />
           </div>
-          <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}>Graph Mode</button>
+          <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}><ShowChartTwoToneIcon/></button>
         </Fragment>
 
       );

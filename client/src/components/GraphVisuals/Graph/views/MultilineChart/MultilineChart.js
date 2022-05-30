@@ -37,6 +37,7 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
           {/* NOTE: gridlines thing below? */}
           {showGridlines && 
             <GridLine
+              className="yAxisGridLine"
               type="vertical"
               scale={xScale}
               ticks={5}
@@ -46,6 +47,7 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
           }
           {showGridlines &&
             <GridLine
+              className="xAxisGridLine"
               type="horizontal"
               scale={yScaleForAxis}
               ticks={2}
