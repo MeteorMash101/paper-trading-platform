@@ -184,7 +184,7 @@ export default function Graph({ stocksSelected, onHover }) {
               // showShade={showShade}
             />
           </div>
-          {/* <Legend
+          <Legend
             legendData={legendData}
             currDateRange={selectedDate[0]}
             onChangeDateRange={onChangeDateRangeHandler}
@@ -192,7 +192,7 @@ export default function Graph({ stocksSelected, onHover }) {
             onChangeShowAxis={onChangeShowAxisHandler}
             onChangeShowShade={onChangeShowShadeHandler}
             onChangeShowColorCode={onChangeShowColorCode}
-          /> */}
+          />
         </Fragment>
       }
     </Fragment>

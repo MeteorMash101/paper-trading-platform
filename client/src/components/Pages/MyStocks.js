@@ -32,27 +32,27 @@ const MyStocks = () => {
 	}
 
 	return (
-	<MotionWrapper>
-		{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
-			// Redirect to /login - User must be logged in to view ALL pages...
-			<Navigate to="/login"/>
-		}
-		{userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
-			<div>
-				<div className={classes.container}>
-					<div className={classes.graph}> 
-						{/* OUR CODE */}
-						<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
-						{/* SOURCE CODE */}
-						{/* <MultilineGraph/> */}
-					</div>
-					<div className={classes.table}> 
-						<MyStocksTabsSwitch onSelect={onSelectHandler}/>
+		<MotionWrapper>
+			{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
+				// Redirect to /login - User must be logged in to view ALL pages...
+				<Navigate to="/login"/>
+			}
+			{userCtx.isLoggedIn && localStorage.getItem("name") !== null &&
+				<div>
+					<div className={classes.container}>
+						<div className={classes.graph}> 
+							{/* OUR CODE */}
+							<MultilineGraph stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+							{/* SOURCE CODE */}
+							{/* <MultilineGraph/> */}
+						</div>
+						<div className={classes.table}> 
+							<MyStocksTabsSwitch onSelect={onSelectHandler}/>
+						</div>
 					</div>
 				</div>
-			</div>
-		}
-	</MotionWrapper>
+			}
+		</MotionWrapper>
 	);
 }
 export default MyStocks

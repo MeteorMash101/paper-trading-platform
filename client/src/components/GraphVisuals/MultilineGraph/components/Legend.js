@@ -12,23 +12,6 @@ const Legend = ({ legendData, currDateRange, onChangeDateRange, onChangeShowGrid
       <div className="dateRangeOptsContainer">
         <DateRangeController legendData={legendData} currDateRange={currDateRange} onChangeDateRange={onChangeDateRange} />
       </div>
-      {/* Graph Switches */}
-      <div class="switchContainer">
-        <Switch label="Gridlines" onChangeHandler={onChangeShowGridlines}/>
-        <Switch label="Axis" onChangeHandler={onChangeShowAxis}/>
-        <Switch label="Shade" onChangeHandler={onChangeShowShade}/>
-        <Switch label="Trend Col" onChangeHandler={onChangeShowColorCode}/>
-        {/* <Switch label="Volume" onChangeHandler={onChangeShowVolume}/> */}
-      </div>
-      {/* Graph Mode Options */}
-      <div class="graphModeSwitchContainer">
-        <Mode name="GRAPH" onClick={onGraphMode}>
-          <VscGraphLine class="svgLogo"/>
-        </Mode>
-        <Mode name="CANDLESTICK" onClick={onGraphMode}>
-          <FcCandleSticks class="svgLogo"/>
-        </Mode>
-      </div>
     </div>
   );
 }
