@@ -67,8 +67,6 @@ export default function Graph() {
     ...[data0, data1, data2]
   ];
 
-  console.log("[G_Depreciated.js] chartData: ", chartData);
-
   const onChangeSelection = (name) => {
     const newSelectedItems = selectedItems.includes(name)
       ? selectedItems.filter((item) => item !== name)

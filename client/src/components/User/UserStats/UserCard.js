@@ -3,23 +3,16 @@ import { useContext } from 'react';
 import UserContext from '../../../store/user-context';
 import { useState, useEffect } from 'react';
 import AccountsAPIs from '../../../APIs/AccountsAPIs';
-import Graph1 from '../../GraphVisuals/PerformanceGraph/Graph1';
+import Graph from '../../GraphVisuals/PerformanceGraph/Graph';
 
 const UserCard = () => {
     const userCtx = useContext(UserContext);
     // API CALL: Fetch User's PV.
     useEffect(async() => {
-        if (!userCtx.isLoggedIn) {
-			userCtx.setPortfolioInfo({
-                portfolio_value: "0.00",
-                percent_change: "%",
-                change_direction: false,
-            });
-			return
-		}
         let dataFetched;
         try {
             dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id)
+            console.log("[UserCard]: dataFetched", dataFetched);
 		} catch (err) {
 			if(err.response.status === 401) {
 				localStorage.clear();
@@ -38,7 +31,7 @@ const UserCard = () => {
                     <h4 className={classes.attribute}> Buying Power: <span className={classes.value}> ${userCtx.balance} </span> </h4>
                 </div>
                 <div className={classes.graph}>
-                    <Graph1/>
+                    <Graph/>
                 </div>
             </div>
         </div>
@@ -46,3 +39,14 @@ const UserCard = () => {
 }
 
 export default UserCard;
+
+
+// DEPRECIATED:
+// if (!userCtx.isLoggedIn) {
+//     userCtx.setPortfolioInfo({
+//         portfolio_value: "0.00",
+//         percent_change: "%",
+//         change_direction: false,
+//     });
+//     return
+// }

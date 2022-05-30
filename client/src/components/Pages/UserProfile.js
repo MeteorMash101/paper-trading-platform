@@ -3,7 +3,7 @@ import UserContext from '../../store/user-context';
 import PieGraph from '../User/UserStats/PieChart.js';
 import classes from './UserProfile.module.css';
 import CardTop from '../User/UserStats/CardTop.js';
-import Graph1 from '../GraphVisuals/PerformanceGraph/Graph1.js';
+import Graph from '../GraphVisuals/PerformanceGraph/Graph.js';
 import Header from '../Header/Header';
 import { Navigate } from 'react-router-dom';
 import MotionWrapper from '../Alerts/MotionWrapper';
@@ -56,7 +56,7 @@ const UserProfile = () => {
                         </div>
                         <div className={classes.lineChart}>
                             <h2>PERFORMANCE GRAPH</h2>
-                            <Graph1/>
+                            <Graph/>
                         </div>
                         <div className={classes.button}>
                             <Tooltip 
