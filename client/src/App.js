@@ -67,7 +67,6 @@ const App = () => {
         let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
         watchlistCtx.setWatchlistOnLogin(listOfTickers);
         listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
-        console.log("[App.js] listOfTickers:", listOfTickers)
         stocksOwnedCtx.setStocksOwnedOnLogin(listOfTickers);
       }
       fetchData()
