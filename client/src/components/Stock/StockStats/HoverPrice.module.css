@@ -1,10 +1,10 @@
 .hoverPrice {
     /* border: 4px solid pink; */
     margin: .6rem .6rem;
-    background-color: rgb(205, 205, 205);
+    background-color: rgb(39, 38, 38);
     border-radius: 10px;
     padding: .2rem .2rem;
-    color: rgb(64, 96, 106);
+    color: rgb(152, 210, 228);
     animation-name: flash;
     animation-duration: 0.25s;
     animation-timing-function: linear;
@@ -14,6 +14,6 @@
 }
  
 @keyframes flash {
-    from {color: rgb(194, 203, 85);}
-    to {color: rgb(82, 127, 142);}
+    from {color: rgb(230, 237, 145);}
+    to {color: rgb(152, 210, 228);}
 }

@@ -15,22 +15,10 @@ const Tooltip = ({
   margin,
   anchorEl,
   children,
+  selectedDate,
   ...props
 }) => {
-  const ref = React.useRef(null);
   const hoverInfoContext = useContext(HoverInfoContext);
-  const drawLine = React.useCallback(
-    (x) => {
-      d3.select(ref.current)
-        .select(".tooltipLine")
-        .attr("x1", x)
-        .attr("x2", x)
-        .attr("y1", -margin.top)
-        .attr("y2", height);
-    },
-    [ref, height, margin]
-  );
-
   // Assign proper date time format:
   const dateTimeFormat1D = (x) => { return d3.timeFormat("%I:%M %p")(xScale.invert(x))}
   const dateTimeFormat1W = (x) => { return d3.timeFormat("%b %d, %I:%M %p")(xScale.invert(x)) }
@@ -41,7 +29,7 @@ const Tooltip = ({
   const dateTimeFormat5Y = (x) => { return d3.timeFormat("%b %d, %Y")(xScale.invert(x)) }
 
   let dateTimeFormat = ""
-  switch(data[0].name) {
+  switch(selectedDate) {
     case "1D":
       dateTimeFormat = dateTimeFormat1D
       break;
@@ -66,6 +54,19 @@ const Tooltip = ({
     default: // safety
       dateTimeFormat = dateTimeFormat5Y
   }
+
+  const ref = React.useRef(null);
+  const drawLine = React.useCallback(
+    (x) => {
+      d3.select(ref.current)
+        .select(".tooltipLine")
+        .attr("x1", x)
+        .attr("x2", x)
+        .attr("y1", -margin.top)
+        .attr("y2", height);
+    },
+    [ref, height, margin]
+  );
 
   const drawContent = React.useCallback(
     (x) => {
@@ -133,7 +134,8 @@ const Tooltip = ({
 
     d3.selectAll(".performanceItemMarketValue").attr(
       "transform",
-      `translate(${maxNameWidth + 80},4)`
+      // EDIT: below is dist. to other component w/ in tooltip
+      `translate(${maxNameWidth + 40},4)`
     );
   }, []);
 
@@ -210,9 +212,23 @@ const Tooltip = ({
       <line className="tooltipLine" />
       <g className="tooltipContent">
         <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
-        {/* EDIT: below date as a title */}
+        {/* NOTE: tooltip content starts here by "classname" */}
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
+          {data.map(({ name, color }, i) => (
+            <g key={name} transform={`translate(6,${22 * i})`}>
+              <circle r={6} fill={color} />
+              <text className="performanceItemName" transform="translate(10,4)">
+                {name}
+              </text>
+              {/* <text
+                className="performanceItemValue"
+                opacity={0.5}
+                fontSize={10}
+              /> */}
+              <text className="performanceItemMarketValue" />
+            </g>
+          ))}
         </g>
       </g>
       {data.map(({ name }) => (
@@ -251,41 +267,3 @@ Tooltip.defaultProps = {
 };
 
 export default Tooltip;
-
-
-
-// [DEPRECIATED]
-
-// return (
-//   <g ref={ref} opacity={0} {...props}>
-//     <line className="tooltipLine" />
-//     <g className="tooltipContent">
-//       <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
-//       {/* EDIT: below date as a title */}
-//       <text className="contentTitle" transform="translate(4,14)" />
-//       <g className="content" transform="translate(4,32)">
-//         {data.map(({ name, color, date, time }, i) => (
-//           <g key={name} transform={`translate(6,${22 * i})`}>
-//             {/* EDIT: below was circle + date range */}
-//             {/* <circle r={6} fill={color} />
-//             <text className="performanceItemName" transform="translate(10,4)">
-//               {name}
-//             </text> */}
-//             {/* EDIT: below was showing the stock volume */}
-//             {/* <text
-//               className="performanceItemValue"
-//               opacity={0.5}
-//               fontSize={10}
-//             /> */}
-//             {/* EDIT: below was just the stock price */}
-//             {/* <text className="performanceItemMarketValue" /> */}
-//           </g>
-//         ))}
-//       </g>
-//     </g>
-//     {data.map(({ name }) => (
-//       <circle className="tooltipLinePoint" r={6} key={name} opacity={0} />
-//     ))}
-//   </g>
-// );
-// };

@@ -1,0 +1,63 @@
+.container {
+    /* border: 5px solid pink; */
+    width: auto;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: .2rem .7rem;
+}
+
+.livePrice {
+    /* border: 5px solid green; */
+    /* bit of a temp fix margin */
+    margin-top: .3rem;
+    color: rgb(79, 79, 79);
+    text-align: right;
+    justify-content: right;
+    align-items: right;
+    padding-left: 1%;
+    font-weight: bolder;
+    animation: fadeIn linear 1.4s;
+    -webkit-animation: fadeIn linear 1.4s;
+    -moz-animation: fadeIn linear 1.4s;
+    -o-animation: fadeIn linear 1.4s;
+    -ms-animation: fadeIn linear 1.4s;
+}
+
+.priceChange {
+    /* border: 5px solid black; */
+    color: rgb(98, 98, 98);
+    font-size: 18px;
+    font-weight: bolder;
+    animation: fadeIn linear 1.4s;
+    -webkit-animation: fadeIn linear 1.4s;
+    -moz-animation: fadeIn linear 1.4s;
+    -o-animation: fadeIn linear 1.4s;
+    -ms-animation: fadeIn linear 1.4s;
+}
+  
+@keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+  
+@-moz-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+  
+@-webkit-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+  
+@-o-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}
+  
+@-ms-keyframes fadeIn {
+    0% {opacity:0;}
+    100% {opacity:1;}
+}

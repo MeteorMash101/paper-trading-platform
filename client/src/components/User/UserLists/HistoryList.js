@@ -34,7 +34,7 @@ const HistoryList = ({title}) => {
 			usersStocks["transaction_history"]?.map((d) => (
 				<HistoryItem
 					key={d.id} // required for React warning...
-					type = {d.type}
+					type = {d.type.toUpperCase()}
                     stock = {d.stock}
                     quantity={d.quantity}
 					date ={d.date}

@@ -36,45 +36,6 @@
     to {color: rgb(82, 127, 142);}
 }
 
-.animate {
-    animation: fadeIn linear 1.4s;
-    color: rgb(134, 133, 133);
-    text-align: right;
-    justify-content: right;
-    align-items: right;
-    padding-left: 1%;
-    font-weight: bolder;
-    -webkit-animation: fadeIn linear 1.4s;
-    -moz-animation: fadeIn linear 1.4s;
-    -o-animation: fadeIn linear 1.4s;
-    -ms-animation: fadeIn linear 1.4s;
-}
-  
-@keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-}
-  
-@-moz-keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-}
-  
-@-webkit-keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-}
-  
-@-o-keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-}
-  
-@-ms-keyframes fadeIn {
-    0% {opacity:0;}
-    100% {opacity:1;}
-}
-
 .nameSect {
     text-align: left;
     border-bottom: 1px solid  rgb(173, 173, 173);
@@ -82,6 +43,9 @@
 }
 
 .companyName {
+    /* border: 5px solid purple; */
+    display: flex;
+    align-items: center;
     margin-bottom: -5px;
 }
 
