@@ -405,15 +405,15 @@ class AccountHistoricPV(APIView):
     def convertToListOfDicts(self, data):
         returnList = []
         keys = sorted(data)
-        prevVal = data[keys[0]]
+        starting = data[keys[0]]
         for key in sorted(data):
             returnList.append({
                 "date": key, 
                 "value": data[key], 
-                "value_change": data[key] - prevVal, 
-                "percent_change": 100*(data[key] - prevVal)/prevVal
+                "value_change": data[key] - starting, 
+                "percent_change": 100*(data[key] - starting)/starting,
+                "change_direction": data[key] - starting > 0
             })
-            prevVal = data[key]
         return returnList
 
    
