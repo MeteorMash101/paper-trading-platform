@@ -1,14 +1,13 @@
 .container {
     width: 90%;
-    margin: 0 5%;
     height: 50vh;
+    margin: 0 5%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow: scroll;
-    margin-top: 1rem;
+    padding: .2rem 0rem;
     /* border: 1px solid black; */
-    overflow-y: hidden;
+    overflow-y: scroll;
     overflow-x: hidden;
 }
 
