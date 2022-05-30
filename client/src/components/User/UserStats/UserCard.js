@@ -12,7 +12,7 @@ const UserCard = () => {
         let dataFetched;
         try {
             dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id)
-            console.log("[UserCard]: dataFetched", dataFetched);
+            // console.log("[UserCard]: dataFetched", dataFetched);
 		} catch (err) {
 			if(err.response.status === 401) {
 				localStorage.clear();

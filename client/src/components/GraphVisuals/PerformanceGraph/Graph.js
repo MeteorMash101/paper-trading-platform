@@ -9,22 +9,27 @@ import "./styles1.css";
 import { useEffect, useState, useContext } from 'react';
 import AccountsAPIs from "../../../APIs/AccountsAPIs";
 import UserContext from "../../../store/user-context";
+// import { Shimmer } from 'react-shimmer'
 
 export default function Graph1() {
   const userCtx = useContext(UserContext);
   const [stock, setStock] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(async() => {
+    setIsLoading(true)
     let dataFetched;
     try {
       dataFetched = await AccountsAPIs.getPortfolioValueHistoricalData(userCtx.user_id)
+      console.log("[Graph.js]: datafetched: ", dataFetched.data)
     } catch(err) {
       if(err.response.status === 401) {
         localStorage.clear();
         userCtx.setDefault();
       }
     }
-    
     setStock(dataFetched.data)
+    setIsLoading(true)
   }, [])
   
   const portfolioData = {
@@ -61,12 +66,15 @@ export default function Graph1() {
 
   return (
     <div>
-      <Legend
+      {/* <Legend
         data={legendData}
         selectedItems={selectedItems}
         onChange={onChangeSelection}
-      />
-      <MultilineChart data={chartData} />
+      /> */}
+      {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
+      {!isLoading &&
+        <MultilineChart data={chartData} />
+      }
     </div>
   );
 }
