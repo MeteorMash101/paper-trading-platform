@@ -9,9 +9,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import StockListTableLabels from '../User/UserUtils/StockListTableLabels';
-import StockListTableEntry from '../User/UserUtils/StockListTableEntry'
+import StockTableEntry from '../User/UserUtils/StockTableEntry'
 import WatchListTableLabels from '../User/UserUtils/WatchListTableLabels';
-import WatchListTableEntry from '../User/UserUtils/WatchListTableEntry'
 import StocksOwnedContext from "../../store/stocks-owned-context";
 import WatchlistContext from "../../store/watchlist-context";
 import AccountsAPIs from '../../APIs/AccountsAPIs';
@@ -103,7 +102,7 @@ const MyStocks = () => {
 													{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
 													{!isLoading &&
 														usersStocksOwned.map((stock) => (
-															<StockListTableEntry
+															<StockTableEntry
 																key={stock.id} // required for React warning...
 																symbol={stock.symbol}
 																shares={stock.shares}
@@ -111,6 +110,7 @@ const MyStocks = () => {
 																percent_change={stock.percent_change}
 																change_direction={stock.change_direction}
 																in_list={stocksOwnedCtx.stocksOwned.has(stock.symbol)}
+																isWL={false}
 																onSelect={onSelectHandler}
 															/>
 														))
@@ -129,13 +129,14 @@ const MyStocks = () => {
 													{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
 													{!isLoading &&
 														usersWatchList.map((stock) => (
-															<WatchListTableEntry
+															<StockTableEntry
 																key={stock.id} // required for React warning...
 																symbol={stock.symbol}
 																price={stock.price}
 																percent_change={stock.percent_change}
 																change_direction={stock.change_direction}
 																in_list={watchlistCtx.watchlist.has(stock.symbol)}
+																isWL={true}
 																onSelect={onSelectHandler}
 															/>
 														))

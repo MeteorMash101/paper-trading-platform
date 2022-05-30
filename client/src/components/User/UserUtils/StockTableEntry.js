@@ -1,11 +1,11 @@
-import classes from './StockListTableEntry.module.css';
+import classes from './StockTableEntry.module.css';
 import { Link } from 'react-router-dom'; // needs to link to specific stock page.
 import { BiUpArrow } from "react-icons/bi";
 import { BiDownArrow } from "react-icons/bi";
 import TableSymbolButton from './TableSymbolButton';
 import { useState } from 'react';
 
-const StockListTableEntry = ({symbol, shares, price, percent_change, change_direction, in_list, onSelect}) => {
+const StockTableEntry = ({symbol, shares, price, percent_change, change_direction, in_list, isWL, onSelect}) => {
     const [mouseIsHovering, setIsMouseHovering] = useState(false);
     const onMouseEnterHandler = () => {
         setIsMouseHovering(true)
@@ -26,7 +26,7 @@ const StockListTableEntry = ({symbol, shares, price, percent_change, change_dire
             
             <Link to={`/stock/${symbol}`} className={classes.symbol} style={{ backgroundColor: "#d53e4f" }} onMouseEnter={onMouseEnterHandler} onMouseLeave={onMouseLeaveHandler}>{symbol.toUpperCase()}</Link>
             {mouseIsHovering && <TableSymbolButton/>}
-            <div className={classes.shares}>{shares}</div>
+            {!isWL && <div className={classes.shares}>{shares}</div>}
             <div className={classes.price}>${parseInt(price).toFixed(2)}</div>
             {
             change_direction && <p className={classes.posChange}>+{parseInt(percent_change).toFixed(2)}%</p>
@@ -44,4 +44,4 @@ const StockListTableEntry = ({symbol, shares, price, percent_change, change_dire
     );
 };
 
-export default StockListTableEntry;
+export default StockTableEntry;
