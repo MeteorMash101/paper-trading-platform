@@ -210,8 +210,7 @@ const Tooltip = ({
       <line className="tooltipLine" />
       <g className="tooltipContent">
         <rect className="contentBackground" rx={7} ry={7} opacity={0.2} />
-        {/* NOTE: below date as a title */}
-        {/* EDIT: put volume back here. */}
+        {/* EDIT: below date as a title */}
         <text className="contentTitle" transform="translate(4,14)" />
         <g className="content" transform="translate(4,32)">
         </g>

@@ -22,7 +22,6 @@ const CardTop = () => {
             }
         }
     }, [])
-
     return (
         <div>
             {/* EDIT: please separate out this Profile component below! */}

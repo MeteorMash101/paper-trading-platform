@@ -1,10 +1,16 @@
 import classes from './Header.module.css';
+import GoogleSocialAuth from '../auth/GoogleSocialAuth';
 import UserContext from '../../store/user-context';
 import SearchBar from './SearchBar';
 import tempLogo from './templogo.jpg';
 import { Link } from 'react-router-dom';
-import { Fragment, useContext, useState } from 'react';
-import {Tabs, Tab } from '@material-ui/core';
+import Box from '@mui/material/Box';
+import React, { Fragment, useContext, useStyles } from 'react';
+import axios from 'axios';
+import { makeStyles } from '@material-ui/core/styles'
+import {Tabs, Tab, AppBar} from '@material-ui/core';
+import { CgProfile } from "react-icons/cg";
+import AccountCircleSharpIcon from '@mui/icons-material/AccountCircleSharp';
 import LogoutIcon from '@mui/icons-material/Logout';
 import PersonIcon from '@mui/icons-material/Person';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
@@ -25,25 +31,12 @@ const Header = () => {
         // Redirect to Login page...
     };
 
-    const [value, setValue] = useState('one');
+const [value, setValue] = React.useState("one");
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    const blue = {
-        50: '#F0F7FF',
-        100: '#C2E0FF',
-        200: '#80BFFF',
-        300: '#66B2FF',
-        400: '#3399FF',
-        500: '#007FFF',
-        600: '#0072E5',
-        700: '#0059B2',
-        800: '#004C99',
-        900: '#003A75',
-      };
-    
     return (
         <Fragment>
             <div className={classes.container}>
@@ -54,20 +47,34 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className={classes.searchbar}>
-                    <SearchBar/>
+                    <SearchBar stockListURL={"http://127.0.0.1:8000/stocks/searchableStocks/"}/>
                 </div>
+
                 <div className={classes.tabs}>
-                    <Tabs aria-label="secondary tabs example" indicatorColor="primary" onChange={handleChange}>
+                <Box sx={{ width: '100%' }}> 
+                    <Tabs
+                    value={value} 
+                    onChange={handleChange}
+                    TabIndicatorProps={{
+                        style: {
+                          backgroundColor: "grey",
+                          marginBottom: '5px'
+                         }
+                        }}
+                    >
                         <Tab icon={<PersonIcon/>} value="one" className={classes.tab1} component={Link} label="Profile" to="/user"/>
                         <Tab icon={<ShowChartIcon />} value="two" className={classes.tab2} component={Link} label="My Stocks" to="/mystocks"/>
                         <Tab icon={<HistoryIcon />} value="three" className={classes.tab3} component={Link} label="History" to="/history"/>
-                        <Tab icon={<LogoutIcon />} className={classes.tab4} onClick={onLogoutHandler} label="Logout" />
+                        <Tab icon={<LogoutIcon />} value="four" className={classes.tab4} onClick={onLogoutHandler} label="Logout" />
+                        
                     </Tabs>
+                </Box>
+
                 </div>
             </div>
-            {/* EDIT: HAVE THIS msg FADE (saying "welcome user")... */}
         </Fragment>
     );
 };
 
 export default Header; 
+
