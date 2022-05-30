@@ -155,10 +155,13 @@ class AccountDetail(APIView):
         if not valid:
             return data
 
-        accountObj = get_object(data["email"])
-        if accountObj != None: # account exists
-            serializer = AccountSerializer(accountObj)
-            PortfolioValue.load(accountObj)
+        account = get_object(data["email"])
+        if account != None: # account exists
+            stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
+            portfolio_value = Decimal.from_float(stock_value) + account.balance
+            account.portfolio_value = portfolio_value
+            serializer = AccountSerializer(account)
+            PortfolioValue.load(account)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else: # account doesn't exist, create new
             return Response(None, status=status.HTTP_404_NOT_FOUND)
@@ -248,6 +251,7 @@ class AccountStocksOwned(APIView):
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
+            print("*"*300)
             stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
             portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, stock_value)
             portfolio_value = Decimal.from_float(stock_value) + account.balance

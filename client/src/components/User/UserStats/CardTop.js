@@ -20,7 +20,7 @@ const CardTop = () => {
                 } catch (err) {
                     if(err.response.status === 401) {
                         localStorage.clear();
-                          userCtx.setDefault();
+                        userCtx.setDefault();
                     }
                 }
                 if (userCtx.portfolioInfo.portfolio_value != dataFetched.data) {
@@ -33,7 +33,6 @@ const CardTop = () => {
         }, TIMER);
         return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
     }, [])
-
     return (
         <div>
             {/* EDIT: please separate out this Profile component below! */}
