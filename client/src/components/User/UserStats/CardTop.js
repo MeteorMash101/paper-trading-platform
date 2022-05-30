@@ -11,27 +11,16 @@ import { LIVE_FETCH, TIMER } from '../../../globals'
 const CardTop = () => {
     const userCtx = useContext(UserContext);
     // live fetching of PV.
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const fetchPV = async () => {
-                let dataFetched;
-                try {
-                    dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id);
-                } catch (err) {
-                    if(err.response.status === 401) {
-                        localStorage.clear();
-                        userCtx.setDefault();
-                    }
-                }
-                if (userCtx.portfolioInfo.portfolio_value != dataFetched.data) {
-                    userCtx.setPortfolioInfo(dataFetched.data);
-                }
+    useEffect(async() => {
+        let dataFetched;
+        try {
+            dataFetched = await AccountsAPIs.getPortfolioValueData(userCtx.user_id);
+        } catch (err) {
+            if (err.response.status === 401) {
+                localStorage.clear();
+                userCtx.setDefault();
             }
-            if (LIVE_FETCH) {
-                fetchPV()
-            }
-        }, TIMER);
-        return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+        }
     }, [])
     return (
         <div>
@@ -49,3 +38,17 @@ const CardTop = () => {
 }
 
 export default CardTop;
+
+// DEPRECIATED:
+// const interval = setInterval(() => {
+//     const fetchPV = async () => {
+
+//         if (userCtx.portfolioInfo.portfolio_value != dataFetched.data) {
+//             userCtx.setPortfolioInfo(dataFetched.data);
+//         }
+//     }
+//     if (LIVE_FETCH) {
+//         fetchPV()
+//     }
+// }, TIMER);
+// return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.

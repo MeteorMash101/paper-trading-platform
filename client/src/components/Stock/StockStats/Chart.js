@@ -17,7 +17,7 @@ const Chart = ({stockURL}) => {
   useEffect(() => {
     const fetchStock = async () => {
         const stockFromServer = await axios.get(stockURL)
-        console.log("[DEBUG]: EARNINGS received from db:", stockFromServer.data)
+        // console.log("[DEBUG]: EARNINGS received from db:", stockFromServer.data)
         setStock(stockFromServer.data)
     }
     fetchStock()

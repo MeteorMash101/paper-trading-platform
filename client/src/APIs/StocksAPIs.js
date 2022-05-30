@@ -53,7 +53,6 @@ const getSearchableStocks = async () => {
 }
 
 const getStockHistoricalByDateRanges = async (symbol) => {
-    console.log("StockAPI called! getStockHistoricalByDateRanges")
     const stockURL = `${BASE_URL}/stocks/historical/${symbol}`;
     let dataFetched = {}
     dataFetched.stockOneDayFromServer = await axios.get(stockURL, {

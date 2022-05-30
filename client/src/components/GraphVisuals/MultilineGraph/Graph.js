@@ -72,8 +72,8 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
   // EDIT: we don't need to be sending in this whole data to legendData, just the date values.
 
   const chartData = [];
-  console.log("stocksOwnedAllDateRanges before chartData Proc:", stocksOwnedAllDateRanges)
-  console.log("stocksSelected, before chartData Proc:", stocksSelected)
+  // console.log("stocksOwnedAllDateRanges before chartData Proc:", stocksOwnedAllDateRanges)
+  // console.log("stocksSelected, before chartData Proc:", stocksSelected)
 
   if (stocksOwnedAllDateRanges.length > 0 && stocksSelected.length > 0) {
     let stocksSelectedToShow = []
@@ -84,8 +84,7 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
         stocksSelectedToShow.push(stocksOwnedAllDateRanges[i])
       }
     }
-    // let stocksSelectedToShow = stocksOwnedAllDateRanges.filter((stockData) => stocksSelected.includes(stockData.symbol.toLowerCase()))
-    console.log("stocksSelectedToShow (we are going to show these!):", stocksSelectedToShow)
+    // console.log("stocksSelectedToShow (we are going to show these!):", stocksSelectedToShow)
     // now add these stock's currently selected dateRanges...
     for (let i = 0; i < stocksSelectedToShow.length; i++) {
       let currStockToShow = stocksSelectedToShow[i]
@@ -125,7 +124,7 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
     )
   }
 
-  console.log("chartData after RENDER + PROCESSING:", chartData)
+  // console.log("chartData after RENDER + PROCESSING:", chartData)
   
   // Trend color: for showing color code.
   // const trendIsPositive = chartData[0].items[0].open < chartData[0].items[chartData[0].items.length - 1].open;

@@ -67,13 +67,14 @@ const App = () => {
         let listOfTickers = await AccountsAPIs.getWatchListSymbols(userCtx.user_id);
         watchlistCtx.setWatchlistOnLogin(listOfTickers);
         listOfTickers = await AccountsAPIs.getStocksOwnedSymbols(userCtx.user_id);
+        // console.log("[App.js] listOfTickers:", listOfTickers)
         stocksOwnedCtx.setStocksOwnedOnLogin(listOfTickers);
       }
       fetchData()
     }
     
   }, [userCtx.isLoggedIn])
-  console.log("[App.js] stocksOwnedCtx.stocksOwned:", stocksOwnedCtx.stocksOwned)
+  // console.log("[App.js] stocksOwnedCtx.stocksOwned:", stocksOwnedCtx.stocksOwned)
   return (
     <div className="App">
       {userCtx.isLoggedIn && <Header/>}

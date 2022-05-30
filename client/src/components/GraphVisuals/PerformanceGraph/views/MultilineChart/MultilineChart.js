@@ -38,14 +38,14 @@ const MultilineChart = ({ data = [], margin = {} }) => {
             ticks={2}
             size={width}
           />
-          {/* <GridLine
+          <GridLine
             type="horizontal"
             className="baseGridLine"
             scale={yScale}
             ticks={1}
             size={width}
             disableAnimation
-          /> */}
+          />
           {data.map(({ name, items = [], color }) => (
             <Line
               key={name}

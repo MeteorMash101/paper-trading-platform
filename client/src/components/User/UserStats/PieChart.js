@@ -125,11 +125,7 @@ const PieGraph = () => {
             fill : myColors[Math.floor(Math.random()*myColors.length)]})
         
       });
-
-      console.log("[DEBUG]: data stock received from db:", data)
-
-
-
+      // console.log("[DEBUG]: data stock received from db:", data)
     }
     fetchStock()
     }, []);
