@@ -63,15 +63,17 @@ function NewSearchBar () {
         onChange={handleFilter}
       />
       {filteredData.length != 0 && (
-        <div className={classes.dataResult}>
-          {filteredData.slice(0, 30).map((value, key) => {
-            return (
-              <a className={classes.stockLink} href={`/stock/${value.symbol}`}>
-                <div className={classes.symbol}> {value.symbol} </div> 
-                <div className={classes.name}> {value.company_name}</div>
-              </a>
-            );
-          })}
+        <div className={classes.extraSpace}>
+          <div className={classes.dataResult}>
+            {filteredData.slice(0, 30).map((value, key) => {
+              return (
+                <a className={classes.stockLink} href={`/stock/${value.symbol}`}>
+                  <div className={classes.symbol}> {value.symbol} </div> 
+                  <div className={classes.name}> {value.company_name}</div>
+                </a>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

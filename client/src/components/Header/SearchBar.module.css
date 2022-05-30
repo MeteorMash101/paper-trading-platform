@@ -1,6 +1,6 @@
 .container {
     display: flex;
-    /* width: 90%; */
+    position: relative;
 }
 
 .searchInput {
@@ -13,6 +13,7 @@
     outline: none;
     border: none;
     overflow-y: scroll;
+    z-index: 2;
 }
 
 .stockLink {
@@ -25,17 +26,39 @@
     color: rgb(10, 0, 0);
 }
 
-.dataResult {
+/* .dataResult {
     position: absolute; 
     margin-top: 40px;
     width: 29%;
     height: 150px;
-    margin-left: 5px;
     border-bottom-left-radius: 1.625rem;
     border-bottom-right-radius: 1.625rem;
     border-top: none;
     background-color: rgb(255, 250, 250);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+    overflow-y: scroll;
+    text-align: center;
+} */
+
+.extraSpace {
+    position: absolute; 
+    margin-top: 25px;
+    width: 100%;
+    height: 150px;
+    padding-top: 20px;
+    border-bottom-left-radius: 1.625rem;
+    border-bottom-right-radius: 1.625rem;
+    border-top: none;
+    background-color: rgb(255, 250, 250);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 10px;
+}
+
+.dataResult {
+    position: absolute; 
+    width: 100%;
+    height: 150px;
+    border-bottom-left-radius: 1.625rem;
+    border-bottom-right-radius: 1.625rem;
     overflow-y: scroll;
     text-align: center;
 }
