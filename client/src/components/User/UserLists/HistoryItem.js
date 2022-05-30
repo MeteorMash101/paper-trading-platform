@@ -8,7 +8,7 @@ const HistoryItem = ({type, stock, quantity, date, stockPrice}) => {
         <div className={classes.container}>
             <div className={classes.content}>
                 <p className={classes.date}> {date} </p>
-                <p className={classes.type}>{type}</p>
+                <p className={classes.type} id={type == "BUY" ? classes.buyPad : classes.sellPad}>{type}</p>
                 <p className={classes.stock}>{stock}</p>
                 <p className={classes.quantity}>{quantity}</p>
                 <p className={classes.stockPrice}>${parseInt(stockPrice).toFixed(2)}</p>

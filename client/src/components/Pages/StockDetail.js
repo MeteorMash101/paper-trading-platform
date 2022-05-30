@@ -8,6 +8,7 @@ import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
 import HoverPrice from '../Stock/StockStats/HoverPrice';
+import PriceStats from '../Stock/StockStats/PriceStats';
 import QEChart from '../GraphVisuals/QEChart';
 import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
@@ -67,7 +68,7 @@ const StockDetail = () => {
                     <div className={classes.nameSect}>
                         <h1 className={classes.companyName}>
                             {stock.company_name} 
-                            {!isMouseHovering && <span className={classes.animate}>${livePrice}</span>}
+                            {!isMouseHovering && <PriceStats livePrice={livePrice}/>}
                             {isMouseHovering && <HoverPrice/>}
                         </h1>
                         <div className={classes.miniContainer}>

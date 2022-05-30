@@ -32,8 +32,23 @@
 }
 
 .type{
-    width: 16%;
+    width: 6%;
+    padding: .2rem .2rem;
     text-align: center;
+    /* border: 2px solid black; */
+    color: white;
+    border-radius: 8px;
+}
+
+#buyPad {
+    background-color: rgb(179, 221, 179);
+    color: rgb(64, 131, 64);
+
+}
+
+#sellPad {
+    background-color: rgb(237, 180, 180);
+    color: rgb(124, 60, 60);
 }
 
 .stock{
