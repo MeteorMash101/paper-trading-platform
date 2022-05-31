@@ -1,6 +1,7 @@
 .hoverPrice {
     /* border: 4px solid pink; */
     margin: .6rem .6rem;
+    top:5%;
     background-color: rgb(39, 38, 38);
     border-radius: 10px;
     padding: .2rem .2rem;
@@ -11,6 +12,19 @@
     animation-iteration-count: 3;
     animation-direction: alternate;
     animation-play-state: running;
+}
+
+.hoverpercent{
+    margin: .6rem .6rem;
+    font-size: x-large;
+    color: rgb(129, 186, 179);
+
+}
+
+.hoverPricechange{
+    margin: 1rem 1rem;
+    font-size: x-large;
+    color:  rgb(126, 192, 183);
 }
 
 .hoverChanges {
