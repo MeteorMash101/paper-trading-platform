@@ -242,6 +242,7 @@ class historicalTestCases(TestCase):
     elif interval == "1m": #1W, 1Mo
         return FakeAPI.minuteInterval(ticker, start_date, end_date)
     '''
+    
     @mock.patch('stocks.financeAPI.datetime', FakeDate)
     @mock.patch("stocks.financeAPI.si", FakeAPI)
     def test_historical_1D(self):
@@ -270,7 +271,7 @@ class historicalTestCases(TestCase):
         apiData.index = apiData.index.map(lambda x: x - relativedelta(hours=4))
         expected = self.__changeFormat(apiData)
         self.assertEqual(expected, data)
-
+    
     @mock.patch('stocks.financeAPI.datetime', FakeDate)
     @mock.patch("stocks.financeAPI.si", FakeAPI)
     def test_historical_1M(self):
@@ -342,7 +343,7 @@ class historicalTestCases(TestCase):
         data = Client().get(url, {"dateRange": "5Y"}, content_type="application/json").json()["historical_data"]
         expected = self.__changeFormat(FakeAPI.get_data("TSLA", start_date=(today - relativedelta(weeks=260)), interval="1wk"))
         self.assertEqual(expected, data)
-
+    
     @mock.patch('stocks.financeAPI.datetime', FakeDate)
     @mock.patch("stocks.financeAPI.si", FakeAPI)
     def test_historical_all_time(self):
@@ -361,13 +362,12 @@ class historicalTestCases(TestCase):
         df["time"] = df["index"].map(lambda a: str(a).split(" ")[1])
         df = df.drop(columns = ["ticker", "index"])
         #Add the price change/percent change from the previous entry
-        df["dollar_change"] = df.open - df.open.shift(1)
-        df["percent_change"] = 100*df["dollar_change"]/df.open.shift(1)
-        df.at[0, "dollar_change"] = 0
-        df.at[0, "percent_change"] = 0
+        df["dollar_change"] = df.open - df.open[0]#df.open.shift(1)
+        df["percent_change"] = 100*df["dollar_change"]/df.open[0]#.shift(1)
+        df["change_direction"] = df["dollar_change"] > 0
 
         #Convert military time to non-military time
-        df["time"] = df["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
+        #df["time"] = df["time"].apply(lambda x: datetime.strptime(x, '%H:%M:%S').strftime('%I:%M %p'))
         #convert to output
         return df.to_dict("records")
 
