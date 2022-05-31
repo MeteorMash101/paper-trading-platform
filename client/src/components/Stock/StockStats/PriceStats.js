@@ -1,10 +1,10 @@
 import classes from './PriceStats.module.css';
 
-const PriceStats = ({livePrice}) => {
+const PriceStats = ({livePrice, percChange}) => {
     return (
         <div className={classes.container}>
             <span className={classes.livePrice}>${livePrice}</span>
-            <span className={classes.priceChange}>+$25.44 (+5.65%) Past Year</span>
+            {/* <span className={classes.priceChange}>{percChange}%</span> */}
         </div>
     )
 }

@@ -118,7 +118,7 @@ const Tooltip = ({
     // Update price using context API here...(to show change w/ price.)
     // console.log("[Tooltip.js]: PRICE RN: ", formatPriceUSD(d.open));
     hoverInfoContext.setPrice(formatPriceUSD(d.open))
-
+    hoverInfoContext.setPriceChanges({dollar_change: d.dollar_change, percent_change: d.percent_change})
     const maxNameWidth = d3.max(
       d3.selectAll(".performanceItemName").nodes(),
       (node) => node.getBoundingClientRect().width

@@ -5,7 +5,11 @@ import HoverInfoContext from '../../../store/hover-info-context';
 const HoverPrice = () => {
     const hoverInfoContext = useContext(HoverInfoContext);
     return (
-        <span className={classes.hoverPrice}>{hoverInfoContext.price}</span>
+        <div>
+            <span className={classes.hoverPrice}>{hoverInfoContext.price}</span>
+            <span className={classes.hoverPrice}>${hoverInfoContext.priceChanges.dollar_change}</span>
+            <span className={classes.hoverPrice}>{hoverInfoContext.priceChanges.percent_change}%</span>
+        </div>
     )
 }
 

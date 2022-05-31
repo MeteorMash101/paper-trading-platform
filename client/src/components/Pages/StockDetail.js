@@ -81,7 +81,7 @@ const StockDetail = () => {
                         </h1>
                         <div className={classes.miniContainer}>
                             <h3 className={classes.symbol}>{stock.symbol}</h3>
-                            {isMouseHovering && <LiveIndicator message={`Current Price: ${livePrice}`}/>}
+                            {isMouseHovering && <LiveIndicator message={`Current Price: $${livePrice}`}/>}
                         </div>
                     </div>
                     <div className={classes.wrapper1}>
