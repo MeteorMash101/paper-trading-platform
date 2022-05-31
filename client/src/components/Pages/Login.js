@@ -7,6 +7,7 @@ import tempLogo from '../Header/templogo.jpg';
 import { Navigate } from 'react-router-dom';
 import GoogleButton from '../auth/GoogleButton';
 import AuthAPIs from '../../APIs/AuthAPIs';
+import { AiOutlineStock } from "react-icons/ai";
 
 const Login = () => {
     const userCtx = useContext(UserContext);
@@ -65,13 +66,10 @@ const Login = () => {
                             <h2>SWAT PAPER TRADING</h2>   
                         </div>
                         <div className={classes.about}>
-                            <h4>
-                            We are Team SWAT. Welcome to our Paper Trading Application. The goal of this application 
-                            is to help beginners in the world of stocks to warm up to all the confusing abbreviations 
-                            and seemingly foreign terminology without any risk. This means that you can buy, sell, 
-                            compare and analyze stocks with ‘fake’ money that we provide to you. Now, whenever 
-                            you feel ready to dive into the world of P/E ratios and candlesticks with your carefully preserved wallet out, 
-                            head on over to something like Robinhood perhaps.
+                            <h4 className={classes.websiteDesc}>
+                                &emsp;&emsp;Welcome to our Paper Trading Platform! We are Team SWAT. 
+                                The goal of this website is to help stock market beginners learn how to invest without risking their own, real, hard-earned money.
+                                You can buy, sell, analyze, watch, and compare stocks all for free with our "paper" money!
                             </h4>
                         </div>
                         <div className={classes.signin}>
@@ -84,6 +82,7 @@ const Login = () => {
                         </div>
                     </div>
                     <div className={classes.right}>
+                        <AiOutlineStock className={classes.logoMid}size={380}/>
                     </div>
                 </div>
             }
@@ -96,3 +95,14 @@ const Login = () => {
 }
 
 export default Login
+
+// REMOVED:
+// to warm up to all the confusing abbreviations 
+// and seemingly foreign terminology w
+// Now, whenever (DO NOT ADVERTISE ROBINHOOD!!!)
+// you feel ready to dive into the world of P/E ratios and candlesticks with your carefully preserved wallet out, 
+// head on over to something like Robinhood perhaps.
+/*
+    Best of all, we are open-source
+    compare and analyze stocks with ‘fake’ money that we provide to you. 
+*/

@@ -25,7 +25,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
     <div ref={containerRef}>
       <svg width={svgWidth} height={svgHeight}>
         <g transform={`translate(${margin.left},${margin.top})`}>
-          <GridLine
+          {/* <GridLine
             type="vertical"
             scale={xScale}
             ticks={5}
@@ -45,7 +45,7 @@ const MultilineChart = ({ data = [], margin = {} }) => {
             ticks={1}
             size={width}
             disableAnimation
-          />
+          /> */}
           {data.map(({ name, items = [], color }) => (
             <Line
               key={name}

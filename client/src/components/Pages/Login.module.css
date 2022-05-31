@@ -22,12 +22,19 @@
     
 }
 
+.websiteDesc {
+    line-height: 36px;
+}
+
 .right{
     width: 70%;
     height: 100vh;
     float: left;
     box-sizing: border-box;
     background: radial-gradient(circle, rgba(206,235,235,1) 25%, rgba(197,248,250,1) 48%, rgba(105,182,172,1) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .tempLogo {
