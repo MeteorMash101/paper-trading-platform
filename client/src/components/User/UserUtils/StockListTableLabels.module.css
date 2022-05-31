@@ -8,11 +8,12 @@
 
 .symbol{
     display: inline-block;
-    width: 15%;
+    width: 35%;
 }
 
 .shares{
-    width: 20%;
+    width: 15%;
+    text-align: left;
 }
 
 .price{
@@ -21,6 +22,6 @@
 }
 
 .change{
-    width: 38%; 
-    left: 10%;
+    width: 35%; 
+    text-align: center;
 }

@@ -21,7 +21,7 @@ const History = () => {
           <div className={classes.header}>
             <div className={classes.headings}>
               <h4 className={classes.names}>Date</h4>
-              <h4 className={classes.names}>Type</h4>
+              <h4 className={classes.type}>Type</h4>
               <h4 className={classes.stock}>Stock</h4>
               <h4 className={classes.names}>Quantity</h4>
               <h4 className={classes.price}>Price</h4>

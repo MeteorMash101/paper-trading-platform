@@ -31,7 +31,7 @@ const Header = () => {
         // Redirect to Login page...
     };
 
-const [value, setValue] = React.useState("one");
+const [value, setValue] = React.useState("");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -41,7 +41,7 @@ const [value, setValue] = React.useState("one");
         <Fragment>
             <div className={classes.container}>
                 <div className={classes.titleSection}>
-                    <Link to={`/`} className={classes.logoandtitle}>
+                    <Link onClick={handleChange} to={`/`} className={classes.logoandtitle}>
                         <img src={tempLogo} className={classes.tempLogo} alt="Logo"/>
                         <h2 className={classes.heading}>SWAT PAPER TRADING</h2>
                     </Link>
