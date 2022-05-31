@@ -39,7 +39,7 @@ const StockItem = ({colorStyle, symbol, company_name, price, percent_change, cha
             change_direction && <p className={classes.percent_change} id={classes.posChange} data-testid={"percent_change"}>+{percent_change}%</p>
           }
           {
-            change_direction && <BiUpArrow size={18} className={classes.upArrow}/>
+            change_direction && <BiUpArrow size={20} className={classes.upArrow}/>
           }
           {
             !change_direction && <p className={classes.percent_change} id={classes.negChange} data-testid={"percent_change"}>-{percent_change}%</p>
