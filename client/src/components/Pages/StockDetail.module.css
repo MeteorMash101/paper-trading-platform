@@ -66,9 +66,9 @@
 
 .graph {
     margin-top: 4%;
-    border: 1px solid rgb(204, 204, 204);
+    /* border: 1px solid rgb(204, 204, 204); */
     border-radius: 1.4rem;
-    box-shadow: 5px 5px 5px 1px rgb(207, 210, 211);
+    /* box-shadow: 5px 5px 5px 1px rgb(207, 210, 211); */
 
 }
 
@@ -261,4 +261,24 @@
     padding-bottom: 5%;
   }
 
+}
+
+.wlContainer {
+  /* border: 2px solid pink; */
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  width: auto;
+}
+
+.watchListBtn:hover {
+  color:rgb(81, 88, 79);
+  overflow: hidden;
+  cursor: pointer;
+  left: 99%;
+}
+
+.watchlist {
+  left:99%;
+  position: absolute;
 }

@@ -6,6 +6,7 @@ import Graph from '../GraphVisuals/Graph/Graph';
 import React, { Component } from "react";
 import { Navigate } from 'react-router-dom';
 import UserContext from '../../store/user-context';
+import WatchlistContext from '../../store/watchlist-context'
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
 import HoverPrice from '../Stock/StockStats/HoverPrice';
 import PriceStats from '../Stock/StockStats/PriceStats';
@@ -14,9 +15,13 @@ import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
 import MotionWrapper from '../Alerts/MotionWrapper';
 import LiveIndicator from '../Alerts/LiveIndicator';
+import AccountsAPIs from '../../APIs/AccountsAPIs';
+import { GrAddCircle } from "react-icons/gr";
+import { FcCheckmark } from "react-icons/fc";
 
 const StockDetail = () => {
     const userCtx = useContext(UserContext);
+    const watchlistCtx = useContext(WatchlistContext);
     const [stock, setStock] = useState("");
     const [livePrice, setLivePrice] = useState("");
     const [isMouseHovering, setIsMouseHovering] = useState(false);
@@ -40,6 +45,30 @@ const StockDetail = () => {
             setShowFull(false)
         }
     }
+    const addToWatchListHandler = async () => {
+		try {
+			await AccountsAPIs.addToWatchList(userCtx.user_id, stock.symbol)
+		} catch (err) {
+			if (err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
+		watchlistCtx.addStock(stock.symbol);
+        console.log("added stock!")
+	}
+	const removeFromWatchListHandler = async () => {
+		try {
+			await AccountsAPIs.removeFromWatchList(userCtx.user_id, stock.symbol)
+		} catch (err) {
+			if (err.response.status === 401) {
+				localStorage.clear();
+      			userCtx.setDefault();
+			}
+		}
+		watchlistCtx.removeStock(stock.symbol);
+        console.log("removed stock!")
+	}
     // Pull the relevant stock info. from DB. using ticker symbol
     useEffect(async() => {
         const dataFetched = await StockAPIs.getStockDetails(symbol)
@@ -83,6 +112,19 @@ const StockDetail = () => {
                             <h3 className={classes.symbol}>{stock.symbol}</h3>
                             {isMouseHovering && <LiveIndicator message={`Current Price: $${livePrice}`}/>}
                         </div>
+                        {/* className={classes.watchListBtn} id={classes.tooltipBG}  */}
+                        {!watchlistCtx.watchlist.has(stock.symbol) && 
+                            <div className={classes.wlContainer}>
+                                <GrAddCircle className={classes.watchListBtn} size={23} onClick={addToWatchListHandler}/>
+                                <p>Add To Watchlist</p>
+                            </div>
+                        }
+                        {watchlistCtx.watchlist.has(stock.symbol) && 
+                            <div className={classes.wlContainer}>
+                                <FcCheckmark className={classes.watchListBtn} size={23} onClick={removeFromWatchListHandler}/>
+                                <p>Remove From Watchlist</p>
+                            </div>
+                        }
                     </div>
                     <div className={classes.wrapper1}>
                         <div className={classes.leftSec}>
