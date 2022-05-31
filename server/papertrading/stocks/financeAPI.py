@@ -45,7 +45,6 @@ class Stock_info:
         data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
         data = data.drop(columns = ["ticker", "index"])
         #Add the price change/percent change from the previous entry
-        print(data.open - data.open[0])
         data["dollar_change"] = data.open - data.open[0]#data.open.shift(1)
         data["percent_change"] = 100*data["dollar_change"]/data.open[0]#data.open.shift(1)
         data["change_direction"] = data.dollar_change > 0
@@ -70,6 +69,57 @@ class Stock_info:
             return df
         elif range == "1M": # INTERVAL: 30 minutes
             return Stock_info.__get_one_month(ticker)
+        elif range == "3M": # INTERVAL: 1 day
+            start_date = (today - timedelta(days=90))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "6M": # INTERVAL: 1 day
+            start_date = (today - timedelta(days=180))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "1Y": # INTERVAL: 1 day
+            start_date = (today - timedelta(days=365))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+        elif range == "5Y": # INTERVAL: 1 week
+            start_date = (today - timedelta(weeks=260))
+            return Stock_info.__get_data_catch_errors(ticker, start_date, interval = "1wk")
+        else: # INTERVAL: 1 month
+            return Stock_info.__get_data_catch_errors(ticker, interval = "1mo")
+
+    def get_stock_historical_data_for_candle(ticker, dayrange):
+        #get the data appropriate for the range
+        data = Stock_info.__get_data_for_candle_interval(ticker, dayrange)
+        #separate date and time
+        data.reset_index(level=0, inplace=True)
+        data["date"] = data["index"].map(lambda a: str(a).split(" ")[0])
+        data["time"] = data["index"].map(lambda a: str(a).split(" ")[1])
+        data = data.drop(columns = ["ticker", "index"])
+        #Add the price change/percent change from the previous entry
+        data["dollar_change"] = data.open - data.open[0]#data.open.shift(1)
+        data["percent_change"] = 100*data["dollar_change"]/data.open[0]#data.open.shift(1)
+        data["change_direction"] = data.dollar_change > 0
+        data.at[0, "dollar_change"] = 0
+        data.at[0, "percent_change"] = 0
+        #convert to output
+        jsonData = {
+            "historical_data": data.to_dict("records")
+        }
+        # print("[financeAPI.py]: curr data:", data, type(data))
+        return jsonData
+    
+    @staticmethod
+    def __get_data_for_candle_interval(ticker, range):
+        today = datetime.today()
+        if range == "1D": # INTERVAL: 5 mins
+            return Stock_info.__get_one_day(ticker)
+        elif range == "1W": # INTERVAL: 10 mins
+            start_date = today - timedelta(days=7)
+            #df = Stock_info.__get_data_catch_errors(ticker, start_date, today, "1m").iloc[::10, :]
+            #df.index = df.index.map(lambda x: x - timedelta(hours=4))
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+            #return df
+        elif range == "1M": # INTERVAL: 30 minutes
+            start_date = today - timedelta(days=30)
+            return Stock_info.__get_data_catch_errors(ticker, start_date)
+            #return Stock_info.__get_one_month(ticker)
         elif range == "3M": # INTERVAL: 1 day
             start_date = (today - timedelta(days=90))
             return Stock_info.__get_data_catch_errors(ticker, start_date)

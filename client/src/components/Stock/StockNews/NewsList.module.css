@@ -1,9 +1,10 @@
 .container {
-    /* border: 1px solid rgb(173, 173, 173);
+    /* border: 1px solid rgb(173, 173, 173); */
     border-radius: 1.6rem;
-    margin-top: 3%; */
+    margin-top: 3%;
     height: 55vh;
     overflow: scroll;
+    overflow-x: hidden;
     /* overflow-y: scroll; */
     /* Internet Explorer 10+
     -ms-overflow-style: none;  

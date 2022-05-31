@@ -251,7 +251,6 @@ class AccountStocksOwned(APIView):
             serializer = StockNumSerializer({"quantity_owned":numOfStock})
             return Response(serializer.data)
         elif data == "portfolio_value":             #returns just the portfolio value
-            print("*"*300)
             stock_value = UserStocks.calculateCurrentPortfolioValue(account.ownedStocks)
             portfolio_change = UserStocks.calculatePortfolioChange(account.ownedStocks, stock_value)
             portfolio_value = Decimal.from_float(stock_value) + account.balance

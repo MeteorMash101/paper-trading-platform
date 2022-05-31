@@ -32,18 +32,14 @@ class StockList(APIView):
 
    curl -d '{"start_date":"04/30/2022", "minutes":"False"}' -H "Content-type: application/json" -X get http://127.0.0.1:8000/stocks/hist/aapl/
    '''
-#DEPRECATED
+#For candlestick historical data
 class StockHistData(APIView):
     def get(self, request, ticker):
-        #Remove if-else once we stick with request.query_params.get()
-        #They are here because of a depracted calling method
-        if "start_date" in request.data.keys():
-            start_date = request.data["start_date"]
+        if "dateRange" in request.data.keys():
+            range = request.data["dateRange"]
         else:
-            start_date = request.query_params.get('start_date', None)
-        minuteIntervals = True if 'minutes' in request.query_params else False
-
-        jsonData = si.get_stock_historical_data_deprecated(ticker, start_date = start_date, minute = minuteIntervals)
+            range = request.query_params.get('dateRange', None)
+        jsonData = si.get_stock_historical_data_for_candle(ticker, range)
         results = HistSerializer(jsonData).data
         return Response(results)
 
