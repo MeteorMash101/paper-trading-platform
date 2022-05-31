@@ -25,6 +25,18 @@ const MyStocks = () => {
 	const [usersStocksOwned, setUsersStocksOwned] = useState([]);
 	const [usersWatchList, setUsersWatchList] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
+	// EDIT: Hex/RGB rand. colors not syncing...temp fix:
+	// So limited to "20" stocks for this page, for now...
+	const TEMP_COLORS = [
+		// RESERVING ALL LIGHT BLUES FOR PV
+		"rgb(230, 103, 147)", "rgb(233, 236, 122)", "rgb(222, 103, 230)",
+		"rgb(38, 71, 84)", "rgb(135, 103, 230)", "rgb(230, 103, 103)",
+		"rgb(31, 148, 39)", "rgb(96, 221, 158)", "rgb(72, 14, 77)",
+		"rgb(178, 224, 105)", "rgb(60, 65, 26)", "rgb(241, 192, 92)",
+		"rgb(103, 135, 230)", "rgb(69, 14, 17)", "rgb(154, 0, 144)",
+		"rgb(230, 103, 103)", "rgb(241, 192, 92)", "rgb(34, 108, 118)",
+		"rebeccapurple", "honeydew"
+	]
 	// EDIT: for some reason ctx is not updated right away...
 	// console.log("[MyStocks.js]: stocksOwnedCtx", stocksOwnedCtx)
 	// API CALL: Fetch user's data for Stock List & Watch List on render.
@@ -40,8 +52,13 @@ const MyStocks = () => {
 			}
 		}
 		// Add rand. color ID for each stock data.
+		let i = 0
 		dataFetched.data.stock_list.forEach((stockData) => { 
-			stockData.colorId = "#" + Math.floor(Math.random()*16777215).toString(16)
+			stockData.colorId = TEMP_COLORS[i]
+			i++
+			if (i == TEMP_COLORS.length) {
+				i = 0
+			}
 		});
 		setUsersStocksOwned(dataFetched.data.stock_list);
 		try {
@@ -54,7 +71,11 @@ const MyStocks = () => {
 		}
 		// Add rand. color ID for each stock data.
 		dataFetched.data.stock_list.forEach((stockData) => { 
-			stockData.colorId = "#" + Math.floor(Math.random()*16777215).toString(16)
+			stockData.colorId = TEMP_COLORS[i]
+			i++
+			if (i == TEMP_COLORS.length) {
+				i = 0
+			}
 		});
 		setUsersWatchList(dataFetched.data.stock_list);
 		setIsLoading(false)
@@ -79,6 +100,7 @@ const MyStocks = () => {
 	const onTabChangeHandler = (event, newValue) => {
 		setValue(newValue);
 	};
+	console.log("[MyStocks.js] sl, wl: ", usersStocksOwned, usersWatchList)
 	return (
 		<MotionWrapper>
 			{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&

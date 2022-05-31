@@ -1,7 +1,7 @@
 import Chart from "react-apexcharts";
 import { useEffect, useState, Fragment } from 'react';
 import ReactApexChart from 'react-apexcharts';
-import StockAPIs from '../../APIs/StocksAPIs';
+import StockAPIs from '../../../APIs/StocksAPIs';
 
 // const QEChart = (symbol) => {
 

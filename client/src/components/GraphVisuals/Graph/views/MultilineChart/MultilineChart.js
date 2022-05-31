@@ -80,6 +80,7 @@ const MultilineChart = ({ data = [], onHover, margin = {}, showGridlines, showAx
             {showAxis && 
               <Axis
                 type="left"
+                className="axisY"
                 scale={yScale}
                 transform="translate(0, -10)"
                 ticks={5}

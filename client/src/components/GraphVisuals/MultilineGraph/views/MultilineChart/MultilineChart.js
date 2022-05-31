@@ -26,7 +26,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
       <svg width={svgWidth} height={svgHeight}>
         <g transform={`translate(${margin.left},${margin.top})`}>
           <GridLine
-            className="yAxisGridLine"
+            // className="yAxisGridLine"
             type="vertical"
             scale={xScale}
             ticks={5}
@@ -34,7 +34,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
             transform={`translate(0, ${height})`}
           />
           <GridLine
-            className="xAxisGridLine"
+            // className="xAxisGridLine"
             type="horizontal"
             scale={yScaleForAxis}
             ticks={2}
@@ -57,7 +57,7 @@ const MultilineChart = ({ data = [], margin = {}, selectedDate }) => {
               color={color}
             />
           ))}
-          {/* EDIT: only shades 2 stocks! So turned off for now. */}
+          {/* EDIT: only shades 2 stocks! So turned off for now. (color doesn't work when commed out?) */}
           {/* <Area data={data[0].items} xScale={xScale} yScale={yScale} color={data[0].color}/> */}
           <Axis
             type="left"

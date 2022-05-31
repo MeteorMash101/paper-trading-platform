@@ -13,6 +13,8 @@ const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change
     const onMouseLeaveHandler = () => {
         setIsMouseHovering(false)
     }
+
+    console.log("[StockTableEntry.js] _color for _symbol:", colorId, symbol)
     return (
         // EDIT: not able to fade out!!! halp.
         <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>

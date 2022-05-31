@@ -1,11 +1,11 @@
-/** Graph.js */
+/* PERFORMANCE GRAPH AKA PV GRAPH (same thing!) */
 import React from "react";
 import MultilineChart from "./views/MultilineChart";
 import Legend from "./components/Legend";
 import schc from "./SCHC.json";
 import vcit from "./VCIT.json";
 import portfolio from "./portfolio.json";
-import "./styles1.css";
+import "./stylesPV.css";
 import { useEffect, useState, useContext } from 'react';
 import AccountsAPIs from "../../../APIs/AccountsAPIs";
 import UserContext from "../../../store/user-context";

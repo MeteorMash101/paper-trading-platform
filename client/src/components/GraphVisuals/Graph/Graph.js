@@ -3,7 +3,7 @@ import React from "react";
 import MultilineChart from "./views/MultilineChart";
 import Legend from "./components/Legend";
 import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
-import "./styles.css";
+import "./stylesGraph.css";
 import { useEffect, useState, Fragment } from 'react';
 import StockAPIs from "../../../APIs/StocksAPIs";
 import { COLOR_CODES } from '../../../globals'

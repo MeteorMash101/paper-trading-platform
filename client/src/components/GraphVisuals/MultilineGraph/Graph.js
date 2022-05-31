@@ -1,6 +1,6 @@
 /** Graph.js */
 import React from "react";
-import "./styles.css";
+import "./stylesMultiline.css";
 // USING [DEPRECIATED] MultilineChart for now (works better):
 // import MultilineChart from "../MultilineGraph_Depreciated/views/MultilineChart/MultilineChart"
 // OUR CODE:
@@ -13,6 +13,7 @@ import AccountsAPIs from "../../../APIs/AccountsAPIs";
 import StocksOwnedContex from '../../../store/stocks-owned-context';
 import UserContext from '../../../store/user-context';
 import portfolio from "./portfolio.json"; // EDIT: temp. dummy data for loader
+import ShimmerGraph from '../../Alerts/ShimmerGraph'
 
 export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHover }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +22,6 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
   const legendData = [{dateOpt: "1D"}, {dateOpt: "1W"}, {dateOpt: "1M"}, {dateOpt: "3M"}, {dateOpt: "6M"}, {dateOpt: "1Y"}, {dateOpt: "5Y"}];
   const userCtx = useContext(UserContext);
   const stocksOwnedCtx = useContext(StocksOwnedContex);
-
-  console.log("selectedDate (date changed!)", selectedDate)
-
   // Strategy: fetch all date range data of every stock the user owns, and filter accordingly to what has been selected.
   // helper func: required format for graph
   const formatData = (colorId, currSymbol, dateRange, stockData) => {
@@ -42,6 +40,7 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
       // EDIT: get the symbol & color id here.
       const currSymbol = usersStocksOwnedNWatchList[i].symbol
       const currColorId = usersStocksOwnedNWatchList[i].colorId
+      console.log("[Graph.js] _color for _symbol:", currColorId, "for", currSymbol)
       const {
         stockOneDayFromServer,
         stockOneWeekFromServer,
@@ -170,10 +169,10 @@ export default function Graph({ usersStocksOwnedNWatchList, stocksSelected, onHo
       setShowColorCode(false)
     }
   }
-
+  
   return (
     <Fragment>
-      {isLoading && <div class="loader"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>}
+      {isLoading && <ShimmerGraph height={560}/>}
       {!isLoading &&
         <Fragment>
           <div className="Graph">

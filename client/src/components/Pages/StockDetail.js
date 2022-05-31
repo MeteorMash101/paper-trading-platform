@@ -9,7 +9,7 @@ import UserContext from '../../store/user-context';
 import CandleStick from '../GraphVisuals/CandleStick/CandleStick';
 import HoverPrice from '../Stock/StockStats/HoverPrice';
 import PriceStats from '../Stock/StockStats/PriceStats';
-import QEChart from '../GraphVisuals/QEChart';
+import QEChart from '../GraphVisuals/QEChart/QEChart';
 import StockAPIs from '../../APIs/StocksAPIs';
 import { LIVE_FETCH, TIMER } from '../../globals';
 import MotionWrapper from '../Alerts/MotionWrapper';
