@@ -121,7 +121,7 @@ const StockDetail = () => {
                                     {stock.summary}
                                 </div>
                             </div>
-                                
+                            <button>Learn More...</button>
                         </div>
                     </div>        
                 </div>

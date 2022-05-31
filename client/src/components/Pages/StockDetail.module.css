@@ -49,12 +49,12 @@
     margin-bottom: -5px;
 }
 
-.symbol{
+.symbol {
     color: rgb(80, 79, 79);
     margin-right: .4rem;
 }
 
-.qe{
+.qe {
     border: 1px solid rgb(204, 204, 204);
     border-radius: 1.4rem;
     margin-left: 1%;
@@ -62,7 +62,7 @@
     margin-bottom: 3%;
 }
 
-.graph{
+.graph {
     margin-top: 4%;
     border: 1px solid rgb(204, 204, 204);
     border-top-left-radius: 1.4rem;
@@ -109,8 +109,10 @@
     border-radius: 1.4rem;
     padding: 5%;
     background-color: rgba(154, 215, 235, 0.1);
-    
     margin-top: 20px;
+    max-height: 620px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
   }
   .summary {
     margin-top: 20px;
