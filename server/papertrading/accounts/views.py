@@ -338,7 +338,6 @@ class AccountWatchList(APIView):
             return data
         
         account = get_object(data["email"])
-        print("WE HERE NOW")
         if account == None:
             return Response(None, status=status.HTTP_404_NOT_FOUND)
         symbol = request.data["symbol"]
