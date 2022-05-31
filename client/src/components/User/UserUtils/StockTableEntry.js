@@ -5,7 +5,7 @@ import { BiDownArrow } from "react-icons/bi";
 import TableSymbolButton from './TableSymbolButton';
 import { useState } from 'react';
 
-const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change_direction, in_list, IS_WATCHLIST_TABLE, onSelect}) => {
+const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change_direction, in_list, IS_WATCHLIST_TABLE, onSelect, stocksSelected}) => {
     const [mouseIsHovering, setIsMouseHovering] = useState(false);
     const onMouseEnterHandler = () => {
         setIsMouseHovering(true)
@@ -13,8 +13,8 @@ const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change
     const onMouseLeaveHandler = () => {
         setIsMouseHovering(false)
     }
-
-    console.log("[StockTableEntry.js] _color for _symbol:", colorId, symbol)
+    const inStocksSelected = stocksSelected.includes(symbol.toUpperCase())
+    // console.log("[StockTableEntry.js] _color for _symbol:", colorId, symbol)
     return (
         // EDIT: not able to fade out!!! halp.
         <div className={classes.container} id={in_list ? classes.fadeOut : classes.fadeIn}>
@@ -22,6 +22,7 @@ const StockTableEntry = ({colorId, symbol, shares, price, percent_change, change
                 className={classes.checkmark}
                 type="checkbox"
                 onChange={onSelect}
+                checked={inStocksSelected}
                 id={symbol.toUpperCase()} // MUST BE UPPER CASE!
             />
             {/* NOTE: only this ticker becomes the link to the stock page, also has a style attribute to it to have a color ID. */}

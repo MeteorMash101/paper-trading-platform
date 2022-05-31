@@ -83,16 +83,21 @@ const MyStocks = () => {
 
 	// When the stock selection changes...
 	const onSelectHandler = (e) => {
-		if (e.target.checked) { // means this was just checked
+		if (e.target.checked) { // means this element was just checked
+			console.log("checked")
+			// e.target.checked = true;
 			setStocksSelected((prevStocksSelected) => {
 				return [...prevStocksSelected, e.target.id.toUpperCase()]
 			})
-		} else { // just unchecked
+		} else { // means this element was just unchecked
+			console.log("unchecked")
+			// e.target.checked = false;
 			setStocksSelected((prevStocksSelected) => {
 				return [...prevStocksSelected].filter(stockTicker => stockTicker != e.target.id.toUpperCase())
 			})
 		}
 	}
+	console.log("HERE stocks selected:", stocksSelected)
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
@@ -100,7 +105,6 @@ const MyStocks = () => {
 	const onTabChangeHandler = (event, newValue) => {
 		setValue(newValue);
 	};
-	console.log("[MyStocks.js] sl, wl: ", usersStocksOwned, usersWatchList)
 	return (
 		<MotionWrapper>
 			{!userCtx.isLoggedIn && localStorage.getItem("name") === null &&
@@ -146,6 +150,7 @@ const MyStocks = () => {
 																in_list={stocksOwnedCtx.stocksOwned.has(stock.symbol)}
 																IS_WATCHLIST_TABLE={false}
 																onSelect={onSelectHandler}
+																stocksSelected={stocksSelected}
 															/>
 														))
 													}
@@ -173,6 +178,7 @@ const MyStocks = () => {
 																in_list={watchlistCtx.watchlist.has(stock.symbol)}
 																IS_WATCHLIST_TABLE={true}
 																onSelect={onSelectHandler}
+																stocksSelected={stocksSelected}
 															/>
 														))
 													}
