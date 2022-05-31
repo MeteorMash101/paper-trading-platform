@@ -45,8 +45,9 @@
 .companyName {
     /* border: 5px solid purple; */
     display: flex;
+    height: 1vh;
     align-items: center;
-    margin-bottom: -5px;
+    /* margin-bottom: -5px; */
 }
 
 .symbol {
@@ -81,7 +82,7 @@
     border-radius: 1.4rem;
   }
 
-  .wrapperHeader{
+  .wrapperHeader {
     font-size: 0px;
   }
 
@@ -91,7 +92,7 @@
     margin-top: 20px;
     border-right:1px solid black;
   }
-  .stats2{
+  .stats2 {
     grid-column: 2;
     margin-top: 20px;
     grid-row: 1;
@@ -116,26 +117,27 @@
   }
   .summary {
     margin-top: 20px;
+    text-align: left;
   }
 
-.attribute{
+.attribute {
     margin-top: -10px;
     font-weight: bolder;
     color: grey;
 }
 
-.value{
+.value {
     color: black;
     font-weight: 500;
 }
-.leftSec{
+.leftSec {
     width: 63%;
     float: left;
     padding: 15px;
     box-sizing: border-box;
 }
 
-.rightSec{
+.rightSec {
     width: 36%;
     float: left;
     padding: 15px;

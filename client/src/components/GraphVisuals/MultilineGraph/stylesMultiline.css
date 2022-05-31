@@ -32,7 +32,7 @@
 
 .tooltipLine {
   stroke: #cccfcf;
-  stroke-width: 1px;
+  stroke-width: 2px;
 }
 
 .tooltipContent .contentTitle {
@@ -43,7 +43,7 @@
 }
 
 .tooltipLinePoint {
-  fill: rgb(163, 160, 160);
+  fill: #57caca;
 }
 
 .legendContainer {

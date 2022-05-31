@@ -27,7 +27,7 @@ const NewsList = () => {
     useEffect(async() => {
 		setIsLoading(true);
 		const dataFetched = await NewsAPIs.getNewsList()
-		setArticles(dataFetched.data.slice(0,10));
+		setArticles(dataFetched.data);//.slice(0,10));
 		setIsLoading(false);
   	}, []) 
     return ( 
