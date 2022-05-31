@@ -8,26 +8,9 @@ import WatchlistContext from '../../../store/watchlist-context';
 import AccountsAPIs from '../../../APIs/AccountsAPIs';
 
 const UserStockList = () => {
-	const dummyData = [ // temp
-		{
-			symbol: "AAPL",
-			shares: "[count]",
-			price: "[currPrice]",
-			percent_change: "[0.00]",
-			change_direction: true
-		},
-		{
-			symbol: "TSLA",
-			shares: "[count]",
-			price: "[currPrice]",
-			percent_change: "[0.00]",
-			change_direction: false
-		}
-	]
-	const stocksOwnedCtx = useContext(StocksOwnedContext);
 	const userCtx = useContext(UserContext);
-	const watchlistCtx = useContext(WatchlistContext);
-  	const [usersStocks, setUsersStocks] = useState(dummyData);
+	const stocksOwnedCtx = useContext(StocksOwnedContext);
+  	const [usersStocks, setUsersStocks] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
 	// API CALL: Fetch user's owned stocklist
 	useEffect(async () => {
@@ -43,26 +26,24 @@ const UserStockList = () => {
 		}
 		setUsersStocks(dataFetched.data.stock_list);
 		setIsLoading(false)
-	}, [userCtx.isLoggedIn, stocksOwnedCtx.stocksOwned])
+	}, [userCtx.isLoggedIn, userCtx.balance])
 	return (
-		// <div className={classes.mainContainer}>
-			<div className={classes.container}>
-				{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
-				{!isLoading &&
-					usersStocks.map((stock) => (
-						<StockListItem
-							key={stock.id} // required for React warning...
-							symbol={stock.symbol}
-							shares={stock.shares}
-							price={stock.price}
-							percent_change={stock.percent_change}
-							change_direction={stock.change_direction}
-							in_watch_list={watchlistCtx.watchlist.has(stock.symbol)}
-						/>
-					))
-				}
-			</div>
-		// </div>
+		<div className={classes.container}>
+			{isLoading && <div className={classes.loader}><div></div><div></div><div></div><div></div></div>}
+			{!isLoading &&
+				usersStocks.map((stock) => (
+					<StockListItem
+						key={stock.id} // required for React warning...
+						symbol={stock.symbol}
+						shares={stock.shares}
+						price={stock.price}
+						percent_change={stock.percent_change}
+						change_direction={stock.change_direction}
+						in_list={stocksOwnedCtx.stocksOwned.has(stock.symbol)}
+					/>
+				))
+			}
+		</div>
 	);
 };
 

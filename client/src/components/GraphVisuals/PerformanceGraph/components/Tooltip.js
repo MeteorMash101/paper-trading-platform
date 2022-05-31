@@ -179,13 +179,13 @@ const Tooltip = ({
                 opacity={0.5}
                 fontSize={10}
               /> */}
-              <text className="performanceItemMarketValue" />
+              <text className="performanceItemMarketValue"/>
             </g>
           ))}
         </g>
       </g>
       {data.map(({ name }) => (
-        <circle className="tooltipLinePoint" r={6} key={name} opacity={0} />
+        <circle className="tooltipLinePoint" r={6} key={name} opacity={0}/>
       ))}
     </g>
   );
