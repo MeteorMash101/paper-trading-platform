@@ -70,7 +70,7 @@ const MyStocks = () => {
 			}
 		}
 		// Add rand. color ID for each stock data.
-		dataFetched.data.stock_list.forEach((stockData) => { 
+		dataFetched.data.stock_list.forEach((stockData) => {
 			stockData.colorId = TEMP_COLORS[i]
 			i++
 			if (i == TEMP_COLORS.length) {
