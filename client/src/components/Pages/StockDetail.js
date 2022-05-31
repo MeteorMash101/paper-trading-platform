@@ -20,6 +20,7 @@ const StockDetail = () => {
     const [stock, setStock] = useState("");
     const [livePrice, setLivePrice] = useState("");
     const [isMouseHovering, setIsMouseHovering] = useState(false);
+    const [showFull, setShowFull] = useState(false);
     const { symbol } = useParams();
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
@@ -30,6 +31,13 @@ const StockDetail = () => {
             setGraphMode("GRAPH")
         } else { // we were just in candlestick mode
             setGraphMode("CANDLESTICK")
+        }
+    }
+    const setShowFullHandler = (e) => {
+        if (e.target.id == "viewFull") {
+            setShowFull(true)
+        } else {
+            setShowFull(false)
         }
     }
     // Pull the relevant stock info. from DB. using ticker symbol
@@ -115,13 +123,14 @@ const StockDetail = () => {
                         </div>
                         <div className={classes.rightSec}>
                             <OrderWidget livePrice={livePrice} stock={stock}/>
-                            <div className={classes.about}>
+                            <div className={classes.about} id={showFull ? "" : classes.hideSummary}>
                                 <h3>About {stock.company_name}</h3>
                                  <div className={classes.summary}>
-                                    {stock.summary}
+                                    &emsp;&emsp;{stock.summary}
                                 </div>
                             </div>
-                                
+                            {!showFull && <button className={classes.viewFull} id="viewFull" onClick={setShowFullHandler}>View Full...</button>}
+                            {showFull && <button className={classes.hide} id="hide" onClick={setShowFullHandler}>Hide</button>}
                         </div>
                     </div>        
                 </div>

@@ -50,7 +50,7 @@
     margin-bottom: -5px;
 }
 
-.symbol{
+.symbol {
     color: rgb(80, 79, 79);
     margin-right: .4rem;
 }
@@ -103,6 +103,7 @@
     margin-top: 20px;
     grid-row: 1;
   }
+  
   .about {
     text-align: center;
     font-size: large;
@@ -110,12 +111,54 @@
     border-radius: 1.4rem;
     padding: 5%;
     background-color: rgba(154, 215, 235, 0.1);
-    
     margin-top: 20px;
   }
+
+  #hideSummary {
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent);
+    max-height: 420px;
+    overflow: hidden;
+  }
+  
   .summary {
+    line-height: 38px;
     margin-top: 20px;
     text-align: left;
+  }
+
+  .viewFull {
+    border: 2px solid rgb(32, 63, 73);
+    border-radius: 10px;
+    background-color: rgb(70, 145, 170);
+    color: whitesmoke;
+    font-size: larger;
+    width: 40%;
+    height: 60px;
+    cursor: pointer;
+    margin: .3rem .3rem;
+  }
+
+  .viewFull:hover {
+    border: 2px solid rgb(70, 145, 170);
+    background-color: rgb(32, 63, 73);
+  }
+
+
+  .hide {
+    border: 2px solid rgb(99, 40, 54);
+    border-radius: 10px;
+    background-color: rgb(170, 70, 93);
+    color: whitesmoke;
+    font-size: larger;
+    width: 40%;
+    height: 60px;
+    cursor: pointer;
+    margin: .3rem .3rem;
+  }
+
+  .hide:hover {
+    border: 2px solid rgb(170, 70, 93);
+    background-color: rgb(99, 40, 54);
   }
 
 .attribute {

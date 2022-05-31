@@ -24,6 +24,7 @@ export default function Graph({ symbol, onHover, onGraphMode="GRAPH" }) {
       stockOneYearFromServer,
       stockFiveYearFromServer
     } = await StockAPIs.getStockHistoricalByDateRanges(symbol)
+    console.log("FETCHED", stockOneDayFromServer.data)
     setStock({ 
       oneDay: stockOneDayFromServer.data,
       oneWeek: stockOneWeekFromServer.data,
