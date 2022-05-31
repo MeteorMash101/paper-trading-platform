@@ -7,6 +7,7 @@ import React from "react";
 // import Legend from "../Graph/components/Legend";
 import Legend from "./Legend.js";
 import ShowChartTwoToneIcon from '@mui/icons-material/ShowChartTwoTone';
+import CandlestickChartTwoToneIcon from '@mui/icons-material/CandlestickChartTwoTone';
 
 export default function ApexChart({symbol, onGraphMode}){
   const [array, setArray] = useState([]);
@@ -274,12 +275,15 @@ fetchStock()
             <ReactApexChart options={options} series={chartData} type="candlestick" height={350} />
           </div>
           {/* <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}>Graph Mode</button> */}
-          <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}><ShowChartTwoToneIcon/></button>
+          
           <Legend
             legendData={legendData}
             currDateRange={selectedItems[0]}
             onChangeDateRange={onChangeDateRangeHandler}
           />
+          <button class="graphSwitch" name="GRAPH" onClick={onGraphMode}><ShowChartTwoToneIcon/></button>
+          <button class="graphSwitch" name="CANDLESTICK" onClick={onGraphMode}><CandlestickChartTwoToneIcon/></button>
+
         </Fragment>
 
       );

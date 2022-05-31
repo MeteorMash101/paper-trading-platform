@@ -5,6 +5,7 @@ import axios from 'axios';
 import AccountsAPIs from '../../../APIs/AccountsAPIs';
 import Alert from '../../Alerts/AlertMessage.js';
 import Confetti from '../../Alerts/ConfettiShower';
+import Button from '@mui/material/Button';
 
 const OrderWidget = ({livePrice, stock}) => {
     const userCtx = useContext(UserContext);
@@ -90,10 +91,10 @@ const OrderWidget = ({livePrice, stock}) => {
         <div className={classes.wrapper}>
             <form className={classes.container} id={orderTypeStyle} onSubmit={stockOrderHandler} ref={containerRef}>
                 <div className={classes.orderType}>
-                    <h3 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder} data-testid={"buyButton"}>Buy {stock.symbol}</h3>
-                    <h3 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder} data-testid={"sellButton"}>Sell {stock.symbol}</h3>
+                    <h4 className={classes.buyLabel} id={orderType == "BUY" ? "" : classes.buyNotSelected} onClick={setBuyOrder} data-testid={"buyButton"}>BUY {stock.symbol}</h4>
+                    <h4 className={classes.sellLabel} id={orderType == "BUY" ? classes.sellNotSelected : ""} onClick={setSellOrder} data-testid={"sellButton"}>SELL {stock.symbol}</h4>
                 </div>
-                <div className={classes.options}><h4>Order Type: </h4><h4>"Market Order"</h4></div> 
+                <div className={classes.options}><h4>Order Type: </h4><h4>Market Order</h4></div> 
                 <div className={classes.options}><h4>Shares: </h4>
                     <input 
                         type="number" 
@@ -105,10 +106,10 @@ const OrderWidget = ({livePrice, stock}) => {
                         min="1"
                     />
                 </div> 
-                <div className={classes.options}><h4>Market Price: </h4><h4>{marketPrice}</h4></div> 
-                <div className={classes.options}><h4>Estimated Cost: </h4><h4>{estimatedCost}</h4></div> 
+                <div className={classes.options}><h4>Market Price: </h4><h4>${marketPrice}</h4></div> 
+                <div className={classes.options}><h4>Estimated Cost: </h4><h4>${estimatedCost}</h4></div> 
                 {isLoading && <div className={classes.loader}><div></div><div></div><div></div></div>}
-                {!isLoading && displayMessage == "" && <button className={classes.orderBtn}>Submit Order</button>}
+                {!isLoading && displayMessage == "" && <button className={classes.orderBtn}>Submit Order</button> }
                 {displayMessage == "SUCCESS" &&
                     <Alert severity="success" message="Successfully placed order!" size={22}/>
                 }
@@ -119,10 +120,10 @@ const OrderWidget = ({livePrice, stock}) => {
                 {errorMsgs.includes(displayMessage) &&
                     <Alert severity="error" message={displayMessage} size={22}/>
                 }
-                <div className={classes.options}><h4>Current Balance: </h4><h4>{userCtx.balance}</h4></div>
+                <div className={classes.options}><h4>Current Balance: </h4><h4>${userCtx.balance}</h4></div>
+                {orderType == "BUY" && <Alert severity="info" message={`You currently own ${sharesOwned} shares`}/>}
+                {orderType == "SELL" && <Alert severity="info" message={`You have ${sharesOwned} shares available`}/>}
             </form>
-            {orderType == "BUY" && <Alert severity="info" message={`You currently own ${sharesOwned} shares`}/>}
-            {orderType == "SELL" && <Alert severity="info" message={`You have ${sharesOwned} shares available`}/>}
         </div>
     );
 }

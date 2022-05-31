@@ -33,7 +33,7 @@ export default function Graph1() {
   }, [])
   
   const portfolioData = {
-    name: "Portfolio",
+    name: "Portfolio Value",
     color: "grey",
     items: stock != "" ? stock['pv'].map((d) => ({ ...d, date: new Date(d.date) })) :
       portfolio['pv'].map((d) => ({ ...d, date: new Date(d.date) }))

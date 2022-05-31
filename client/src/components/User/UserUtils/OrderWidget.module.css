@@ -1,12 +1,13 @@
 .wrapper {
     display: flex;
-    width: 400px;
+    /* width: 400px; */
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .container {
-    border: 1px solid rgb(153, 152, 152);
+    border: 1px solid rgb(213, 212, 212);
+    background-color: rgba(154, 215, 235, 0.1);
     border-radius: 1.4rem;
     overflow: hidden;
     margin: 1rem 1rem;
@@ -16,20 +17,20 @@
     position: relative; 
 }
 
-#buy {
+/* #buy {
     background-color: rgb(236, 247, 238);
 }
 
 #sell {
     background-color: rgb(250, 239, 239);
-}
+} */
 
 .orderType {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
     width: auto;
-    height: 13%;
+    height: 5%;
 }
 
 /* EDIT: ADD MORE FLAIR TO LABELS PLZ  */
@@ -37,8 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 4px solid rgb(150, 236, 183);
-    /* margin: 0 0; */
+    border-bottom: 4px solid rgb(81, 159, 112);
     box-sizing: content-box;
     width: 50%;
     height: 100%;
@@ -48,14 +48,15 @@
 }
 
 #buyNotSelected {
-    border-bottom: 4px solid rgb(97, 152, 118);
+    /* border-bottom: 4px solid rgb(97, 152, 118); */
+    border-bottom: 1px solid rgba(154, 215, 235, 0.1);
 }
 
 .sellLabel {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 4px solid rgb(235, 140, 140);
+    border-bottom: 4px solid rgb(202, 103, 103);
     width: 50%;
     height: 100%;
     color: rgb(22, 22, 22);
@@ -64,40 +65,47 @@
 }
 
 #sellNotSelected {
-    border-bottom: 4px solid rgb(119, 70, 70);
+    /* border-bottom: 4px solid rgb(119, 70, 70); */
+    border-bottom: 1px solid rgba(154, 215, 235, 0.1);
 }
 
 .options {
     display: flex;
     justify-content: space-between;
-    margin: 1rem 1rem;
+    margin: 0.3rem 2rem;
 }
 
 .orderBtn {
-    background-image: linear-gradient(to right, rgb(240, 227, 53),rgb(232, 165, 51));
-    border-radius: 1.6rem;
-    font-size: large;
+    /* background-image: linear-gradient(to right, rgb(240, 227, 53),rgb(232, 165, 51)); */
+    /* background-color: rgb(217, 215, 215); */
+    border-radius: 20px;
+    border: 1px solid rgb(206, 205, 205);
+    font-size: 13;
     padding: .4rem .4rem;
     width: 50%;
+    font-weight: 700;
     height: 10%;
     cursor: pointer;
-    box-shadow: 0 4px #999;
+    box-shadow: 0 1px rgb(216, 215, 215);
+    background-color: rgb(205, 236, 205);
 }
 
 .orderBtn:hover {
-    background-image: linear-gradient(to right, rgb(217, 206, 50),rgb(217, 154, 46));
+    /* background-image: linear-gradient(to right, rgb(217, 206, 50),rgb(217, 154, 46)); */
+    background-color: rgb(86, 160, 86);
 }
 
 .orderBtn:active {
     background-image: linear-gradient(to right, rgb(217, 206, 50),rgb(217, 154, 46));
+    background-color: rgb(217, 215, 215);
     box-shadow: 0 2px #666;
     transform: translateY(2px);
 }
 
 .sharesInput {
     width: 50px;
+    height: 50px;
     font-size: larger;
-
 }
 
 .errorMsg {
