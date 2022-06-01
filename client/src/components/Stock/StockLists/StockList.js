@@ -69,4 +69,4 @@ const StockList = ({title}) => {
 	);
 };
 
-export default StockList;
+export default StockList;	

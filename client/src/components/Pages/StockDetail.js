@@ -114,14 +114,14 @@ const StockDetail = () => {
                         </div>
                         {/* className={classes.watchListBtn} id={classes.tooltipBG}  */}
                         {!watchlistCtx.watchlist.has(stock.symbol) && 
-                            <div className={classes.wlContainer}>
-                                <GrAddCircle className={classes.watchListBtn} size={23} onClick={addToWatchListHandler}/>
+                            <div className={classes.wlContainer} onClick={addToWatchListHandler}>
+                                <GrAddCircle className={classes.watchListBtn} size={23}/>
                                 <p>Add To Watchlist</p>
                             </div>
                         }
                         {watchlistCtx.watchlist.has(stock.symbol) && 
-                            <div className={classes.wlContainer}>
-                                <FcCheckmark className={classes.watchListBtn} size={23} onClick={removeFromWatchListHandler}/>
+                            <div className={classes.wlContainer} onClick={removeFromWatchListHandler}>
+                                <FcCheckmark className={classes.watchListBtn} size={23}/>
                                 <p>Remove From Watchlist</p>
                             </div>
                         }

@@ -270,7 +270,13 @@
   /* justify-content: space-between; */
   margin: 0.1rem 0.1rem;
   margin-top: -1.5%;
-  width: auto;
+  width: 18%;
+  cursor: pointer;
+
+}
+
+.watchListBtn {
+  margin-right: .4rem;
 }
 
 .watchListBtn:hover {

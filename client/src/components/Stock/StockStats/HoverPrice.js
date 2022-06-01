@@ -7,8 +7,8 @@ const HoverPrice = () => {
     return (
         <div className={classes.price}>
             <span className={classes.hoverPrice}>{hoverInfoContext.price}</span>
-                <span className={classes.hoverPricechange}> ${hoverInfoContext.priceChanges.dollar_change}</span>
-                <span className={classes.hoverpercent}>{hoverInfoContext.priceChanges.percent_change}%</span>
+                {/* <span className={classes.hoverDallorChange}> ${hoverInfoContext.priceChanges.dollar_change}</span> */}
+                <span className={classes.hoverPercentChange}>{hoverInfoContext.priceChanges.percent_change}%</span>
         </div>
     )
 }

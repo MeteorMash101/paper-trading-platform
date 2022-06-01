@@ -7,6 +7,8 @@
     overflow-x: hidden;
     margin-right:5%;
     margin-left:5%;
+    overflow-y: scroll;
+    /* overflow-y: hidden; */
     /* overflow-y: scroll; */
     /* Internet Explorer 10+
     -ms-overflow-style: none;  

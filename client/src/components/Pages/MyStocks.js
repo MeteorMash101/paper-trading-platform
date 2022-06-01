@@ -38,7 +38,6 @@ const MyStocks = () => {
 		"rebeccapurple", "honeydew"
 	]
 	// EDIT: for some reason ctx is not updated right away...
-	// console.log("[MyStocks.js]: stocksOwnedCtx", stocksOwnedCtx)
 	// API CALL: Fetch user's data for Stock List & Watch List on render.
 	useEffect(async () => {
 		setIsLoading(true)
@@ -97,7 +96,6 @@ const MyStocks = () => {
 			})
 		}
 	}
-	console.log("HERE stocks selected:", stocksSelected)
     const onMouseHoverHandler = (bool) => {
         setIsMouseHovering(bool)
     }
@@ -116,10 +114,13 @@ const MyStocks = () => {
 					<div className={classes.mainContainer}>
 						{/* Multi-line Display Graph */}
 						<div className={classes.graph}> 
-							<Graph usersStocksOwnedNWatchList={usersStocksOwned.concat(usersWatchList)} usersWatchList={usersWatchList} stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+							{stocksSelected.length > 0 &&
+								<Graph usersStocksOwnedNWatchList={usersStocksOwned.concat(usersWatchList)} usersWatchList={usersWatchList} stocksSelected={stocksSelected} onHover={onMouseHoverHandler}/>
+							}
 						</div>
 						{/* The Stock List & Watch List Tables */}
 						<div className={classes.table}> 
+							{stocksSelected.length === 0 && <p>Start by selecting some stocks from your lists below!<br/><b>WARNING:</b> As we have to fetch all stock data's date ranges for all stocks below, this could take awhile if your list is really big!</p>}
 							<Box sx={{ width: '90%', margin: '5%', border:'1px solid grey', borderRadius:'1.6rem', height:'65vh'}}>
 								<Tabs
 								value={value}
