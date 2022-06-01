@@ -203,7 +203,7 @@ fetchStock()
       chart: {
         type: 'candlestick',
         height: 350,
-        background: "#3e3e3e"
+        // background: "#3e3e3e"
       },
       title: {
         text: 'CandleStick Chart',
@@ -213,9 +213,9 @@ fetchStock()
         type: 'datetime',
         // type: 'category',
         labels: {
-          style: {
-              colors: "#99d1e7"
-          },
+          // style: {
+          //     colors: "#99d1e7"
+          // },
           // formatter: function(val) {
           //   return dayjs(val).format('MMM DD HH:mm')
           // },
@@ -238,9 +238,9 @@ fetchStock()
           enabled: true
         },
         labels: {
-          style: {
-              colors: "#99d1e7"
-          },
+          // style: {
+          //     colors: "#99d1e7"
+          // },
           formatter: function (value) {
             return value;
           }
@@ -248,10 +248,10 @@ fetchStock()
       },
       plotOptions: {
         candlestick: {
-            colors: {
-                upward: '#A9A9A9',
-                downward: '#99d1e7'
-            }
+            // colors: {
+            //     upward: '#A9A9A9',
+            //     downward: '#99d1e7'
+            // }
         },
     },
   });
