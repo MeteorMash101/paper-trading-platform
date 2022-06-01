@@ -2,4 +2,4 @@ Senior design project where we worked with a client from Google to create a plat
 
 Snapshots:
 
-![alt text](https://github.com/MeteorMash101/paper-trading-platform/blob/master/snapshots/pics_1.png?raw=true)
+![alt text](https://github.com/MeteorMash101/paper-trading-platform/blob/master/snapshots/pic_1.png)
